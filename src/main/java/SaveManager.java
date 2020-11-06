@@ -1,12 +1,14 @@
+package main.java;
+
 import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import turing.State;
-import turing.Tape;
-import turing.TransitionFunction;
-import turing.TuringMachine;
+import main.java.turing.State;
+import main.java.turing.Tape;
+import main.java.turing.TransitionFunction;
+import main.java.turing.TuringMachine;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

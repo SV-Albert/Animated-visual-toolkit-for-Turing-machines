@@ -1,4 +1,4 @@
-package exceptions;
+package main.java.exceptions;
 
 public class InvalidSymbolException extends Exception{
     public InvalidSymbolException(String message){

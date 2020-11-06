@@ -1,6 +1,6 @@
-package turing;
+package main.java.turing;
 
-import exceptions.InvalidSymbolException;
+import main.java.exceptions.InvalidSymbolException;
 import java.util.ArrayList;
 
 public class Tape {

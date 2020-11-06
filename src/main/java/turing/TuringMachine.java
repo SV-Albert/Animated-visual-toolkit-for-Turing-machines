@@ -1,7 +1,7 @@
-package turing;
+package main.java.turing;
 
-import exceptions.InvalidStateTransitionException;
-import exceptions.InvalidSymbolException;
+import main.java.exceptions.InvalidStateTransitionException;
+import main.java.exceptions.InvalidSymbolException;
 
 import java.util.HashMap;
 import java.util.HashSet;

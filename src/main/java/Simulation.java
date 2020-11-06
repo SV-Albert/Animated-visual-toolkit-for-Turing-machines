@@ -1,11 +1,10 @@
-import org.xml.sax.SAXException;
-import turing.State;
-import turing.Tape;
-import turing.TransitionFunction;
-import turing.TuringMachine;
+package main.java;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
+import main.java.turing.State;
+import main.java.turing.Tape;
+import main.java.turing.TransitionFunction;
+import main.java.turing.TuringMachine;
+
 import java.io.*;
 import java.util.ArrayList;
 

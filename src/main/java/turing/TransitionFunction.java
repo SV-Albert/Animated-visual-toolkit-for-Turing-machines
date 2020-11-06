@@ -1,6 +1,6 @@
-package turing;
+package main.java.turing;
 
-import exceptions.InvalidStateTransitionException;
+import main.java.exceptions.InvalidStateTransitionException;
 import javafx.util.Pair;
 import java.util.HashMap;
 
