@@ -1,7 +1,6 @@
 import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import turing.State;
@@ -17,7 +16,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -55,33 +53,6 @@ public class SaveManager {
         writer.close();
     }
 
-//    public TuringMachine loadTuringMachine(List<String> lines){
-//        String name;
-//        HashSet<Character> alphabet = new HashSet<>();
-//        HashMap<String, State> states = new HashMap<>();
-//        State initialState;
-//        TransitionFunction tFunc = new TransitionFunction();
-//        for(int i = 2; i < lines.size(); i++){
-//            String line = lines.get(i);
-//            if(line.contains("<tmName>")){
-//                name = omitTags(line);
-//            }
-//            else if(line.contains("<symbol>")){
-//                alphabet.add(omitTags(line).charAt(0));
-//            }
-//            else if (line.contains("<states>")){
-//                int j = i + 1;
-//                while(!line.contains("</states>")){
-//                    line = lines.get(j);
-//                    if(line.contains("<state>")){
-//                        name = omitTags(lines.get(j+1))
-//                    }
-//                    j++;
-//                }
-//            }
-//        }
-//    }
-
     public TuringMachine loadTuringMachine() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         FileInputStream stream = new FileInputStream(new File(TuringSavePath.toString()));
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -90,9 +61,10 @@ public class SaveManager {
         XPath xpath = XPathFactory.newInstance().newXPath();
 
         Element tmNode = (Element) xpath.compile("/TuringMachineSave").evaluate(xml, XPathConstants.NODE);
+
         String tmName = tmNode.getAttribute("name");
 
-        Element alphabetNode = (Element) xpath.compile("/TuringMachineSave/alphabet").evaluate(xml, XPathConstants.NODE);
+        Element alphabetNode = (Element) tmNode.getElementsByTagName("alphabet").item(0);
         NodeList values = alphabetNode.getElementsByTagName("symbol");
         HashSet<Character> alphabet = new HashSet<>();
         for (int i = 0; i < values.getLength(); i++) {
@@ -100,10 +72,9 @@ public class SaveManager {
         }
 
         HashMap<String, State> states = new HashMap<>();
-        Element globalStatesNode = (Element) xpath.compile("/TuringMachineSave/states").evaluate(xml, XPathConstants.NODE);
+        Element globalStatesNode = (Element) tmNode.getElementsByTagName("states").item(0);
         String initialStateName = globalStatesNode.getAttribute("initial");
-
-        NodeList stateNodeList = (NodeList) xpath.compile("/TuringMachineSave/states/state").evaluate(xml, XPathConstants.NODESET);
+        NodeList stateNodeList = globalStatesNode.getElementsByTagName("state");
         for (int i = 0; i < stateNodeList.getLength(); i++) {
             Element stateNode = (Element) stateNodeList.item(i);
             String stateName = stateNode.getAttribute("name");
@@ -119,10 +90,11 @@ public class SaveManager {
                 state.addAction(tapeSymbol, writeSymbol, direction);
             }
         }
+
         State initialState = states.get(initialStateName);
 
         TransitionFunction tFunc = new TransitionFunction();
-        NodeList transitionsNodeList = (NodeList) xpath.compile("/TuringMachineSave/transitions/transition").evaluate(xml, XPathConstants.NODESET);
+        NodeList transitionsNodeList = tmNode.getElementsByTagName("transition");
         for (int i = 0; i < transitionsNodeList.getLength(); i++) {
             Element transitionNode = (Element) transitionsNodeList.item(i);
             State fromState = states.get(transitionNode.getElementsByTagName("fromState").item(0).getTextContent());
@@ -131,8 +103,30 @@ public class SaveManager {
             tFunc.addTransition(fromState, tapeSymbol, toState);
         }
 
-        TuringMachine tm = new TuringMachine(tmName, alphabet, states, initialState, tFunc);
-        return tm;
+        return new TuringMachine(tmName, alphabet, states, initialState, tFunc);
+    }
+
+    public Tape loadTape() throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        FileInputStream stream = new FileInputStream(new File(TapeSavePath.toString()));
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document xml = builder.parse(stream);
+        XPath xpath = XPathFactory.newInstance().newXPath();
+
+        Element tapeNode = (Element) xpath.compile("/TuringTapeSave").evaluate(xml, XPathConstants.NODE);
+
+        String tapeName = tapeNode.getAttribute("name");
+
+        int headPosition = Integer.parseInt(tapeNode.getElementsByTagName("headPosition").item(0).getTextContent());
+
+        Element valuesNode = (Element) tapeNode.getElementsByTagName("tape").item(0);
+        NodeList values = valuesNode.getElementsByTagName("value");
+        ArrayList<Character> tapeList = new ArrayList<>();
+        for (int i = 0; i < values.getLength(); i++) {
+            tapeList.add(values.item(i).getTextContent().charAt(0));
+        }
+
+        return new Tape(tapeName, tapeList, headPosition);
     }
 
     private String getTuringXML(TuringMachine tm){
@@ -191,24 +185,19 @@ public class SaveManager {
 
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + '\n');
-        builder.append("<TuringTapeSave>" + '\n');
-        builder.append('\t' + "<name>").append(name).append("</name>" + '\n');
+        builder.append("<TuringTapeSave name = \"").append(tape.getName()).append("\">" + '\n');
         builder.append('\t' + "<headPosition>").append(head).append("</headPosition>" + '\n');
         builder.append('\t' + "<tape>" + '\n');
         for(char ch: tapeArray){
             if (ch == '\n'){
                 ch = '~';
             }
-            builder.append(tab(2)).append("<value> ").append(ch).append(" </value>" + '\n');
+            builder.append(tab(2)).append("<value>").append(ch).append("</value>" + '\n');
         }
         builder.append('\t' + "</tape>" + '\n');
         builder.append("</TuringTapeSave>" + '\n');
 
         return builder.toString();
-    }
-
-    private String omitTags(String line){
-        return line.substring(line.indexOf('>') + 1, line.lastIndexOf('<'));
     }
 
     private String tab(int times){

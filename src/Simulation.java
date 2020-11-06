@@ -68,6 +68,7 @@ public class Simulation {
 
         try{
             tm = sm.loadTuringMachine();
+            tape = sm.loadTape();
             System.out.println("Loading complete. Executing...");
         }
         catch (Exception e){
@@ -91,16 +92,6 @@ public class Simulation {
         }
         System.out.println(tape.toString() + " Current state: " + tm.getCurrentState().getName());
 
-        try {
-            sm.loadTuringMachine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
+
     }
 }
