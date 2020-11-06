@@ -2,18 +2,20 @@ package turing;
 
 import exceptions.InvalidStateTransitionException;
 import exceptions.InvalidSymbolException;
+
+import java.util.HashMap;
 import java.util.HashSet;
 
 
 public class TuringMachine {
     private String name;
     private HashSet<Character> alphabet;
-    private HashSet<State> states;
+    private HashMap<String, State> states;
     private State initialState;
     private State currentState;
     private TransitionFunction transitionFunction;
 
-    public TuringMachine(String name, HashSet<Character> alphabet, HashSet<State> states, State initialState, TransitionFunction transitionFunction){
+    public TuringMachine(String name, HashSet<Character> alphabet, HashMap<String, State> states, State initialState, TransitionFunction transitionFunction){
         this.name = name;
         this.alphabet = alphabet;
         this.states = states;
@@ -43,7 +45,7 @@ public class TuringMachine {
         return alphabet;
     }
 
-    public HashSet<State> getStates(){
+    public HashMap<String, State> getStates(){
         return states;
     }
 
