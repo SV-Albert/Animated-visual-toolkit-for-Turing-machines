@@ -1,9 +1,9 @@
-package main.java;
+package java;
 
-import main.java.turing.State;
-import main.java.turing.Tape;
-import main.java.turing.TransitionFunction;
-import main.java.turing.TuringMachine;
+import java.turing.State;
+import java.turing.Tape;
+import java.turing.TransitionFunction;
+import java.turing.TuringMachine;
 
 import java.io.*;
 import java.util.ArrayList;

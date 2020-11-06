@@ -1,4 +1,4 @@
-package main.java.turing;
+package java.turing;
 
 import main.java.exceptions.InvalidStateTransitionException;
 import main.java.exceptions.InvalidSymbolException;
