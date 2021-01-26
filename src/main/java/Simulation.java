@@ -1,9 +1,4 @@
-package java;
-
-import java.turing.State;
-import java.turing.Tape;
-import java.turing.TransitionFunction;
-import java.turing.TuringMachine;
+import turing.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -29,66 +24,54 @@ public class Simulation {
         alphabet.add('1');
 
         State s0 = new State("s0", false);
-        s0.addAction('~', '~', 'L');
-        s0.addAction('0', '1', 'R');
-        s0.addAction('1', '0', 'R');
         State s1 = new State("s1", false);
-        s1.addAction('~', '~', 'R');
-        s1.addAction('0', '1', 'L');
-        s1.addAction('1', '0', 'L');
         State s2 = new State("s2", true);
         HashMap<String, State> states = new HashMap<>();
         states.put("s0", s0);
         states.put("s1", s1);
         states.put("s2", s2);
 
-        TransitionFunction tf = new TransitionFunction();
-        tf.addTransition(s0, '~', s1);
-        tf.addTransition(s0, '0', s0);
-        tf.addTransition(s0, '1', s0);
-        tf.addTransition(s1, '~', s2);
-        tf.addTransition(s1, '0', s1);
-        tf.addTransition(s1, '1', s1);
 
-        TuringMachine tm = new TuringMachine("0 and 1 flip", alphabet, states, s0, tf);
+        TuringMachine tm = new TuringMachine("0 and 1 flip", states, s0);
+        tm.addTransition(new Transition(s0, s1, '~', '~', 'L'));
+        tm.addTransition(new Transition(s0, s0, '0', '1', 'R'));
+        tm.addTransition(new Transition(s0, s0, '1', '0', 'R'));
+        tm.addTransition(new Transition(s1, s2, '~', '~', 'R'));
+        tm.addTransition(new Transition(s1, s1, '0', '1', 'L'));
+        tm.addTransition(new Transition(s1, s1, '1', '0', 'L'));
 
-        SaveManager sm = new SaveManager();
+
+
         try{
-            sm.saveTuringMachine(tm);
-            sm.saveTape(tape);
+            SaveManager.saveTuringMachine(tm);
+            SaveManager.saveTape(tape);
             System.out.println("Save completed");
         }
         catch (IOException e){
             e.printStackTrace();
         }
 
-
         System.out.println("Loading from save...");
 
         try{
-            tm = sm.loadTuringMachine();
-            tape = sm.loadTape();
+            tm = SaveManager.loadTuringMachine();
+            tape = SaveManager.loadTape();
             System.out.println("Loading complete. Executing...");
         }
         catch (Exception e){
             e.printStackTrace();
         }
-
+        TuringMachineHandler handler = new TuringMachineHandler(tm, tape);
         while(!tm.getCurrentState().isAccepting()){
             System.out.println(tape.toString() + " Current state: " + tm.getCurrentState().getName());
             try{
-                char tapeSymbol = tape.read();
-                State currentState = tm.getCurrentState();
-                char writeSymbol = currentState.getWriteSymbol(tapeSymbol);
-                char direction = currentState.getDirection(tapeSymbol);
-                tape.write(writeSymbol);
-                tape.move(direction);
-                tm.nextState(tapeSymbol);
+                handler.next();
             }
             catch (Exception e){
                 e.printStackTrace();
             }
         }
+
         System.out.println(tape.toString() + " Current state: " + tm.getCurrentState().getName());
 
 

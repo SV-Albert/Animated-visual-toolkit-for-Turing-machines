@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TuringMachineSave name = "0 and 1 flip">
+	<states initial = "s0">
+		<state name = "s0">
+			<isAccepting>false</isAccepting>
+		</state>
+		<state name = "s1">
+			<isAccepting>false</isAccepting>
+		</state>
+		<state name = "s2">
+			<isAccepting>true</isAccepting>
+		</state>
+	</states>
+	<transitions>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s0</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s1</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s2</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s1</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s0</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s1</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>L</direction>
+		</transition>
+	</transitions>
+</TuringMachineSave>

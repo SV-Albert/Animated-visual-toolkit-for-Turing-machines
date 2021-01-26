@@ -1,31 +1,20 @@
-package java.turing;
+package turing;
 
-import main.java.exceptions.InvalidSymbolException;
+import exceptions.InvalidSymbolException;
 import java.util.ArrayList;
 
 public class Tape {
     private String name;
     private ArrayList<Character> tape;
     private int head;
-    private int initialHeadPosition;
-
-    public Tape(){
-        tape = new ArrayList<>();
-    }
+    private final int initialHeadPosition;
+    private final char emptyChar = '~';
 
     public Tape(String name, ArrayList<Character> tape, int head){
         this.name = name;
         this.tape = tape;
         this.head = head;
         this.initialHeadPosition = head;
-    }
-
-    public int getSize(){
-        return tape.size();
-    }
-
-    public int getHead(){
-        return head;
     }
 
     public char read(){
@@ -36,7 +25,7 @@ public class Tape {
         if (direction == 'L'){
             head++;
             if(head == tape.size()){
-                tape.add('~');
+                tape.add(emptyChar);
             }
         }
         else if (direction == 'R'){
@@ -58,7 +47,7 @@ public class Tape {
         }
         else{
             for (int i = tape.size(); i < head; i++){
-                tape.add(head, '~');
+                tape.add(head, emptyChar);
             }
         }
     }
@@ -67,14 +56,14 @@ public class Tape {
         for (int i = tape.size() - 1; i > index; i--) {
             tape.add(i+1, tape.get(i));
         }
-        tape.add(index + 1, '~');
+        tape.add(index + 1, emptyChar);
     }
 
     public String toString(){
         StringBuilder builder = new StringBuilder();
         int index = 0;
         for (char value: tape) {
-            if (value == '~'){
+            if (value == emptyChar){
                 value = '_';
             }
             builder.append('[');
@@ -96,12 +85,24 @@ public class Tape {
         return name;
     }
 
+    public int getSize(){
+        return tape.size();
+    }
+
+    public int getHead(){
+        return head;
+    }
+
     public ArrayList<Character> getTapeArray(){
         return tape;
     }
 
     public int getInitialHeadPosition(){
         return initialHeadPosition;
+    }
+
+    public char getEmptyChar(){
+        return emptyChar;
     }
 
 }

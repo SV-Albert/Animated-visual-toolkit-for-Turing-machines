@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TuringTapeSave name = "Ones and zeros">
+	<headPosition>0</headPosition>
+	<tape>
+		<value>~</value>
+		<value>0</value>
+		<value>0</value>
+		<value>1</value>
+		<value>~</value>
+	</tape>
+</TuringTapeSave>

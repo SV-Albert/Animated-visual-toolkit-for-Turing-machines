@@ -1,36 +1,60 @@
-package java.turing;
-
-import main.java.exceptions.InvalidStateTransitionException;
-import main.java.exceptions.InvalidSymbolException;
+package turing;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class TuringMachine {
-    private String name;
-    private HashSet<Character> alphabet;
-    private HashMap<String, State> states;
-    private State initialState;
+    private final String name;
+    private final Set<Character> alphabet;
+    private final Map<String, State> states;
+    private final State initialState;
     private State currentState;
-    private TransitionFunction transitionFunction;
+    private final Set<Transition> transitionFunction;
+    private final Map<State, Set<Transition>> transitionMap;
 
-    public TuringMachine(String name, HashSet<Character> alphabet, HashMap<String, State> states, State initialState, TransitionFunction transitionFunction){
+    public TuringMachine(String name, HashMap<String, State> states, State initialState){
         this.name = name;
-        this.alphabet = alphabet;
         this.states = states;
         this.initialState = initialState;
         currentState = initialState;
-        this.transitionFunction = transitionFunction;
+        alphabet = new HashSet<>();
+        transitionMap = new HashMap<>();
+        transitionFunction = new HashSet<>();
     }
 
-    public void nextState(char tapeSymbol) throws InvalidStateTransitionException, InvalidSymbolException{
-        if (alphabet.contains(tapeSymbol) || tapeSymbol == '~'){
-            currentState = transitionFunction.getNextState(currentState, tapeSymbol);
+    public void addTransition(Transition transition){
+        State fromState = transition.getFromState();
+        State toState = transition.getToState();
+        char readSymbol = transition.getReadSymbol();
+        char writeSymbol = transition.getWriteSymbol();
+        transitionFunction.add(transition);
+        if(transitionMap.containsKey(fromState)){
+            transitionMap.get(fromState).add(transition);
         }
         else{
-            throw new InvalidSymbolException("Symbol '" + tapeSymbol + "' is not part of the Turing Machine's alphabet");
+            Set<Transition> stateTransitions = new HashSet<>();
+            stateTransitions.add(transition);
+            transitionMap.put(fromState, stateTransitions);
         }
+        if(!states.containsValue(fromState)){
+            states.put(fromState.getName(), fromState);
+        }
+        if(!states.containsValue(toState)){
+            states.put(toState.getName(), toState);
+        }
+        if(!alphabet.contains(readSymbol)){
+            alphabet.add(readSymbol);
+        }
+        if(!alphabet.contains(writeSymbol)){
+            alphabet.add(writeSymbol);
+        }
+    }
+
+    public void setCurrentState(State state) {
+        currentState = state;
     }
 
     public State getCurrentState(){
@@ -41,11 +65,11 @@ public class TuringMachine {
         return name;
     }
 
-    public HashSet<Character> getAlphabet(){
+    public Set<Character> getAlphabet(){
         return alphabet;
     }
 
-    public HashMap<String, State> getStates(){
+    public Map<String, State> getStates(){
         return states;
     }
 
@@ -53,8 +77,16 @@ public class TuringMachine {
         return initialState;
     }
 
-    public TransitionFunction getTransitionFunction(){
+    public Set<Transition> getTransitionFunction(){
         return transitionFunction;
     }
+
+    public Set<Transition> getTransitionsFromCurrentState(){
+        return transitionMap.get(currentState);
+    }
+
+//    public boolean isCharLegal(char read){
+//        return alphabet.contains(read);
+//    }
 
 }
