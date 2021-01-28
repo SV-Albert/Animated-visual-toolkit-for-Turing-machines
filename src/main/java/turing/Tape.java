@@ -2,30 +2,31 @@ package turing;
 
 import exceptions.InvalidSymbolException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tape {
     private String name;
-    private ArrayList<Character> tape;
+    private List<Character> tapeArray;
     private int head;
     private final int initialHeadPosition;
     private final char emptyChar = '~';
 
-    public Tape(String name, ArrayList<Character> tape, int head){
+    public Tape(String name, List<Character> tapeArray, int head){
         this.name = name;
-        this.tape = tape;
+        this.tapeArray = tapeArray;
         this.head = head;
         this.initialHeadPosition = head;
     }
 
     public char read(){
-        return tape.get(head);
+        return tapeArray.get(head);
     }
 
     public void move(char direction) throws InvalidSymbolException{
         if (direction == 'L'){
             head++;
-            if(head == tape.size()){
-                tape.add(emptyChar);
+            if(head == tapeArray.size()){
+                tapeArray.add(emptyChar);
             }
         }
         else if (direction == 'R'){
@@ -42,40 +43,40 @@ public class Tape {
     }
 
     public void write(char ch){
-        if (head < tape.size()){
-            tape.set(head, ch);
+        if (head < tapeArray.size()){
+            tapeArray.set(head, ch);
         }
         else{
-            for (int i = tape.size(); i < head; i++){
-                tape.add(head, emptyChar);
+            for (int i = tapeArray.size(); i < head; i++){
+                tapeArray.add(head, emptyChar);
             }
         }
     }
 
     public void addSpaceAfter(int index){
-        for (int i = tape.size() - 1; i > index; i--) {
-            tape.add(i+1, tape.get(i));
+        for (int i = tapeArray.size() - 1; i > index; i--) {
+            tapeArray.add(i+1, tapeArray.get(i));
         }
-        tape.add(index + 1, emptyChar);
+        tapeArray.add(index + 1, emptyChar);
     }
 
     public String toString(){
         StringBuilder builder = new StringBuilder();
         int index = 0;
-        for (char value: tape) {
-            if (value == emptyChar){
-                value = '_';
-            }
-            builder.append('[');
+        for (char value: tapeArray) {
+//            if (value == emptyChar){
+//                value = '~';
+//            }
             if(index == head){
                 builder.append('(');
                 builder.append(value);
                 builder.append(')');
             }
             else{
+                builder.append('[');
                 builder.append(value);
+                builder.append(']');
             }
-            builder.append(']');
             index++;
         }
         return builder.toString();
@@ -86,15 +87,15 @@ public class Tape {
     }
 
     public int getSize(){
-        return tape.size();
+        return tapeArray.size();
     }
 
     public int getHead(){
         return head;
     }
 
-    public ArrayList<Character> getTapeArray(){
-        return tape;
+    public List<Character> getTapeArray(){
+        return tapeArray;
     }
 
     public int getInitialHeadPosition(){
@@ -103,6 +104,11 @@ public class Tape {
 
     public char getEmptyChar(){
         return emptyChar;
+    }
+
+    public Tape getCopy(){
+        List<Character> tapeCopy = new ArrayList<>(tapeArray);
+        return new Tape(name, tapeCopy, head);
     }
 
 }

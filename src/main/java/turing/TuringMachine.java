@@ -15,7 +15,7 @@ public class TuringMachine {
     private final Set<Transition> transitionFunction;
     private final Map<State, Set<Transition>> transitionMap;
 
-    public TuringMachine(String name, HashMap<String, State> states, State initialState){
+    public TuringMachine(String name, Map<String, State> states, State initialState){
         this.name = name;
         this.states = states;
         this.initialState = initialState;
@@ -23,6 +23,17 @@ public class TuringMachine {
         alphabet = new HashSet<>();
         transitionMap = new HashMap<>();
         transitionFunction = new HashSet<>();
+    }
+
+    public TuringMachine(String name, Map<String, State> states, State initialState,
+                         Set<Character> alphabet, Set<Transition> transitionFunction, Map<State, Set<Transition>> transitionMap){
+        this.name = name;
+        this.states = states;
+        this.initialState = initialState;
+        currentState = initialState;
+        this.alphabet = alphabet;
+        this.transitionMap = transitionMap;
+        this.transitionFunction = transitionFunction;
     }
 
     public void addTransition(Transition transition){
@@ -85,6 +96,10 @@ public class TuringMachine {
         return transitionMap.get(currentState);
     }
 
+    public TuringMachine getCopy(){
+        TuringMachine copy = new TuringMachine(name, states, initialState, alphabet, transitionFunction, transitionMap);
+        return copy;
+    }
 //    public boolean isCharLegal(char read){
 //        return alphabet.contains(read);
 //    }

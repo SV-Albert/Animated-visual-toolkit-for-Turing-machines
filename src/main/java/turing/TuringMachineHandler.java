@@ -1,38 +1,20 @@
 package turing;
 
-import exceptions.InvalidSymbolException;
+import execution.ExecutionNode;
+
 
 public class TuringMachineHandler {
-    private TuringMachine turingMachine;
-    private Tape tape;
+    private final Executor rootExecutor;
+
 
     public TuringMachineHandler(TuringMachine turingMachine, Tape tape){
-        this.turingMachine = turingMachine;
-        this.tape = tape;
+        ExecutionNode rootNode = new ExecutionNode(true, null, tape.toString(), null);
+        rootExecutor = new Executor(turingMachine, tape, rootNode, null);
     }
 
-    private Transition findTransition(char read) throws InvalidSymbolException{
-        for (Transition transition:turingMachine.getTransitionsFromCurrentState()) {
-            if(transition.getReadSymbol() == read){
-                return transition;
-            }
-        }
-        throw new InvalidSymbolException("State " + turingMachine.getCurrentState().getName() + " has no operations for input '" + read + "'");
+    public void run() {
+        rootExecutor.run();
     }
 
-    public void next() throws InvalidSymbolException{
-        char read = tape.read();
-        Transition transition = findTransition(read);
-        tape.write(transition.getWriteSymbol());
-        tape.move(transition.getDirection());
-        turingMachine.setCurrentState(transition.getToState());
-    }
 
-//    public char getWriteSymbol(char read) throws InvalidSymbolException{
-//        return findTransition(read).getWriteSymbol();
-//    }
-//
-//    public char getDirection(char read) throws InvalidSymbolException{
-//        return findTransition(read).getDirection();
-//    }
 }

@@ -156,7 +156,7 @@ public class SaveManager {
 
     private static String getTapeXML(Tape tape){
         String name = tape.getName();
-        ArrayList<Character> tapeArray = tape.getTapeArray();
+        List<Character> tapeArray = tape.getTapeArray();
         int head = tape.getInitialHeadPosition();
 
         StringBuilder builder = new StringBuilder();

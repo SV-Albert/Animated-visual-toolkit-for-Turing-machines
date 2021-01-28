@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-
 public class Simulation {
     public Simulation(){}
 
@@ -31,16 +30,14 @@ public class Simulation {
         states.put("s1", s1);
         states.put("s2", s2);
 
-
         TuringMachine tm = new TuringMachine("0 and 1 flip", states, s0);
         tm.addTransition(new Transition(s0, s1, '~', '~', 'L'));
+//        tm.addTransition(new Transition(s0, s1, '~', '1', 'L'));
         tm.addTransition(new Transition(s0, s0, '0', '1', 'R'));
         tm.addTransition(new Transition(s0, s0, '1', '0', 'R'));
         tm.addTransition(new Transition(s1, s2, '~', '~', 'R'));
         tm.addTransition(new Transition(s1, s1, '0', '1', 'L'));
         tm.addTransition(new Transition(s1, s1, '1', '0', 'L'));
-
-
 
         try{
             SaveManager.saveTuringMachine(tm);
@@ -61,19 +58,8 @@ public class Simulation {
         catch (Exception e){
             e.printStackTrace();
         }
+
         TuringMachineHandler handler = new TuringMachineHandler(tm, tape);
-        while(!tm.getCurrentState().isAccepting()){
-            System.out.println(tape.toString() + " Current state: " + tm.getCurrentState().getName());
-            try{
-                handler.next();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println(tape.toString() + " Current state: " + tm.getCurrentState().getName());
-
-
+        handler.run();
     }
 }
