@@ -7,7 +7,7 @@ import java.util.Set;
 
 
 public class TuringMachine {
-    private final String name;
+    private String name;
     private final Set<Character> alphabet;
     private final Map<String, State> states;
     private final State initialState;
@@ -15,8 +15,7 @@ public class TuringMachine {
     private final Set<Transition> transitionFunction;
     private final Map<State, Set<Transition>> transitionMap;
 
-    public TuringMachine(String name, Map<String, State> states, State initialState){
-        this.name = name;
+    public TuringMachine(Map<String, State> states, State initialState){
         this.states = states;
         this.initialState = initialState;
         currentState = initialState;
@@ -34,6 +33,10 @@ public class TuringMachine {
         this.alphabet = alphabet;
         this.transitionMap = transitionMap;
         this.transitionFunction = transitionFunction;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     public void addTransition(Transition transition){
@@ -56,12 +59,8 @@ public class TuringMachine {
         if(!states.containsValue(toState)){
             states.put(toState.getName(), toState);
         }
-        if(!alphabet.contains(readSymbol)){
-            alphabet.add(readSymbol);
-        }
-        if(!alphabet.contains(writeSymbol)){
-            alphabet.add(writeSymbol);
-        }
+        alphabet.add(readSymbol);
+        alphabet.add(writeSymbol);
     }
 
     public void setCurrentState(State state) {
@@ -97,8 +96,7 @@ public class TuringMachine {
     }
 
     public TuringMachine getCopy(){
-        TuringMachine copy = new TuringMachine(name, states, initialState, alphabet, transitionFunction, transitionMap);
-        return copy;
+        return new TuringMachine(name, states, initialState, alphabet, transitionFunction, transitionMap);
     }
 //    public boolean isCharLegal(char read){
 //        return alphabet.contains(read);

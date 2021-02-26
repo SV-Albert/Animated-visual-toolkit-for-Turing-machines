@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="845.0" prefWidth="1550.0" styleClass="bodybg" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.BuilderController">
+   <children>
+      <HBox prefHeight="846.0" prefWidth="1549.0" stylesheets="@stylesheet.css">
+         <children>
+            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
+               <bottom>
+                  <VBox alignment="BOTTOM_CENTER" prefHeight="472.0" prefWidth="190.0" BorderPane.alignment="BOTTOM_CENTER">
+                     <children>
+                        <Button fx:id="loadButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Save To File" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="addTransitionsButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Add Transitions" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="runButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Run" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="30.0" left="6.0" right="6.0" top="6.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </bottom>
+               <center>
+                  <StackPane prefHeight="447.0" prefWidth="190.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="394.0" stroke="BLACK" strokeType="INSIDE" styleClass="states-toolbar" width="183.0" />
+                        <VBox alignment="TOP_CENTER" prefHeight="441.0" prefWidth="190.0" stylesheets="@stylesheet.css">
+                           <children>
+                              <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="190.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="state-label" text="Intial State" textAlignment="CENTER" wrappingWidth="33.14453125" />
+                                    <Group fx:id="initialStateNode">
+                                       <children>
+                                          <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="-59.0" layoutY="-13.0">
+                                             <image>
+                                                <Image url="@arrow_right.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Circle fill="DODGERBLUE" radius="28.0" stroke="BLACK" strokeType="INSIDE" styleClass="state" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="25.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Group>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="58.0" prefWidth="190.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="state-label" text="State" textAlignment="CENTER" wrappingWidth="69.14453125">
+                                       <HBox.margin>
+                                          <Insets right="15.0" />
+                                       </HBox.margin>
+                                    </Text>
+                                    <Group fx:id="stateNode">
+                                       <children>
+                                          <Circle fill="DODGERBLUE" radius="28.0" stroke="BLACK" strokeType="INSIDE" styleClass="state" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Group>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="58.0" prefWidth="190.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="state-label" text="Final Accepting State" textAlignment="CENTER" wrappingWidth="83.14453125" />
+                                    <Group fx:id="finalAcceptingStateNode">
+                                       <children>
+                                          <Circle fill="DODGERBLUE" radius="28.0" stroke="BLACK" strokeType="INSIDE" styleClass="state" />
+                                          <Circle fill="DODGERBLUE" radius="22.0" stroke="BLACK" strokeType="INSIDE" styleClass="state-accepting" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Group>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="58.0" prefWidth="190.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="state-label" text="Final Rejecting State" textAlignment="CENTER" wrappingWidth="83.14453125" />
+                                    <Group fx:id="finalRejectingStateNode">
+                                       <children>
+                                          <Circle fill="DODGERBLUE" radius="28.0" stroke="BLACK" strokeType="INSIDE" styleClass="state" />
+                                          <Circle fill="DODGERBLUE" radius="22.0" stroke="BLACK" strokeType="INSIDE" styleClass="state-rejecting" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Group>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="58.0" prefWidth="190.0">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="state-label" text="Halting State" textAlignment="CENTER" wrappingWidth="83.14453125" />
+                                    <Group fx:id="haltingStateNode">
+                                       <children>
+                                          <Circle fill="DODGERBLUE" radius="28.0" stroke="BLACK" strokeType="INSIDE" styleClass="state" />
+                                          <Circle fill="DODGERBLUE" radius="22.0" stroke="BLACK" strokeType="INSIDE" styleClass="state" />
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Group>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </StackPane>
+               </center>
+            </BorderPane>
+            <HBox alignment="CENTER" prefHeight="846.0" prefWidth="1360.0">
+               <children>
+                  <ScrollPane fx:id="canvasScroll" hbarPolicy="ALWAYS" maxWidth="1.7976931348623157E308" minHeight="220.0" pannable="true" prefHeight="846.0" prefWidth="1146.0" styleClass="canvas" vbarPolicy="ALWAYS">
+                     <content>
+                        <Pane fx:id="canvas" prefHeight="850.0" prefWidth="1130.0" />
+                     </content>
+                  </ScrollPane>
+                  <Group>
+                     <children>
+                        <TextArea editable="false" maxWidth="190.0" prefHeight="836.0" styleClass="help_section" text="Start by dragding an initial state to the canvas in the center of the screen to add it to the Turing Machine&#10;&#10;Hold Ctrl (Command) and left-click on the states to add a transition between them&#10;&#10;To encode a Turing Machine using just transition rules - press the &quot;Add Transitions &quot;button at the bottom of the toolbar&#10;&#10;Remember that you can save your progress or load an existing Turing Machine&#10;&#10;To simulate execution of the Turing Machine - press the &quot;Run&quot; button" wrapText="true" />
+                     </children>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Group>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

@@ -14,15 +14,8 @@
 	<transitions>
 		<transition>
 			<fromState>s0</fromState>
-			<toState>s0</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s1</fromState>
 			<toState>s1</toState>
-			<readSymbol>0</readSymbol>
+			<readSymbol>~</readSymbol>
 			<writeSymbol>1</writeSymbol>
 			<direction>L</direction>
 		</transition>
@@ -35,13 +28,6 @@
 		</transition>
 		<transition>
 			<fromState>s0</fromState>
-			<toState>s1</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s0</fromState>
 			<toState>s0</toState>
 			<readSymbol>1</readSymbol>
 			<writeSymbol>0</writeSymbol>
@@ -52,6 +38,27 @@
 			<toState>s1</toState>
 			<readSymbol>1</readSymbol>
 			<writeSymbol>0</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s1</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s0</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s1</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>1</writeSymbol>
 			<direction>L</direction>
 		</transition>
 	</transitions>

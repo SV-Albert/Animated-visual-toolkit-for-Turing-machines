@@ -5,16 +5,18 @@ import execution.ExecutionNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Executor implements Runnable{
+public class ExecutorThread implements Runnable{
 
     private final TuringMachine turingMachine;
     private final Tape tape;
     private ExecutionNode currentNode;
+    private final TuringMachineHandler handler;
 
-    public Executor(TuringMachine turingMachine, Tape tape, ExecutionNode currentNode, Transition nextTransition) {
+    public ExecutorThread(TuringMachine turingMachine, Tape tape, ExecutionNode currentNode, Transition nextTransition, TuringMachineHandler handler) {
         this.turingMachine = turingMachine;
         this.tape = tape;
         this.currentNode = currentNode;
+        this.handler = handler;
         if (nextTransition != null){
             step(nextTransition);
         }
@@ -38,8 +40,9 @@ public class Executor implements Runnable{
             List<Transition> transitions = findTransitions(read);
             if(transitions.size() > 1){
                 for (int i = 1; i < transitions.size(); i++) {
-                    Executor executor = new Executor(turingMachine.getCopy(), tape.getCopy(), currentNode, transitions.get(i));
-                    executor.run();
+                    ExecutorThread executorThread = new ExecutorThread(turingMachine.getCopy(), tape.getCopy(), currentNode, transitions.get(i), handler);
+                    handler.addThread(executorThread);
+                    executorThread.run();
                 }
             }
             if (transitions.size() == 0){
@@ -48,9 +51,8 @@ public class Executor implements Runnable{
             else {
                 Transition transition = transitions.get(0);
                 step(transition);
+                return false;
             }
-
-            return false;
         }
     }
 

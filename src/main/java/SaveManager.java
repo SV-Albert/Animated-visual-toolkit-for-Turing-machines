@@ -74,11 +74,14 @@ public class SaveManager {
             Element stateNode = (Element) stateNodeList.item(i);
             String stateName = stateNode.getAttribute("name");
             boolean isAccepting = Boolean.parseBoolean(stateNode.getElementsByTagName("isAccepting").item(0).getTextContent());
-            State state = new State(stateName, isAccepting);
+            State state = new State();
+            state.setName(stateName);
+            state.setAccepting(true);
             states.put(stateName, state);
         }
         State initialState = states.get(initialStateName);
-        TuringMachine tm = new TuringMachine(tmName, states, initialState);
+        TuringMachine tm = new TuringMachine(states, initialState);
+        tm.setName(tmName);
         NodeList transitionsNodeList = tmNode.getElementsByTagName("transition");
         for (int i = 0; i < transitionsNodeList.getLength(); i++) {
             Element transitionNode = (Element) transitionsNodeList.item(i);

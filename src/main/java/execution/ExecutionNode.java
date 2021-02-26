@@ -24,12 +24,16 @@ public class ExecutionNode {
         children.add(child);
     }
 
-    public boolean isRoot() {
-        return isRoot;
+    public ExecutionNode getParent(){
+        return parent;
     }
 
     public List<ExecutionNode> getChildren(){
         return children;
+    }
+
+    public boolean isRoot() {
+        return isRoot;
     }
 
     public String toString(){

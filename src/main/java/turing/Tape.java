@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tape {
-    private String name;
-    private List<Character> tapeArray;
+    private final String name;
+    private final List<Character> tapeArray;
     private int head;
     private final int initialHeadPosition;
     private final char emptyChar = '~';
@@ -64,9 +64,9 @@ public class Tape {
         StringBuilder builder = new StringBuilder();
         int index = 0;
         for (char value: tapeArray) {
-//            if (value == emptyChar){
-//                value = '~';
-//            }
+            if (value == emptyChar){
+                value = Character.MIN_VALUE;
+            }
             if(index == head){
                 builder.append('(');
                 builder.append(value);

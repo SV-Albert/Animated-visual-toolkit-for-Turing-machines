@@ -2,19 +2,29 @@ package turing;
 
 import execution.ExecutionNode;
 
+import java.util.ArrayList;
 
 public class TuringMachineHandler {
-    private final Executor rootExecutor;
-
+    private final ExecutorThread rootExecutorThread;
+    private final ExecutionNode rootNode;
+    private final ArrayList<ExecutorThread> threads;
 
     public TuringMachineHandler(TuringMachine turingMachine, Tape tape){
-        ExecutionNode rootNode = new ExecutionNode(true, null, tape.toString(), null);
-        rootExecutor = new Executor(turingMachine, tape, rootNode, null);
+        rootNode = new ExecutionNode(true, null, tape.toString(), null);
+        rootExecutorThread = new ExecutorThread(turingMachine, tape, rootNode, null, this);
+        threads = new ArrayList<>();
+        threads.add(rootExecutorThread);
     }
 
     public void run() {
-        rootExecutor.run();
+        rootExecutorThread.run();
     }
 
+    public ExecutionNode getRootNode(){
+        return rootNode;
+    }
 
+    public void addThread(ExecutorThread thread){
+        threads.add(thread);
+    }
 }
