@@ -18,16 +18,12 @@ public class State {
         isHalting = false;
     }
 
-    public void setPosition(double xPos, double yPos){
-        position = new Pair<>(xPos, yPos);
-    }
-
-    public Pair<Double, Double> getPosition(){
-        return position;
-    }
-
     public void setName(String name){
         this.name = name;
+    }
+
+    public void setPosition(double xPos, double yPos){
+        position = new Pair<>(xPos, yPos);
     }
 
     public void setInitial(boolean isInitial){
@@ -48,6 +44,10 @@ public class State {
 
     public String getName(){
         return name;
+    }
+
+    public Pair<Double, Double> getPosition(){
+        return position;
     }
 
     public boolean isInitial(){

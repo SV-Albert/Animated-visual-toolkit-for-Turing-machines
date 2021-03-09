@@ -8,50 +8,50 @@ import java.util.Set;
 
 public class TuringMachine {
     private String name;
-    private final Set<Character> alphabet;
     private final Map<String, State> states;
     private final State initialState;
     private State currentState;
-    private final Set<Transition> transitionFunction;
-    private final Map<State, Set<Transition>> transitionMap;
+    private final Set<TuringTransition> transitionFunction;
+    private final Map<State, Set<TuringTransition>> transitionMap;
 
-    public TuringMachine(Map<String, State> states, State initialState){
-        this.states = states;
+    public TuringMachine(State initialState){
         this.initialState = initialState;
         currentState = initialState;
-        alphabet = new HashSet<>();
+        states = new HashMap<>();
+        states.put(initialState.getName(), initialState);
         transitionMap = new HashMap<>();
         transitionFunction = new HashSet<>();
     }
 
     public TuringMachine(String name, Map<String, State> states, State initialState,
-                         Set<Character> alphabet, Set<Transition> transitionFunction, Map<State, Set<Transition>> transitionMap){
+                         Set<TuringTransition> turingTransitionFunction, Map<State, Set<TuringTransition>> transitionMap){
         this.name = name;
         this.states = states;
         this.initialState = initialState;
         currentState = initialState;
-        this.alphabet = alphabet;
         this.transitionMap = transitionMap;
-        this.transitionFunction = transitionFunction;
+        this.transitionFunction = turingTransitionFunction;
     }
 
     public void setName(String name){
         this.name = name;
     }
 
-    public void addTransition(Transition transition){
-        State fromState = transition.getFromState();
-        State toState = transition.getToState();
-        char readSymbol = transition.getReadSymbol();
-        char writeSymbol = transition.getWriteSymbol();
-        transitionFunction.add(transition);
+    public void addState(State state){
+        states.put(state.getName(), state);
+    }
+
+    public void addTransition(TuringTransition turingTransition){
+        State fromState = turingTransition.getFromState();
+        State toState = turingTransition.getToState();
+        transitionFunction.add(turingTransition);
         if(transitionMap.containsKey(fromState)){
-            transitionMap.get(fromState).add(transition);
+            transitionMap.get(fromState).add(turingTransition);
         }
         else{
-            Set<Transition> stateTransitions = new HashSet<>();
-            stateTransitions.add(transition);
-            transitionMap.put(fromState, stateTransitions);
+            Set<TuringTransition> stateTuringTransitions = new HashSet<>();
+            stateTuringTransitions.add(turingTransition);
+            transitionMap.put(fromState, stateTuringTransitions);
         }
         if(!states.containsValue(fromState)){
             states.put(fromState.getName(), fromState);
@@ -59,8 +59,29 @@ public class TuringMachine {
         if(!states.containsValue(toState)){
             states.put(toState.getName(), toState);
         }
-        alphabet.add(readSymbol);
-        alphabet.add(writeSymbol);
+    }
+
+    public void removeState(State state){
+        states.remove(state.getName());
+        if(transitionMap.containsKey(state)){
+            for(TuringTransition turingTransition : transitionMap.get(state)){
+                transitionFunction.remove(turingTransition);
+            }
+        }
+        transitionMap.remove(state);
+    }
+
+    public void removeTransition(TransitionRule transitionRule){
+        TuringTransition transitionToRemove = null;
+        for(TuringTransition turingTransition : transitionFunction){
+            if (turingTransition.getTransitionRule() == transitionRule){
+                transitionToRemove = turingTransition;
+            }
+        }
+        if(transitionToRemove != null){
+            transitionFunction.remove(transitionToRemove);
+            transitionMap.get(transitionToRemove.getFromState()).remove(transitionToRemove);
+        }
     }
 
     public void setCurrentState(State state) {
@@ -75,10 +96,6 @@ public class TuringMachine {
         return name;
     }
 
-    public Set<Character> getAlphabet(){
-        return alphabet;
-    }
-
     public Map<String, State> getStates(){
         return states;
     }
@@ -87,19 +104,15 @@ public class TuringMachine {
         return initialState;
     }
 
-    public Set<Transition> getTransitionFunction(){
+    public Set<TuringTransition> getTransitionFunction(){
         return transitionFunction;
     }
 
-    public Set<Transition> getTransitionsFromCurrentState(){
+    public Set<TuringTransition> getTransitionsFromCurrentState(){
         return transitionMap.get(currentState);
     }
 
     public TuringMachine getCopy(){
-        return new TuringMachine(name, states, initialState, alphabet, transitionFunction, transitionMap);
+        return new TuringMachine(name, states, initialState, transitionFunction, transitionMap);
     }
-//    public boolean isCharLegal(char read){
-//        return alphabet.contains(read);
-//    }
-
 }

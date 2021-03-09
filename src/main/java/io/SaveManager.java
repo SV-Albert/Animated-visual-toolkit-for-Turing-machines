@@ -1,11 +1,10 @@
+package io;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import turing.State;
-import turing.Tape;
-import turing.Transition;
-import turing.TuringMachine;
+import turing.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -23,15 +22,14 @@ import javax.xml.xpath.XPathFactory;
 
 public class SaveManager {
 
-    private static final Path TuringSavePath = Paths.get("C:\\Users\\Blackout\\Documents\\IDEA\\Animated-visual-toolkit-for-Turing-machines\\src\\main\\resources\\TMSaveTest.xml");
     private static final Path TapeSavePath = Paths.get("C:\\Users\\Blackout\\Documents\\IDEA\\Animated-visual-toolkit-for-Turing-machines\\src\\main\\resources\\TapeSaveTest.xml");
 
-    public static void saveTuringMachine(TuringMachine tm) throws IOException {
+    public static void saveTuringMachine(TuringMachine tm, Path savePath) throws IOException {
         String xml = getTuringXML(tm);
-        if(!Files.exists(TuringSavePath)){
-            Files.createFile(TuringSavePath);
+        if(!Files.exists(savePath)){
+            Files.createFile(savePath);
         }
-        OutputStream outputStream = new FileOutputStream(TuringSavePath.toString());
+        OutputStream outputStream = new FileOutputStream(savePath.toString());
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
         writer.print(xml);
         writer.close();
@@ -48,8 +46,8 @@ public class SaveManager {
         writer.close();
     }
 
-    public static TuringMachine loadTuringMachine() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        FileInputStream stream = new FileInputStream(new File(TuringSavePath.toString()));
+    public static TuringMachine loadTuringMachine(File saveFile) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        FileInputStream stream = new FileInputStream(saveFile);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document xml = builder.parse(stream);
@@ -59,38 +57,49 @@ public class SaveManager {
 
         String tmName = tmNode.getAttribute("name");
 
-//        Element alphabetNode = (Element) tmNode.getElementsByTagName("alphabet").item(0);
-//        NodeList values = alphabetNode.getElementsByTagName("symbol");
-//        HashSet<Character> alphabet = new HashSet<>();
-//        for (int i = 0; i < values.getLength(); i++) {
-//            alphabet.add(values.item(i).getTextContent().charAt(0));
-//        }
-
         HashMap<String, State> states = new HashMap<>();
+        State initialState = new State();
         Element globalStatesNode = (Element) tmNode.getElementsByTagName("states").item(0);
         String initialStateName = globalStatesNode.getAttribute("initial");
         NodeList stateNodeList = globalStatesNode.getElementsByTagName("state");
         for (int i = 0; i < stateNodeList.getLength(); i++) {
-            Element stateNode = (Element) stateNodeList.item(i);
-            String stateName = stateNode.getAttribute("name");
-            boolean isAccepting = Boolean.parseBoolean(stateNode.getElementsByTagName("isAccepting").item(0).getTextContent());
+            Element stateElement = (Element) stateNodeList.item(i);
+            String stateName = stateElement.getAttribute("name");
+            boolean isInitial = Boolean.parseBoolean(stateElement.getElementsByTagName("isInitial").item(0).getTextContent());
+            boolean isAccepting = Boolean.parseBoolean(stateElement.getElementsByTagName("isAccepting").item(0).getTextContent());
+            boolean isRejecting = Boolean.parseBoolean(stateElement.getElementsByTagName("isRejecting").item(0).getTextContent());
+            boolean isHalting = Boolean.parseBoolean(stateElement.getElementsByTagName("isHalting").item(0).getTextContent());
+            double xPos = Double.parseDouble(stateElement.getElementsByTagName("xPos").item(0).getTextContent());
+            double yPos = Double.parseDouble(stateElement.getElementsByTagName("yPos").item(0).getTextContent());
             State state = new State();
             state.setName(stateName);
-            state.setAccepting(true);
+            state.setInitial(isInitial);
+            state.setAccepting(isAccepting);
+            state.setRejecting(isRejecting);
+            state.setHalting(isHalting);
+            state.setPosition(xPos, yPos);
+            if(isInitial){
+                initialState = state;
+            }
             states.put(stateName, state);
+
         }
-        State initialState = states.get(initialStateName);
-        TuringMachine tm = new TuringMachine(states, initialState);
+        TuringMachine tm = new TuringMachine(initialState);
         tm.setName(tmName);
+        for (State state:states.values()) {
+            if(!state.isInitial()){
+                tm.addState(state);
+            }
+        }
         NodeList transitionsNodeList = tmNode.getElementsByTagName("transition");
         for (int i = 0; i < transitionsNodeList.getLength(); i++) {
-            Element transitionNode = (Element) transitionsNodeList.item(i);
-            State fromState = states.get(transitionNode.getElementsByTagName("fromState").item(0).getTextContent());
-            State toState = states.get(transitionNode.getElementsByTagName("toState").item(0).getTextContent());
-            char readSymbol = transitionNode.getElementsByTagName("readSymbol").item(0).getTextContent().charAt(0);
-            char writeSymbol = transitionNode.getElementsByTagName("writeSymbol").item(0).getTextContent().charAt(0);
-            char direction = transitionNode.getElementsByTagName("direction").item(0).getTextContent().charAt(0);
-            tm.addTransition(new Transition(fromState, toState, readSymbol, writeSymbol, direction));
+            Element transitionElement = (Element) transitionsNodeList.item(i);
+            State fromState = states.get(transitionElement.getElementsByTagName("fromState").item(0).getTextContent());
+            State toState = states.get(transitionElement.getElementsByTagName("toState").item(0).getTextContent());
+            char readSymbol = transitionElement.getElementsByTagName("readSymbol").item(0).getTextContent().charAt(0);
+            char writeSymbol = transitionElement.getElementsByTagName("writeSymbol").item(0).getTextContent().charAt(0);
+            char direction = transitionElement.getElementsByTagName("direction").item(0).getTextContent().charAt(0);
+            tm.addTransition(new TuringTransition(fromState, toState, new TransitionRule(readSymbol, writeSymbol, direction)));
         }
 
         return tm;
@@ -120,35 +129,34 @@ public class SaveManager {
     }
 
     private static String getTuringXML(TuringMachine tm){
-        String name = tm.getName();
-        Set<Character> alphabet = tm.getAlphabet();
         Map<String, State> states = tm.getStates();
         State initialState = tm.getInitialState();
-        Set<Transition> transitionFunction = tm.getTransitionFunction();
+        Set<TuringTransition> turingTransitionFunction = tm.getTransitionFunction();
 
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + '\n');
         builder.append("<TuringMachineSave name = \"").append(tm.getName()).append("\">" + '\n');
-//        builder.append('\t' + "<alphabet>" + '\n');
-//        for(char ch: alphabet){
-//            builder.append(tab(2)).append("<symbol>").append(ch).append("</symbol>" + '\n');
-//        }
-//        builder.append('\t' + "</alphabet>" + '\n');
         builder.append('\t' + "<states initial = \"").append(initialState.getName()).append("\">" + '\n');
         for(State state: states.values()){
             builder.append(tab(2)).append("<state name = \"").append(state.getName()).append("\">" + '\n');
+            builder.append(tab(3)).append("<isInitial>").append(state.isInitial()).append("</isInitial>" + '\n');
             builder.append(tab(3)).append("<isAccepting>").append(state.isAccepting()).append("</isAccepting>" + '\n');
+            builder.append(tab(3)).append("<isRejecting>").append(state.isRejecting()).append("</isRejecting>" + '\n');
+            builder.append(tab(3)).append("<isHalting>").append(state.isHalting()).append("</isHalting>" + '\n');
+            builder.append(tab(3)).append("<xPos>").append(state.getPosition().getKey()).append("</xPos>" + '\n');
+            builder.append(tab(3)).append("<yPos>").append(state.getPosition().getValue()).append("</yPos>" + '\n');
             builder.append(tab(2)).append("</state>").append('\n');
         }
         builder.append('\t' + "</states>" + '\n');
         builder.append('\t' + "<transitions>"  + '\n');
-        for (Transition transition:transitionFunction){
+        for (TuringTransition turingTransition : turingTransitionFunction){
+            TransitionRule rule = turingTransition.getTransitionRule();
             builder.append(tab(2)).append("<transition>").append('\n');
-            builder.append(tab(3)).append("<fromState>").append(transition.getFromState().getName()).append("</fromState>"  + '\n');
-            builder.append(tab(3)).append("<toState>").append(transition.getToState().getName()).append("</toState>"  + '\n');
-            builder.append(tab(3)).append("<readSymbol>").append(transition.getReadSymbol()).append("</readSymbol>"  + '\n');
-            builder.append(tab(3)).append("<writeSymbol>").append(transition.getWriteSymbol()).append("</writeSymbol>"  + '\n');
-            builder.append(tab(3)).append("<direction>").append(transition.getDirection()).append("</direction>"  + '\n');
+            builder.append(tab(3)).append("<fromState>").append(turingTransition.getFromState().getName()).append("</fromState>"  + '\n');
+            builder.append(tab(3)).append("<toState>").append(turingTransition.getToState().getName()).append("</toState>"  + '\n');
+            builder.append(tab(3)).append("<readSymbol>").append(rule.getReadSymbol()).append("</readSymbol>"  + '\n');
+            builder.append(tab(3)).append("<writeSymbol>").append(rule.getWriteSymbol()).append("</writeSymbol>"  + '\n');
+            builder.append(tab(3)).append("<direction>").append(rule.getDirection()).append("</direction>"  + '\n');
             builder.append(tab(2)).append("</transition>").append('\n');
         }
         builder.append('\t' + "</transitions>"  + '\n');

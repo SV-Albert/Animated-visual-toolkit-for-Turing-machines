@@ -3,6 +3,7 @@ package canvasNodes;
 import javafx.scene.Group;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import turing.State;
 
 public class StateNode {
     private final double radius = 28;
@@ -11,6 +12,7 @@ public class StateNode {
     private final Circle nodeCircle;
     private double xPos;
     private double yPos;
+    private State state;
 
     public StateNode(double xPos, double yPos){
         this.xPos = xPos;
@@ -29,7 +31,16 @@ public class StateNode {
         return nodeGroup;
     }
 
+    public void setState(State state){
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
+    }
+
     public void setName(String name){
+        state.setName(name);
         stateName.setText(name);
         stateName.setTranslateX(xPos - stateName.prefWidth(-1)/1.7);
         stateName.setTranslateY(yPos - radius - stateName.prefHeight(-1)/2);
@@ -38,6 +49,7 @@ public class StateNode {
     public void move(double xPos, double yPos){
         this.xPos = xPos;
         this.yPos = yPos;
+        state.setPosition(xPos, yPos);
         nodeCircle.setCenterX(xPos);
         nodeCircle.setCenterY(yPos);
         stateName.setTranslateX(xPos - stateName.prefWidth(-1)/1.7);
@@ -56,4 +68,7 @@ public class StateNode {
         return radius;
     }
 
+    public String getName(){
+        return stateName.getText();
+    }
 }
