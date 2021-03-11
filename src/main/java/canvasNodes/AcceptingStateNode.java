@@ -32,4 +32,5 @@ public class AcceptingStateNode extends StateNode{
         innerCircle.getStyleClass().clear();
         innerCircle.getStyleClass().add("state-accepting");
     }
+
 }

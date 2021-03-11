@@ -31,7 +31,7 @@ public class TransitionArrow {
         this.to = to;
         line = new Line();
         line.getStyleClass().add("transition-arrow");
-        Image arrowImage = new Image(getClass().getResourceAsStream("../arrowhead.png"));
+        Image arrowImage = new Image(getClass().getResourceAsStream("../arrow_head.png"));
         arrowHead = new ImageView(arrowImage);
         arrowHead.setFitHeight(arrowHeadLength);
         arrowHead.setFitWidth(arrowHeadWidth);

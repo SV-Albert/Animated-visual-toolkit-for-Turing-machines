@@ -27,4 +27,5 @@ public class InitialStateNode extends StateNode{
         arrowImage.setX(xPos - xOffset);
         arrowImage.setY(yPos - yOffset);
     }
+
 }

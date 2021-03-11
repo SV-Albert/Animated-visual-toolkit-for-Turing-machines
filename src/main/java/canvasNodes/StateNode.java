@@ -90,4 +90,5 @@ public class StateNode {
     public boolean isActive() {
         return isActive;
     }
+
 }

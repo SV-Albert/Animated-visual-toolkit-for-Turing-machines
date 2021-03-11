@@ -13,6 +13,7 @@ public class HaltingStateNode extends StateNode{
         innerCircle.getStyleClass().add("state");
         super.getNodeGroup().getChildren().add(innerCircle);
     }
+
     @Override
     public void move(double xPos, double yPos){
         super.move(xPos, yPos);

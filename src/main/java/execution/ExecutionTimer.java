@@ -7,7 +7,6 @@ public class ExecutionTimer implements Runnable{
     private double speed;
     private boolean isRunning;
 
-
     public ExecutionTimer(SimulatorController controller, double speed){
         this.controller = controller;
         this.speed = speed;

@@ -101,10 +101,6 @@ public class Tape {
         return initialHeadPosition;
     }
 
-    public char getEmptyChar(){
-        return emptyChar;
-    }
-
     public Tape getCopy(){
         List<Character> tapeCopy = new ArrayList<>(tapeArray);
         return new Tape(tapeCopy, head);

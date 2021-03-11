@@ -10,7 +10,6 @@ public class State {
     private boolean isHalting;
     private Pair<Double, Double> position;
 
-
     public State(){
         isInitial = false;
         isAccepting = false;

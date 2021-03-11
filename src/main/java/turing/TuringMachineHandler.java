@@ -30,7 +30,6 @@ public class TuringMachineHandler {
 //            executor.stop();
 //        }
 //    }
-
     synchronized public boolean step(){
         if(!executorsList.isEmpty()){
             List<ExecutorThread> finished = new ArrayList<>();

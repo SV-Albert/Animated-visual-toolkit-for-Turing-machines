@@ -1,7 +1,5 @@
 package turing;
 
-import canvasNodes.TransitionArrow;
-
 public class TransitionRule {
     private char readSymbol;
     private char writeSymbol;

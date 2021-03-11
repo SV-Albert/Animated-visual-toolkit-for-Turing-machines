@@ -100,4 +100,5 @@ public class ExecutorThread{
 //            throw new InvalidSymbolException("State " + turingMachine.getCurrentState().getName() + " has no operations for input '" + read + "'");
 //        }
     }
+
 }

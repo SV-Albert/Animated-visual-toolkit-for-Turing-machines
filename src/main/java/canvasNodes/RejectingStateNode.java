@@ -33,4 +33,5 @@ public class RejectingStateNode extends StateNode{
         innerCircle.getStyleClass().clear();
         innerCircle.getStyleClass().add("state-rejecting");
     }
+
 }

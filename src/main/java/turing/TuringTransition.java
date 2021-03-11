@@ -1,7 +1,5 @@
 package turing;
 
-import canvasNodes.TransitionArrow;
-
 public class TuringTransition {
 
     private final State fromState;

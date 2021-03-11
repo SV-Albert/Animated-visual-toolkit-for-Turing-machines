@@ -1055,7 +1055,6 @@ public class BuilderController {
         currentSaveFile = saveFile;
     }
 }
-
 //Known bugs
 //Loading a tm with nodes outside the canvas does not work
 //Cannot remove transition rules

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 public class TuringMachine {
     private String name;
     private final Map<String, State> states;

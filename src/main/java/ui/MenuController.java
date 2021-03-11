@@ -30,7 +30,4 @@ public class MenuController {
         builderButton.setOnAction(event -> ControllerLoader.openBuilderWindow(primaryStage));
         simulatorButton.setOnAction(event -> ControllerLoader.openSimulatorWindow(primaryStage));
     }
-
-
-
 }

@@ -1,7 +1,5 @@
 package execution;
-
 import turing.TuringTransition;
-
 import java.util.ArrayList;
 import java.util.List;
 

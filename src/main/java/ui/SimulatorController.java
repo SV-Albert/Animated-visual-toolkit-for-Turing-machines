@@ -88,7 +88,6 @@ public class SimulatorController {
             }
         });
     }
-
     public void nextStep(){
         if(tmHandler != null && isRunning){
             isRunning = tmHandler.step();
