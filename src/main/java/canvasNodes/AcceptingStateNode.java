@@ -18,4 +18,18 @@ public class AcceptingStateNode extends StateNode{
         innerCircle.setCenterX(xPos);
         innerCircle.setCenterY(yPos);
     }
+
+    @Override
+    public void activate(){
+        super.activate();
+        innerCircle.getStyleClass().clear();
+        innerCircle.getStyleClass().add("state-accepting-active");
+    }
+
+    @Override
+    public void deactivate(){
+        super.deactivate();
+        innerCircle.getStyleClass().clear();
+        innerCircle.getStyleClass().add("state-accepting");
+    }
 }

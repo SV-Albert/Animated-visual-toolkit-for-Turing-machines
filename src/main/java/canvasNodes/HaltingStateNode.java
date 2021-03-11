@@ -19,4 +19,18 @@ public class HaltingStateNode extends StateNode{
         innerCircle.setCenterX(xPos);
         innerCircle.setCenterY(yPos);
     }
+
+    @Override
+    public void activate(){
+        super.activate();
+        innerCircle.getStyleClass().clear();
+        innerCircle.getStyleClass().add("state-active");
+    }
+
+    @Override
+    public void deactivate() {
+        super.deactivate();
+        innerCircle.getStyleClass().clear();
+        innerCircle.getStyleClass().add("state-halting");
+    }
 }

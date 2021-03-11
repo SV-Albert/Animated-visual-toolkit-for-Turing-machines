@@ -26,6 +26,11 @@
     -fx-fill: #292929;
     -fx-stroke: #000000;
 }
+.tape-cell-head{
+    -fx-fill: #292929;
+    -fx-stroke: #07595e;
+    -fx-stroke-width: 2;
+}
 
 .text-area .scroll-pane .viewport .content{
     -fx-background-color: #292929;
@@ -104,7 +109,10 @@
 .state{
     -fx-fill: #292929;
     -fx-stroke: #ffffff;
-
+}
+.state-active{
+    -fx-fill: #07595e;
+    -fx-stroke: #ffffff;
 }
 .state-accepting{
     -fx-fill: #292929;
@@ -112,6 +120,14 @@
 }
 .state-rejecting{
     -fx-fill: #292929;
+    -fx-stroke: #ff0000;
+}
+.state-accepting-active{
+    -fx-fill: #07595e;
+    -fx-stroke: #04ff04;
+}
+.state-rejecting-active{
+    -fx-fill: #07595e;
     -fx-stroke: #ff0000;
 }
 .state-label{

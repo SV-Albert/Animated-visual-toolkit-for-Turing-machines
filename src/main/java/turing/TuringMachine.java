@@ -88,6 +88,10 @@ public class TuringMachine {
         currentState = state;
     }
 
+    public void reset(){
+        currentState = initialState;
+    }
+
     public State getCurrentState(){
         return currentState;
     }

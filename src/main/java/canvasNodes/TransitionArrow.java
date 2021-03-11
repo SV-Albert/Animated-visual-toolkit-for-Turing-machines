@@ -2,12 +2,15 @@ package canvasNodes;
 
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.text.Text;
 import turing.State;
 import turing.TransitionRule;
 
+import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +22,19 @@ public class TransitionArrow {
     private final Group lineGroup;
     private final List<TransitionRule> transitionRules;
     private final Label rulesLabel;
+    private final ImageView arrowHead;
+    private final double arrowHeadLength = 25;
+    private final double arrowHeadWidth = 15;
 
     public TransitionArrow(StateNode from, StateNode to){
         this.from = from;
         this.to = to;
         line = new Line();
         line.getStyleClass().add("transition-arrow");
+        Image arrowImage = new Image(getClass().getResourceAsStream("../arrowhead.png"));
+        arrowHead = new ImageView(arrowImage);
+        arrowHead.setFitHeight(arrowHeadLength);
+        arrowHead.setFitWidth(arrowHeadWidth);
         loop = new QuadCurve();
         loop.getStyleClass().add("transition-loop");
         rulesLabel = new Label();
@@ -53,35 +63,43 @@ public class TransitionArrow {
         }
         else{
             double angle = Math.atan(Math.abs(from.getY() - to.getY())/Math.abs(from.getX() - to.getX()));
-            double x1;
-            double y1;
-            double x2;
-            double y2;
+            double toX;
+            double toY;
+            double fromX;
+            double fromY;
+            double headX;
+            double headY;
             if(from.getX() <= to.getX()){
-                x1 = from.getX() + Math.cos(angle)*radius;
-                x2 = to.getX() - Math.cos(angle)*radius;
+                fromX = from.getX() + Math.cos(angle)*radius;
+                toX = to.getX() - Math.cos(angle)*radius;
+                headX = toX - Math.cos(angle)*arrowHeadLength/2;
             }
             else {
-                x1 = from.getX() - Math.cos(angle)*radius;
-                x2 = to.getX() + Math.cos(angle)*radius;
+                fromX = from.getX() - Math.cos(angle)*radius;
+                toX = to.getX() + Math.cos(angle)*radius;
+                headX = toX + Math.cos(angle)*arrowHeadLength/2;
             }
             if(from.getY() <= to.getY()) {
-                y1 = from.getY() + Math.sin(angle)*radius;
-                y2 = to.getY() - Math.sin(angle)*radius;
+                fromY = from.getY() + Math.sin(angle)*radius;
+                toY = to.getY() - Math.sin(angle)*radius;
+                headY = toY - Math.sin(angle) * arrowHeadWidth/2;
             }
             else {
-                y1 = from.getY() - Math.sin(angle)*radius;
-                y2 = to.getY() + Math.sin(angle)*radius;
+                fromY = from.getY() - Math.sin(angle)*radius;
+                toY = to.getY() + Math.sin(angle)*radius;
+                headY = toY + Math.sin(angle) * arrowHeadWidth/2;
             }
-            line.setStartX(x1);
-            line.setStartY(y1);
-            line.setEndX(x2);
-            line.setEndY(y2);
-            rulesLabel.setTranslateX((x1 + x2)/2);
-            rulesLabel.setTranslateY((y1 + y2)/2);
+            line.setStartX(fromX);
+            line.setStartY(fromY);
+            line.setEndX(toX);
+            line.setEndY(toY);
+            arrowHead.setLayoutX(headX);
+            arrowHead.setLayoutY(headY);
+            arrowHead.setRotate(90 - Math.toDegrees(angle));
+            rulesLabel.setTranslateX((fromX + toX)/2);
+            rulesLabel.setTranslateY((fromY + toY)/2);
             lineGroup.getChildren().clear();
-            lineGroup.getChildren().add(line);
-            lineGroup.getChildren().add(rulesLabel);
+            lineGroup.getChildren().addAll(line, arrowHead, rulesLabel);
         }
     }
 

@@ -46,13 +46,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox prefHeight="846.0" prefWidth="1549.0" styleClass="bodybg" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<HBox prefHeight="866.0" prefWidth="1549.0" styleClass="bodybg" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.SimulatorController">
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
          <bottom>
             <VBox alignment="CENTER" prefHeight="307.0" prefWidth="190.0" BorderPane.alignment="BOTTOM_CENTER">
                <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
+                  <Button fx:id="loadButton" alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -60,7 +60,7 @@
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </VBox.margin>
                   </Button>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Edit" textAlignment="CENTER" textFill="WHITE">
+                  <Button fx:id="editButton" alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Edit" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -68,7 +68,7 @@
                         <Insets bottom="8.0" left="2.0" right="2.0" top="2.0" />
                      </VBox.margin>
                   </Button>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Add Tape Input" textAlignment="CENTER" textFill="WHITE">
+                  <Button fx:id="tapeInputButton" alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Add Tape Input" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -76,7 +76,7 @@
                         <Insets bottom="2.0" left="2.0" right="2.0" top="8.0" />
                      </VBox.margin>
                   </Button>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Run/Pause" textAlignment="CENTER" textFill="WHITE">
+                  <Button fx:id="runPauseButton" alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Run/Pause" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -84,7 +84,7 @@
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </VBox.margin>
                   </Button>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Reset" textAlignment="CENTER" textFill="WHITE">
+                  <Button fx:id="resetButton" alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Reset" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -100,7 +100,7 @@
                         <Insets bottom="2.0" left="2.0" right="2.0" top="5.0" />
                      </VBox.margin>
                   </Text>
-                  <Slider maxWidth="-Infinity" prefHeight="14.0" prefWidth="140.0" showTickMarks="true" snapToTicks="true">
+                  <Slider fx:id="speedSlider" blockIncrement="5.0" maxWidth="-Infinity" min="1.0" prefHeight="14.0" prefWidth="140.0" showTickMarks="true" snapToTicks="true" value="51.0">
                      <VBox.margin>
                         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </VBox.margin>
@@ -113,7 +113,7 @@
                <children>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER">
                      <children>
-                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -144,50 +144,54 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="220.0" stroke="BLACK" strokeType="INSIDE" styleClass="history_section" width="1360.0" />
                   <ScrollPane hbarPolicy="ALWAYS" maxWidth="1.7976931348623157E308" minHeight="220.0" prefHeight="220.0" styleClass="execution-history" stylesheets="@stylesheet.css" vbarPolicy="NEVER">
                      <content>
-                        <VBox alignment="CENTER" prefHeight="204.0" prefWidth="70.0">
+                        <HBox fx:id="executionHistorySection" prefHeight="207.0" prefWidth="1357.0">
                            <children>
-                              <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Step" textAlignment="CENTER" textFill="WHITE">
-                                 <VBox.margin>
-                                    <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="From State" textAlignment="CENTER" textFill="WHITE">
-                                 <VBox.margin>
-                                    <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="To State" textAlignment="CENTER" textFill="WHITE">
-                                 <VBox.margin>
-                                    <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Read" textAlignment="CENTER" textFill="WHITE">
-                                 <VBox.margin>
-                                    <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Write" textAlignment="CENTER" textFill="WHITE">
-                                 <VBox.margin>
-                                    <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Move Tape" textAlignment="CENTER" textFill="WHITE">
-                                 <VBox.margin>
-                                    <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
-                                 </VBox.margin>
-                              </Label>
+                              <VBox alignment="CENTER" prefHeight="204.0" prefWidth="70.0">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Step" textAlignment="CENTER" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="From State" textAlignment="CENTER" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="To State" textAlignment="CENTER" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Read" textAlignment="CENTER" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Write" textAlignment="CENTER" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Move Tape" textAlignment="CENTER" textFill="WHITE">
+                                       <VBox.margin>
+                                          <Insets bottom="1.0" left="2.0" right="2.0" top="1.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                 </children>
+                              </VBox>
                            </children>
-                        </VBox>
+                        </HBox>
                      </content>
                   </ScrollPane>
                </children>
             </StackPane>
-            <ScrollPane maxWidth="1.7976931348623157E308" minHeight="220.0" prefHeight="586.0" prefWidth="1360.0" styleClass="canvas">
+            <ScrollPane maxWidth="1.7976931348623157E308" minHeight="220.0" prefHeight="606.0" prefWidth="1360.0" styleClass="canvas">
                <content>
-                  <Pane prefHeight="583.0" prefWidth="1358.0" />
+                  <Pane fx:id="canvas" prefHeight="604.0" prefWidth="1358.0" />
                </content>
             </ScrollPane>
-            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="1549.0">
+            <HBox fx:id="tapeSection" alignment="CENTER" prefHeight="40.0" prefWidth="1549.0">
                <children>
                   <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="40.0">
                      <children>
@@ -351,17 +355,7 @@
                   </StackPane>
                   <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="40.0">
                      <children>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" stroke="BLACK" strokeType="INSIDE" styleClass="tape-cells" width="40.0" />
-                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0">
-                           <font>
-                              <Font name="Roboto" size="24.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </StackPane>
-                  <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="40.0">
-                     <children>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" stroke="BLACK" strokeType="INSIDE" styleClass="tape-cells" width="40.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="40.0" stroke="BLACK" strokeType="INSIDE" styleClass="tape-cell-head" width="40.0" />
                         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0">
                            <font>
                               <Font name="Roboto" size="24.0" />

@@ -5,12 +5,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
@@ -130,7 +128,13 @@ public class BuilderController {
         saveToFileButton.setOnAction(e -> saveToFile());
         loadButton.setOnAction(e -> load());
         clearButton.setOnAction(e -> clearCanvas());
+        runButton.setOnAction(event -> {
+            SimulatorController controller = ControllerLoader.openSimulatorWindow(primaryStage);
+            controller.loadTuringMachine(tm);
+            controller.setSaveFile(currentSaveFile);
+        });
         addTransitionsButton.setOnAction(e -> addTransitionsThroughRulesPopup());
+        backButton.setOnAction(event -> ControllerLoader.openMainMenu(primaryStage));
         setUIDisable(true);
         setupTransitionRulesInputWindow();
     }
@@ -1025,23 +1029,33 @@ public class BuilderController {
             directoryChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
             currentSaveFile = directoryChooser.showOpenDialog(primaryStage);
             tm = SaveManager.loadTuringMachine(currentSaveFile);
-            for(State state: tm.getStates().values()){
-                loadStateNode(state);
-            }
-            for(TuringTransition turingTransition : tm.getTransitionFunction()){
-                TransitionRule transitionRule = turingTransition.getTransitionRule();
-                State fromState = turingTransition.getFromState();
-                State toState = turingTransition.getToState();
-                addTransitionArrow(stateStateNodeMap.get(fromState), stateStateNodeMap.get(toState), transitionRule);
-            }
-            tmNameField.setText(tm.getName());
-            setUIDisable(false);
+            loadTuringMachine(tm);
         }
         catch (Exception e){
             e.printStackTrace(); //TODO add exception
         }
     }
+
+    public void loadTuringMachine(TuringMachine tm){
+        this.tm = tm;
+        for(State state: tm.getStates().values()){
+            loadStateNode(state);
+        }
+        for(TuringTransition turingTransition : tm.getTransitionFunction()){
+            TransitionRule transitionRule = turingTransition.getTransitionRule();
+            State fromState = turingTransition.getFromState();
+            State toState = turingTransition.getToState();
+            addTransitionArrow(stateStateNodeMap.get(fromState), stateStateNodeMap.get(toState), transitionRule);
+        }
+        tmNameField.setText(tm.getName());
+        setUIDisable(false);
+    }
+
+    public void setSaveFile(File saveFile){
+        currentSaveFile = saveFile;
+    }
 }
 
 //Known bugs
 //Loading a tm with nodes outside the canvas does not work
+//Cannot remove transition rules

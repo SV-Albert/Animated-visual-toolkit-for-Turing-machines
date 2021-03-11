@@ -5,12 +5,14 @@ import execution.ExecutionNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExecutorThread implements Runnable{
+public class ExecutorThread{
 
     private final TuringMachine turingMachine;
     private final Tape tape;
     private ExecutionNode currentNode;
     private final TuringMachineHandler handler;
+    private boolean isRunning;
+    private boolean finishedExecution;
 
     public ExecutorThread(TuringMachine turingMachine, Tape tape, ExecutionNode currentNode, TuringTransition nextTuringTransition, TuringMachineHandler handler) {
         this.turingMachine = turingMachine;
@@ -20,18 +22,28 @@ public class ExecutorThread implements Runnable{
         if (nextTuringTransition != null){
             step(nextTuringTransition);
         }
+        finishedExecution = false;
     }
 
-    @Override
-    public void run() {
-        boolean finished = false;
-        while(!finished){
-            System.out.println(currentNode.toString());
-            finished = nextState();
-        }
-    }
+//    @Override
+//    synchronized public void run() {
+//        isRunning = true;
+//        while(!finishedExecution && isRunning){
+//            try {
+//                wait();
+//            } catch (InterruptedException e) {
+//                isRunning = false;
+//                Thread.currentThread().interrupt();
+//            }
+//            finishedExecution = nextState();
+//        }
+//    }
+//
+//    public void stop(){
+//        isRunning = false;
+//    }
 
-    private boolean nextState(){
+    public boolean nextState(){
         if(turingMachine.getCurrentState().isAccepting()){
             return true;
         }
@@ -42,7 +54,7 @@ public class ExecutorThread implements Runnable{
                 for (int i = 1; i < turingTransitions.size(); i++) {
                     ExecutorThread executorThread = new ExecutorThread(turingMachine.getCopy(), tape.getCopy(), currentNode, turingTransitions.get(i), handler);
                     handler.addThread(executorThread);
-                    executorThread.run();
+//                    executorThread.run();
                 }
             }
             if (turingTransitions.size() == 0){
@@ -76,7 +88,7 @@ public class ExecutorThread implements Runnable{
 
     private List<TuringTransition> findTransitions(char read){
         List<TuringTransition> foundTuringTransitions = new ArrayList<>();
-        for (TuringTransition turingTransition :turingMachine.getTransitionsFromCurrentState()) {
+        for (TuringTransition turingTransition: turingMachine.getTransitionsFromCurrentState()) {
             if(turingTransition.getTransitionRule().getReadSymbol() == read){
                 foundTuringTransitions.add(turingTransition);
             }

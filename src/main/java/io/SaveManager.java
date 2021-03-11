@@ -114,8 +114,6 @@ public class SaveManager {
 
         Element tapeNode = (Element) xpath.compile("/TuringTapeSave").evaluate(xml, XPathConstants.NODE);
 
-        String tapeName = tapeNode.getAttribute("name");
-
         int headPosition = Integer.parseInt(tapeNode.getElementsByTagName("headPosition").item(0).getTextContent());
 
         Element valuesNode = (Element) tapeNode.getElementsByTagName("tape").item(0);
@@ -125,7 +123,7 @@ public class SaveManager {
             tapeList.add(values.item(i).getTextContent().charAt(0));
         }
 
-        return new Tape(tapeName, tapeList, headPosition);
+        return new Tape(tapeList, headPosition);
     }
 
     private static String getTuringXML(TuringMachine tm){
@@ -166,13 +164,12 @@ public class SaveManager {
     }
 
     private static String getTapeXML(Tape tape){
-        String name = tape.getName();
         List<Character> tapeArray = tape.getTapeArray();
         int head = tape.getInitialHeadPosition();
 
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + '\n');
-        builder.append("<TuringTapeSave name = \"").append(tape.getName()).append("\">" + '\n');
+        builder.append("<TuringTapeSave>" + '\n');
         builder.append('\t' + "<headPosition>").append(head).append("</headPosition>" + '\n');
         builder.append('\t' + "<tape>" + '\n');
         for(char ch: tapeArray){

@@ -1,6 +1,7 @@
 package canvasNodes;
 
 import javafx.scene.Group;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import turing.State;
@@ -13,6 +14,7 @@ public class StateNode {
     private double xPos;
     private double yPos;
     private State state;
+    private boolean isActive;
 
     public StateNode(double xPos, double yPos){
         this.xPos = xPos;
@@ -25,6 +27,7 @@ public class StateNode {
         stateName.setTranslateY(nodeCircle.getCenterY() - radius - stateName.prefHeight(-1)/2);
         nodeGroup = new Group();
         nodeGroup.getChildren().addAll(nodeCircle, stateName);
+        isActive = false;
     }
 
     public Group getNodeGroup(){
@@ -70,5 +73,21 @@ public class StateNode {
 
     public String getName(){
         return stateName.getText();
+    }
+
+    public void activate(){
+        isActive = true;
+        nodeCircle.getStyleClass().clear();
+        nodeCircle.getStyleClass().add("state-active");
+    }
+
+    public void deactivate(){
+        isActive = false;
+        nodeCircle.getStyleClass().clear();
+        nodeCircle.getStyleClass().add("state");
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 }

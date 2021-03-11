@@ -10,6 +10,7 @@ public class InitialStateNode extends StateNode{
 
     public InitialStateNode(double xPos, double yPos) {
         super(xPos, yPos);
+        super.activate();
         try {
             arrowImage = new ImageView("arrow_right.png");
             arrowImage.setX(xPos - xOffset);

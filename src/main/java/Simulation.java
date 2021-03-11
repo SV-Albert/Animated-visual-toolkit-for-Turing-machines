@@ -5,8 +5,6 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import java.util.HashMap;
-
 public class Simulation {
     public Simulation(){}
 
@@ -17,12 +15,7 @@ public class Simulation {
         tapeArray.add('0');
         tapeArray.add('1');
         tapeArray.add('~');
-        Tape tape = new Tape("Ones and zeros", tapeArray, 0);
-
-//        HashSet<Character> alphabet = new HashSet<>();
-//        alphabet.add('0');
-//        alphabet.add('1');
-
+        Tape tape = new Tape( tapeArray, 0);
 
         State s0 = new State();
         s0.setName("s0");
@@ -65,6 +58,6 @@ public class Simulation {
 //        }
 
         TuringMachineHandler handler = new TuringMachineHandler(tm, tape);
-        handler.run();
+//        handler.run();
     }
 }

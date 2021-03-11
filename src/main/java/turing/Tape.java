@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tape {
-    private final String name;
-    private final List<Character> tapeArray;
+    private List<Character> tapeArray;
     private int head;
     private final int initialHeadPosition;
     private final char emptyChar = '~';
 
-    public Tape(String name, List<Character> tapeArray, int head){
-        this.name = name;
+    public Tape(List<Character> tapeArray, int head){
         this.tapeArray = tapeArray;
         this.head = head;
         this.initialHeadPosition = head;
@@ -56,6 +54,7 @@ public class Tape {
     public void addSpaceAfter(int index){
         for (int i = tapeArray.size() - 1; i > index; i--) {
             tapeArray.add(i+1, tapeArray.get(i));
+            tapeArray.remove(i);
         }
         tapeArray.add(index + 1, emptyChar);
     }
@@ -82,20 +81,20 @@ public class Tape {
         return builder.toString();
     }
 
-    public String getName(){
-        return name;
-    }
-
-    public int getSize(){
-        return tapeArray.size();
-    }
-
     public int getHead(){
         return head;
     }
 
     public List<Character> getTapeArray(){
         return tapeArray;
+    }
+
+    public void setTapeArray(List<Character> tapeArray){
+        this.tapeArray = tapeArray;
+    }
+
+    public void resetHead(){
+        head = initialHeadPosition;
     }
 
     public int getInitialHeadPosition(){
@@ -108,7 +107,7 @@ public class Tape {
 
     public Tape getCopy(){
         List<Character> tapeCopy = new ArrayList<>(tapeArray);
-        return new Tape(name, tapeCopy, head);
+        return new Tape(tapeCopy, head);
     }
 
 }
