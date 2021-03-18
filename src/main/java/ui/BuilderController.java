@@ -433,6 +433,7 @@ public class BuilderController {
             canvas.getChildren().add(transitionArrow.getLineGroup());
         }
         transitionArrow.addRules(transitionRule);
+        transitionRule.setArrow(transitionArrow);
     }
 
     private void addTransitionWithPopup(StateNode from, StateNode to){

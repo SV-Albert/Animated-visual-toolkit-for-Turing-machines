@@ -6,11 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.QuadCurve;
-import javafx.scene.text.Text;
-import turing.State;
 import turing.TransitionRule;
 
-import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +19,9 @@ public class TransitionArrow {
     private final Group lineGroup;
     private final List<TransitionRule> transitionRules;
     private final Label rulesLabel;
-    private final ImageView arrowHead;
-    private final double arrowHeadLength = 25;
-    private final double arrowHeadWidth = 15;
+//    private final ImageView arrowHead;
+//    private final double arrowHeadLength = 25;
+//    private final double arrowHeadWidth = 15;
 
     public TransitionArrow(StateNode from, StateNode to){
         this.from = from;
@@ -32,9 +29,9 @@ public class TransitionArrow {
         line = new Line();
         line.getStyleClass().add("transition-arrow");
         Image arrowImage = new Image(getClass().getResourceAsStream("../arrow_head.png"));
-        arrowHead = new ImageView(arrowImage);
-        arrowHead.setFitHeight(arrowHeadLength);
-        arrowHead.setFitWidth(arrowHeadWidth);
+//        arrowHead = new ImageView(arrowImage);
+//        arrowHead.setFitHeight(arrowHeadLength);
+//        arrowHead.setFitWidth(arrowHeadWidth);
         loop = new QuadCurve();
         loop.getStyleClass().add("transition-loop");
         rulesLabel = new Label();
@@ -72,40 +69,43 @@ public class TransitionArrow {
             if(from.getX() <= to.getX()){
                 fromX = from.getX() + Math.cos(angle)*radius;
                 toX = to.getX() - Math.cos(angle)*radius;
-                headX = toX - Math.cos(angle)*arrowHeadLength/2;
+//                headX = toX - Math.cos(angle)*arrowHeadLength/2;
             }
             else {
                 fromX = from.getX() - Math.cos(angle)*radius;
                 toX = to.getX() + Math.cos(angle)*radius;
-                headX = toX + Math.cos(angle)*arrowHeadLength/2;
+//                headX = toX + Math.cos(angle)*arrowHeadLength/2;
             }
             if(from.getY() <= to.getY()) {
                 fromY = from.getY() + Math.sin(angle)*radius;
                 toY = to.getY() - Math.sin(angle)*radius;
-                headY = toY - Math.sin(angle) * arrowHeadWidth/2;
+//                headY = toY - Math.sin(angle) * arrowHeadWidth/2;
             }
             else {
                 fromY = from.getY() - Math.sin(angle)*radius;
                 toY = to.getY() + Math.sin(angle)*radius;
-                headY = toY + Math.sin(angle) * arrowHeadWidth/2;
+//                headY = toY + Math.sin(angle) * arrowHeadWidth/2;
             }
             line.setStartX(fromX);
             line.setStartY(fromY);
             line.setEndX(toX);
             line.setEndY(toY);
-            arrowHead.setLayoutX(headX);
-            arrowHead.setLayoutY(headY);
-            arrowHead.setRotate(90 - Math.toDegrees(angle));
+//            arrowHead.setLayoutX(headX);
+//            arrowHead.setLayoutY(headY);
+//            arrowHead.setRotate(90 - Math.toDegrees(angle));
             rulesLabel.setTranslateX((fromX + toX)/2);
             rulesLabel.setTranslateY((fromY + toY)/2);
             lineGroup.getChildren().clear();
-            lineGroup.getChildren().addAll(line, arrowHead, rulesLabel);
+//            lineGroup.getChildren().addAll(line, arrowHead, rulesLabel);
+            lineGroup.getChildren().addAll(line, rulesLabel);
         }
     }
 
     public void addRules(TransitionRule rule){
         transitionRules.add(rule);
-        addRuleToLabel(rule);
+        if(!rule.isEmpty()) {
+            refreshRulesLabel();
+        }
     }
 
     private void addRuleToLabel(TransitionRule rule){
@@ -116,12 +116,17 @@ public class TransitionArrow {
         repositionLine();
     }
 
+    public void refreshRulesLabel(){
+        rulesLabel.setText("");
+        for(TransitionRule rule: transitionRules){
+            rulesLabel.setText(rulesLabel.getText() + rule.getReadSymbol() + "|" + rule.getWriteSymbol() + "|" + rule.getDirection() + '\n');
+        }
+        repositionLine();
+    }
+
     public void removeTransitionRule(TransitionRule rule){
         transitionRules.remove(rule);
-        rulesLabel.setText("");
-        for (TransitionRule transitionRule:transitionRules) {
-            addRuleToLabel(transitionRule);
-        }
+        refreshRulesLabel();
     }
 
     public boolean containsTransitionRule(String rule){

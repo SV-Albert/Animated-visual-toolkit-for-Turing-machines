@@ -80,7 +80,7 @@
 .scroll-bar > .track{
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-border-radius: 10 10 10 10;
+    -fx-border-radius: 10;
 }
 
 .scroll-bar > .thumb{
@@ -104,6 +104,12 @@
     -fx-border-radius: 5px;
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
+    -fx-min-width: 75;
+    -fx-min-height: 32;
+    -fx-wrap-text: true;
+    -fx-padding: 2;
+    -fx-border-insets: 2;
+    -fx-background-insets: 2;
 }
 
 .state{
@@ -216,3 +222,17 @@
     -fx-background-color: #a1a1a1;
     -fx-opacity: 0.8;
 }
+
+.list-view{
+    -fx-font-family: Roboto;
+    -fx-font-size: 14;
+    -fx-border-color: #000000;
+    -fx-control-inner-background: #292929;
+    -fx-background-radius: 16;
+    -fx-border-radius: 15;
+    -fx-border-width: 2;
+}
+/* 
+.list-view .list-cell:filled:selected:focused{
+    -fx-background-color: -fx-highlight-color;
+} */

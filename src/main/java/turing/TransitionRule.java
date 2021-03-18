@@ -1,9 +1,12 @@
 package turing;
 
+import canvasNodes.TransitionArrow;
+
 public class TransitionRule {
     private char readSymbol;
     private char writeSymbol;
     private char direction;
+    private TransitionArrow arrow;
 
     public TransitionRule(){}
 
@@ -15,6 +18,7 @@ public class TransitionRule {
 
     public void setReadSymbol(char readSymbol){
         this.readSymbol = readSymbol;
+        updateArrow();
     }
 
     public char getReadSymbol() {
@@ -23,6 +27,7 @@ public class TransitionRule {
 
     public void setWriteSymbol(char writeSymbol){
         this.writeSymbol = writeSymbol;
+        updateArrow();
     }
 
     public char getWriteSymbol() {
@@ -31,10 +36,25 @@ public class TransitionRule {
 
     public void setDirection(char direction){
         this.direction = direction;
+        updateArrow();
     }
 
     public char getDirection(){
         return direction;
+    }
+
+    public void setArrow(TransitionArrow arrow){
+        this.arrow = arrow;
+    }
+
+    private void updateArrow(){
+        if(arrow != null){
+            arrow.refreshRulesLabel();
+        }
+    }
+
+    public boolean isEmpty(){
+        return readSymbol == '\u0000' && writeSymbol == '\u0000' && direction == '\u0000';
     }
 
     public String toString(){

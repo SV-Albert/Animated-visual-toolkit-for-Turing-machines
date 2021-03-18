@@ -1,58 +1,56 @@
 package turing;
 
-import execution.ExecutionNode;
+import execution.ExecutionStep;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TuringMachineHandler {
-    private final ExecutionNode rootNode;
-//    private final List<Thread> threads;
-    private final List<ExecutorThread> executorsList;
+    private final Map<TuringMachine, ExecutorThread> executorsMap;
+    private final Map<String, TuringMachine> uniqueExecutionPaths;
 
     public TuringMachineHandler(TuringMachine turingMachine, Tape tape){
-        rootNode = new ExecutionNode(true, null, tape.toString(), null);
-        ExecutorThread rootExecutorThread = new ExecutorThread(turingMachine, tape, rootNode, null, this);
-//        threads = new ArrayList<>();
-//        threads.add(new Thread(rootExecutorThread));
-        executorsList = new ArrayList<>();
-        executorsList.add(rootExecutorThread);
+        ExecutorThread rootExecutorThread = new ExecutorThread(turingMachine, tape, this);
+        executorsMap = new HashMap<>();
+        executorsMap.put(turingMachine, rootExecutorThread);
+        uniqueExecutionPaths = new HashMap<>();
     }
 
-//    public void run() {
-//        for (Thread thread:threads) {
-//            thread.start();
-//        }
-//    }
-
-//    public void stop(){
-//        for (ExecutorThread executor: executorsList) {
-//            executor.stop();
-//        }
-//    }
-    synchronized public boolean step(){
-        if(!executorsList.isEmpty()){
-            List<ExecutorThread> finished = new ArrayList<>();
-            for (ExecutorThread executorThread: executorsList) {
-                boolean isFinished = executorThread.nextState();
-                if(isFinished){
-                    finished.add(executorThread);
+    synchronized public String step(){
+        if(!executorsMap.isEmpty()){
+            uniqueExecutionPaths.clear();
+            for (ExecutorThread executorThread: executorsMap.values()) {
+                String stateCode = executorThread.nextState();
+                String path = executorThread.getExecutionPath();
+                uniqueExecutionPaths.putIfAbsent(path, executorThread.getTM());
+                System.out.println(uniqueExecutionPaths.size());
+                if(!stateCode.equals("Run")){
+                    return stateCode;
                 }
             }
-            for (ExecutorThread executorThread: finished) {
-                executorsList.remove(executorThread);
-            }
-            return true;
+            return "Run";
         }
-        return false;
+        return "Halt";
     }
 
-    public ExecutionNode getRootNode(){
-        return rootNode;
+    public Map<String, TuringMachine> getUniqueExecutionPaths(){
+        return uniqueExecutionPaths;
     }
 
-    public void addThread(ExecutorThread executorThread){
-//        threads.add(new Thread(executorThread));
-        executorsList.add(executorThread);
+    public Tape getTape(TuringMachine tm){
+        return executorsMap.get(tm).getTape();
+    }
+
+    public ExecutionStep getStep(TuringMachine tm, int index){
+        return executorsMap.get(tm).getStepHistory().get(index);
+    }
+
+    public List<ExecutionStep> getAllSteps(TuringMachine tm){
+        return executorsMap.get(tm).getStepHistory();
+    }
+
+    public void addThread(TuringMachine tm, ExecutorThread executorThread){
+        executorsMap.put(tm, executorThread);
     }
 }

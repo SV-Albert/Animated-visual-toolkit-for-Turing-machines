@@ -89,8 +89,9 @@ public class Tape {
         return tapeArray;
     }
 
-    public void setTapeArray(List<Character> tapeArray){
-        this.tapeArray = tapeArray;
+    public void setTapeArray(List<Character> tapeArrayIn){
+        tapeArray.clear();
+        tapeArray.addAll(tapeArrayIn);
     }
 
     public void resetHead(){

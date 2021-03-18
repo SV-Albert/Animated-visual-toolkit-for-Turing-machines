@@ -20,7 +20,6 @@ public class ExecutionTimer implements Runnable{
     public void run() {
         isRunning = true;
         while(isRunning){
-            System.out.println("Running...");
             try {
                 int maxDelayInMs = 2000;
                 Thread.sleep((long) (maxDelayInMs /speed));

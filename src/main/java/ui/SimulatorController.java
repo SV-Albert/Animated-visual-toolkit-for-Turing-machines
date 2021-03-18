@@ -1,15 +1,15 @@
 package ui;
 
 import canvasNodes.*;
+import execution.ExecutionStep;
 import execution.ExecutionTimer;
 import io.SaveManager;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -30,6 +30,7 @@ import java.util.Map;
 public class SimulatorController {
     @FXML private HBox executionHistorySection;
     @FXML private HBox tapeSection;
+    @FXML private ListView<String> executionPaths;
     @FXML private Button backButton;
     @FXML private Button loadButton;
     @FXML private Button editButton;
@@ -38,6 +39,7 @@ public class SimulatorController {
     @FXML private Button resetButton;
     @FXML private Slider speedSlider;
     @FXML private Pane canvas;
+    @FXML private Label inputStatusLabel;
 
     private Tape tape;
     private ArrayList<Character> originalTapeInput;
@@ -52,6 +54,7 @@ public class SimulatorController {
     private StateNode currentState;
     private Map<State, StateNode> stateStateNodeMap;
     private Map<StateNode, List<TransitionArrow>> stateNodeArrowMap;
+    private Map<String, TuringMachine> uniqueExecutionPaths;
 
     @FXML
     public void initialize(){
@@ -76,29 +79,108 @@ public class SimulatorController {
         });
         runPauseButton.setOnAction(event -> {
             if(isRunning){
-//                tmHandler.stop();
                 timer.stop();
+                timerThread.interrupt();
                 isRunning = false;
                 timerThread = new Thread(timer);
             }
             else{
-//                tmHandler.run();
                 timerThread.start();
                 isRunning = true;
             }
         });
     }
     public void nextStep(){
+        String stateCode = "";
         if(tmHandler != null && isRunning){
-            isRunning = tmHandler.step();
+            stateCode = tmHandler.step();
+            if(!stateCode.equals("Run")){
+                isRunning = false;
+            }
         }
+        timer.stop();
+        timerThread.interrupt();
         currentState.deactivate();
         currentState = stateStateNodeMap.get(currentTM.getCurrentState());
         currentState.activate();
-        populateTape();
-        if(!isRunning){
-            timer.stop();
+        if(isRunning){
+            String finalStateCode = stateCode;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    setInputStatus(finalStateCode);
+                    populateTape();
+                    if(finalStateCode.equals("Run")){
+                        int stepIndex = executionHistorySection.getChildren().size();
+                        recordStep(stepIndex);
+                        updateUniquePathsSelector();
+                    }
+                }
+            });
+            timerThread = new Thread(timer);
+            timerThread.start();
         }
+    }
+
+    private void recordStep(int stepIndex){
+        VBox stepLabelContainer = new VBox();
+        stepLabelContainer.setAlignment(Pos.CENTER);
+        ExecutionStep executionStep = tmHandler.getStep(currentTM, stepIndex - 1);
+        Label step = new Label(String.valueOf(stepIndex));
+        Label from = new Label(executionStep.getFrom().getName());
+        Label to = new Label(executionStep.getTo().getName());
+        Label read = new Label(String.valueOf(executionStep.getRead()));
+        Label write = new Label(String.valueOf(executionStep.getWrite()));
+        Label move = new Label(String.valueOf(executionStep.getDirection()));
+        stepLabelContainer.getChildren().addAll(step, from, to, read, write, move);
+        for (Node label: stepLabelContainer.getChildren()) {
+            label.getStyleClass().add("execution-history-label");
+            ((Label) label).setAlignment(Pos.CENTER);
+        }
+        executionHistorySection.getChildren().add(stepLabelContainer);
+    }
+
+    private void switchHistorySection(){
+        resetHistorySection();
+        List<ExecutionStep> steps = tmHandler.getAllSteps(currentTM);
+        for (int i = 1; i <= steps.size(); i++) {
+            recordStep(i);
+        }
+    }
+
+    private void updateUniquePathsSelector(){
+        executionPaths.getItems().clear();
+        for (String uniquePath: uniqueExecutionPaths.keySet()) {
+            executionPaths.getItems().add(uniquePath);
+        }
+        executionPaths.setOnMouseClicked(event -> {
+            String selectedPath = executionPaths.getSelectionModel().getSelectedItem();
+            for (String key: uniqueExecutionPaths.keySet()) {
+                if(key.contains(selectedPath)){
+                    selectedPath = key;
+                    break;
+                }
+            }
+            TuringMachine selectedTM = uniqueExecutionPaths.get(selectedPath);
+            switchTM(selectedTM);
+        });
+    }
+
+    private void switchTM(TuringMachine tm){
+        if(currentTM != tm){
+            currentTM = tm;
+            currentState.deactivate();
+            stateStateNodeMap.get(currentTM.getCurrentState()).activate();
+            switchHistorySection();
+            tape = tmHandler.getTape(tm);
+            populateTape();
+        }
+    }
+
+    private void resetHistorySection(){
+        VBox labels = (VBox) executionHistorySection.getChildren().get(0);
+        executionHistorySection.getChildren().clear();
+        executionHistorySection.getChildren().add(labels);
     }
 
     public void setStage(Stage primaryStage){
@@ -230,12 +312,14 @@ public class SimulatorController {
             populateTape();
             canvas.getChildren().remove(root);
             tmHandler = new TuringMachineHandler(initialTM, tape);
+            uniqueExecutionPaths = tmHandler.getUniqueExecutionPaths();
             runPauseButton.setDisable(false);
             reset();
         }
     }
 
     private void populateTape(){
+        //TODO add index selection
         int numberOfCells = tapeSection.getChildren().size();
         int headCellIndex = numberOfCells/2;
         for (Node node: tapeSection.getChildren()) {
@@ -253,11 +337,8 @@ public class SimulatorController {
             }
             else{
                 tapeIndex = tape.getHead() - headCellIndex;
-                //TODO ??????
                 leftSideIndex = 0;
                 rightSideIndex = Math.min((tapeArray.size() - tapeIndex), numberOfCells);
-                System.out.println("Size: " + tapeArray.size());
-                System.out.println("rightSideIndex: " + rightSideIndex);
             }
 
             for (int i = leftSideIndex; i < rightSideIndex; i++) {
@@ -272,28 +353,26 @@ public class SimulatorController {
                 }
                 tapeIndex++;
             }
-//
-//            if(tapeLength <= numberOfCells){
-//                int offset = (numberOfCells - tapeLength)/2;
-//                int tapeIndex = 0;
-//                for (int i = offset; i < offset + tapeLength; i++) {
-//                    StackPane cell = (StackPane) tapeSection.getChildren().get(i);
-//                    Text cellText = (Text) cell.getChildren().get(1);
-//                    cellText.setText(String.valueOf(tapeArray.get(tapeIndex)));
-//                    tapeIndex++;
-//                }
-//            }
-//            else{
-//                int tapeIndex = tape.getHead();
-//                for (int i = 0; i < numberOfCells; i++) {
-//                    StackPane cell = (StackPane) tapeSection.getChildren().get(i);
-//                    Text cellText = (Text) cell.getChildren().get(1);
-//                    if(tapeLength > tapeIndex){
-//                        cellText.setText(String.valueOf(tapeArray.get(tapeIndex)));
-//                    }
-//                    tapeIndex++;
-//                }
-//            }
+        }
+    }
+
+    private void setInputStatus(String stateCode){
+        switch(stateCode){
+            case "Accept":
+                inputStatusLabel.setText("Input status: Accepted");
+                break;
+            case "Reject":
+                inputStatusLabel.setText("Input status: Rejected");
+                break;
+            case "Halt":
+                inputStatusLabel.setText("Input status: Halted");
+                break;
+            case "Stuck":
+                inputStatusLabel.setText("Input status: Stuck");
+                break;
+            case "Run":
+                inputStatusLabel.setText("Input status: Running");
+                break;
         }
     }
 
@@ -340,7 +419,9 @@ public class SimulatorController {
         tape.setTapeArray(originalTapeInput);
         tape.resetHead();
         populateTape();
-        currentTM.reset();
+        resetHistorySection();
+        initialTM.reset();
+        currentTM = initialTM;
         currentState.deactivate();
         currentState = stateStateNodeMap.get(currentTM.getInitialState());
         currentState.activate();
@@ -348,5 +429,7 @@ public class SimulatorController {
         timerThread = new Thread(timer);
         isRunning = false;
         tmHandler = new TuringMachineHandler(currentTM, tape);
+        uniqueExecutionPaths = tmHandler.getUniqueExecutionPaths();
+        inputStatusLabel.setText("Input status: None");
     }
 }
