@@ -87,6 +87,15 @@ public class TuringMachine {
         currentState = state;
     }
 
+    public State findStateByName(String name){
+        if(states.containsKey(name)){
+            return states.get(name);
+        }
+        else {
+            return new State();
+        }
+    }
+
     public void reset(){
         currentState = initialState;
     }

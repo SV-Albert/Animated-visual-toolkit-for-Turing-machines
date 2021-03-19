@@ -232,6 +232,17 @@
     -fx-border-radius: 15;
     -fx-border-width: 2;
 }
+
+.transition-rules-popup-delete-button{
+    -fx-background-color: #292929;
+    -fx-background-radius: 10;
+    -fx-border-color: #000000;
+    -fx-border-radius: 10;
+    -fx-border-width: 1px;
+    -fx-text-fill: #ffffff;
+    -fx-font-family: Roboto;
+    -fx-font-size: 10px;
+}
 /* 
 .list-view .list-cell:filled:selected:focused{
     -fx-background-color: -fx-highlight-color;

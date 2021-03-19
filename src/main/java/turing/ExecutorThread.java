@@ -98,11 +98,8 @@ public class ExecutorThread{
                     foundTuringTransitions.add(turingTransition);
                 }
             }
-            return foundTuringTransitions;
         }
-        else{
-            return new ArrayList<>();
-        }
+        return foundTuringTransitions;
     }
 
     public List<ExecutionStep> getStepHistory(){

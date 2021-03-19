@@ -12,7 +12,7 @@ public class ControllerLoader {
 
     public static MenuController openMainMenu(Stage primaryStage){
         try{
-            FXMLLoader menuScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("../start_menu.fxml"));
+            FXMLLoader menuScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("start_menu.fxml"));
             Parent root = new Pane();
             root = menuScreenLoader.load();
             MenuController controller = menuScreenLoader.getController();
@@ -28,7 +28,7 @@ public class ControllerLoader {
 
     public static BuilderController openBuilderWindow(Stage primaryStage){
         try{
-            FXMLLoader builderScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("../builder.fxml"));
+            FXMLLoader builderScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("builder.fxml"));
             Parent root = new Pane();
             root = builderScreenLoader.load();
             BuilderController controller = builderScreenLoader.getController();
@@ -44,7 +44,7 @@ public class ControllerLoader {
 
     public static SimulatorController openSimulatorWindow(Stage primaryStage){
         try{
-            FXMLLoader simulatorScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("../simulator.fxml"));
+            FXMLLoader simulatorScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("simulator.fxml"));
             Parent root = new Pane();
             root = simulatorScreenLoader.load();
             SimulatorController controller = simulatorScreenLoader.getController();

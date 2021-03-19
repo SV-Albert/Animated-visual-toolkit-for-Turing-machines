@@ -31,7 +31,7 @@ public class TuringMachineHandler {
             }
             return "Run";
         }
-        return "Halt";
+        return "Stuck";
     }
 
     public Map<String, TuringMachine> getUniqueExecutionPaths(){

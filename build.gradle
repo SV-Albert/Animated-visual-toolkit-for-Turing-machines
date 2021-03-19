@@ -1,18 +1,13 @@
 plugins {
     id 'java'
     id 'application'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
 repositories {
     mavenCentral()
 }
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/main']
-//        }
-//    }
-//}
+
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testImplementation('org.junit.jupiter:junit-jupiter-params:5.7.0')
@@ -27,8 +22,25 @@ test {
 }
 
 apply plugin: 'java'
+//apply plugin: 'com.github.johnrengelman.shadow'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+}
+
+//shadowJar {
+//    mainClassName = 'src/main/java/Main'
+//    include 'src/main/java'
+//    include 'src/main/resources/'
+//}
+
+mainClassName = 'Main'
+
+

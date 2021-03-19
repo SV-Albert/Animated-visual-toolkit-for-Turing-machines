@@ -417,16 +417,19 @@ public class BuilderController {
 
     private void addTransitionArrow(StateNode from, StateNode to, TransitionRule transitionRule){
         TransitionArrow transitionArrow = new TransitionArrow(from, to);
+        boolean arrowExists = false;
         if(transitions.getOrDefault(from, new ArrayList<>()).contains(to)){
             for(TransitionArrow arrowFromState: stateNodeArrowMap.get(from)){
                 if(arrowFromState.getFrom() == from && arrowFromState.getTo() == to){
                     transitionArrow = arrowFromState;
+                    arrowExists = true;
+                    break;
                 }
             }
         }
-        else{
+        if(!arrowExists) {
             addTransition(from, to, transitionArrow);
-            if(from != to){
+            if (from != to) {
                 addTransition(to, from, transitionArrow);
             }
 
@@ -542,7 +545,7 @@ public class BuilderController {
         directionMap.put('N', 2);
         transitionRulesInputWindow = new VBox();
         transitionRulesInputWindow.setAlignment(Pos.TOP_CENTER);
-        transitionRulesInputWindow.setPrefWidth(300);
+        transitionRulesInputWindow.setPrefWidth(330);
         transitionRulesInputWindow.setPrefHeight(200);
         if(tm != null && !tm.getTransitionFunction().isEmpty()){
             for (TuringTransition turingTransition: tm.getTransitionFunction()) {
@@ -912,7 +915,22 @@ public class BuilderController {
         direction.getSelectionModel().select(2);
         direction.setMinWidth(55);
         direction.getStyleClass().add("pop-up-combobox");
-        inputs.getChildren().addAll(fromState, toState, read, write, direction);
+        Button deleteButton = new Button("x");
+        deleteButton.getStyleClass().add("transition-rules-popup-delete-button");
+        deleteButton.setMinWidth(20);
+        deleteButton.setMinHeight(20);
+        deleteButton.setOnAction(event -> {
+            int numberOfFields = transitionRulesInputWindow.getChildren().size();
+            if(transitionRulesInputWindow.getChildren().indexOf(inputs) < numberOfFields - 1){
+                transitionRulesInputWindow.getChildren().remove(inputs);
+                TransitionRule ruleToDelete = new TransitionRule();
+                ruleToDelete.setReadSymbol(read.getText().charAt(0));
+                ruleToDelete.setWriteSymbol(write.getText().charAt(0));
+                ruleToDelete.setDirection(direction.getSelectionModel().getSelectedItem());
+                deleteTransition(fromState.getText(), toState.getText(), ruleToDelete);
+            }
+        });
+        inputs.getChildren().addAll(fromState, toState, read, write, direction, deleteButton);
 
         for (Node inputNode: inputs.getChildren()) {
             if (inputNode instanceof TextField){
@@ -938,6 +956,26 @@ public class BuilderController {
             for(TransitionArrow arrow: toRemove){
                 deleteTransitionArrow(arrow);
             }
+        }
+    }
+
+    private void deleteTransition(String fromName, String toName, TransitionRule ruleCopy){
+        if(tm != null){
+            StateNode fromState = stateStateNodeMap.get(tm.findStateByName(fromName));
+            StateNode toState = stateStateNodeMap.get(tm.findStateByName(toName));
+            TransitionArrow arrowToDelete = new TransitionArrow(fromState, toState);
+            for (TransitionArrow arrow: stateNodeArrowMap.get(fromState)) {
+                if(arrow.getTo() == toState){
+                    arrowToDelete = arrow;
+                }
+            }
+            TransitionRule ruleToDelete = ruleCopy;
+            for (TransitionRule rule: arrowToDelete.getTransitionRules()) {
+                if(rule.toString().equals(ruleToDelete.toString())){
+                    ruleToDelete = rule;
+                }
+            }
+            deleteTransition(arrowToDelete, ruleToDelete);
         }
     }
 
@@ -1058,4 +1096,3 @@ public class BuilderController {
 }
 //Known bugs
 //Loading a tm with nodes outside the canvas does not work
-//Cannot remove transition rules

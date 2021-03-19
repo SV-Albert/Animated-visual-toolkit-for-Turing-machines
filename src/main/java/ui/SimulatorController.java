@@ -103,20 +103,20 @@ public class SimulatorController {
         currentState.deactivate();
         currentState = stateStateNodeMap.get(currentTM.getCurrentState());
         currentState.activate();
-        if(isRunning){
-            String finalStateCode = stateCode;
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    setInputStatus(finalStateCode);
-                    populateTape();
-                    if(finalStateCode.equals("Run")){
-                        int stepIndex = executionHistorySection.getChildren().size();
-                        recordStep(stepIndex);
-                        updateUniquePathsSelector();
-                    }
+        String finalStateCode = stateCode;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                setInputStatus(finalStateCode);
+                populateTape();
+                if(finalStateCode.equals("Run")){
+                    int stepIndex = executionHistorySection.getChildren().size();
+                    recordStep(stepIndex);
+                    updateUniquePathsSelector();
                 }
-            });
+            }
+        });
+        if(isRunning){
             timerThread = new Thread(timer);
             timerThread.start();
         }
@@ -167,7 +167,7 @@ public class SimulatorController {
     }
 
     private void switchTM(TuringMachine tm){
-        if(currentTM != tm){
+        if(currentTM != tm && tm != null){
             currentTM = tm;
             currentState.deactivate();
             stateStateNodeMap.get(currentTM.getCurrentState()).activate();

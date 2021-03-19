@@ -19,15 +19,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="866.0" prefWidth="1549.0" styleClass="bodybg" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.BuilderController">
+<VBox prefHeight="866.0" prefWidth="1549.0" styleClass="bodybg" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.BuilderController">
    <children>
-      <HBox prefHeight="846.0" prefWidth="1549.0" stylesheets="@stylesheet.css">
+      <HBox prefHeight="846.0" prefWidth="1549.0" stylesheets="@../stylesheet.css">
          <children>
             <BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
                <bottom>
                   <VBox alignment="BOTTOM_CENTER" prefHeight="472.0" prefWidth="190.0" BorderPane.alignment="BOTTOM_CENTER">
                      <children>
-                        <Button fx:id="loadButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="loadButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -35,7 +35,7 @@
                               <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="saveToFileButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Save To File" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="saveToFileButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Save To File" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -43,7 +43,7 @@
                               <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Save" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Save" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -51,7 +51,7 @@
                               <Insets bottom="20.0" left="6.0" right="6.0" top="6.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="addTransitionsButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Add Transitions" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                        <Button fx:id="addTransitionsButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Add Transitions" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -59,7 +59,7 @@
                               <Insets bottom="6.0" left="6.0" right="6.0" top="20.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="runButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Run" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="runButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Run" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -67,7 +67,7 @@
                               <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="clearButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="Clear Canvas" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="clearButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Clear Canvas" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -82,9 +82,9 @@
                   <StackPane prefHeight="447.0" prefWidth="190.0" BorderPane.alignment="CENTER">
                      <children>
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="394.0" stroke="BLACK" strokeType="INSIDE" styleClass="states-toolbar" width="183.0" />
-                        <VBox alignment="TOP_CENTER" prefHeight="441.0" prefWidth="190.0" stylesheets="@stylesheet.css">
+                        <VBox alignment="TOP_CENTER" prefHeight="441.0" prefWidth="190.0" stylesheets="@../stylesheet.css">
                            <children>
-                              <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="simulator-buttons" stylesheets="@stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
+                              <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -99,7 +99,7 @@
                                        <children>
                                           <ImageView fitHeight="28.0" fitWidth="35.0" layoutX="-59.0" layoutY="-13.0">
                                              <image>
-                                                <Image url="@arrow_right.png" />
+                                                <Image url="@../arrow_right.png" />
                                              </image>
                                           </ImageView>
                                           <Circle fill="DODGERBLUE" radius="28.0" stroke="BLACK" strokeType="INSIDE" styleClass="state" />

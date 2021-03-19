@@ -14,7 +14,7 @@ import java.util.List;
 public class TransitionArrow {
     private final StateNode from;
     private final StateNode to;
-    private final Line line;
+    private final QuadCurve line;
     private final QuadCurve loop;
     private final Group lineGroup;
     private final List<TransitionRule> transitionRules;
@@ -26,9 +26,9 @@ public class TransitionArrow {
     public TransitionArrow(StateNode from, StateNode to){
         this.from = from;
         this.to = to;
-        line = new Line();
-        line.getStyleClass().add("transition-arrow");
-        Image arrowImage = new Image(getClass().getResourceAsStream("../arrow_head.png"));
+        line = new QuadCurve();
+        line.getStyleClass().add("transition-loop");
+//        Image arrowImage = new Image(getClass().getResourceAsStream("../arrow_head.png"));
 //        arrowHead = new ImageView(arrowImage);
 //        arrowHead.setFitHeight(arrowHeadLength);
 //        arrowHead.setFitWidth(arrowHeadWidth);
@@ -38,7 +38,9 @@ public class TransitionArrow {
         rulesLabel.getStyleClass().add("transition-label");
         lineGroup = new Group();
         transitionRules = new ArrayList<>();
-        repositionLine();
+        if(from != null && to != null){
+            repositionLine();
+        }
     }
 
     public void repositionLine(){
@@ -64,18 +66,10 @@ public class TransitionArrow {
             double toY;
             double fromX;
             double fromY;
+            double controlX;
+            double controlY;
             double headX;
             double headY;
-            if(from.getX() <= to.getX()){
-                fromX = from.getX() + Math.cos(angle)*radius;
-                toX = to.getX() - Math.cos(angle)*radius;
-//                headX = toX - Math.cos(angle)*arrowHeadLength/2;
-            }
-            else {
-                fromX = from.getX() - Math.cos(angle)*radius;
-                toX = to.getX() + Math.cos(angle)*radius;
-//                headX = toX + Math.cos(angle)*arrowHeadLength/2;
-            }
             if(from.getY() <= to.getY()) {
                 fromY = from.getY() + Math.sin(angle)*radius;
                 toY = to.getY() - Math.sin(angle)*radius;
@@ -86,15 +80,33 @@ public class TransitionArrow {
                 toY = to.getY() + Math.sin(angle)*radius;
 //                headY = toY + Math.sin(angle) * arrowHeadWidth/2;
             }
+            if(from.getX() <= to.getX()){
+                fromX = from.getX() + Math.cos(angle)*radius;
+                toX = to.getX() - Math.cos(angle)*radius;
+                controlY = Math.max(fromY, toY) - Math.min(Math.abs(fromX - toX), 50);
+//                rulesLabel.setTranslateY(((fromY + toY)/2)+20);
+//                headX = toX - Math.cos(angle)*arrowHeadLength/2;
+            }
+            else {
+                fromX = from.getX() - Math.cos(angle)*radius;
+                toX = to.getX() + Math.cos(angle)*radius;
+                controlY = Math.min(fromY, toY) + Math.min(Math.abs(fromX - toX), 50);
+//                rulesLabel.setTranslateY(((fromY + toY)/2)-20);
+//                headX = toX + Math.cos(angle)*arrowHeadLength/2;
+            }
+            controlX = Math.min(fromX, toX) + (Math.abs(fromX - toX)/2);
             line.setStartX(fromX);
             line.setStartY(fromY);
             line.setEndX(toX);
             line.setEndY(toY);
+            line.setControlX(controlX);
+            line.setControlY(controlY);
 //            arrowHead.setLayoutX(headX);
 //            arrowHead.setLayoutY(headY);
 //            arrowHead.setRotate(90 - Math.toDegrees(angle));
-            rulesLabel.setTranslateX((fromX + toX)/2);
-            rulesLabel.setTranslateY((fromY + toY)/2);
+//            rulesLabel.setTranslateX((fromX + toX)/2);
+            rulesLabel.setTranslateX(controlX);
+            rulesLabel.setTranslateY(controlY);
             lineGroup.getChildren().clear();
 //            lineGroup.getChildren().addAll(line, arrowHead, rulesLabel);
             lineGroup.getChildren().addAll(line, rulesLabel);
