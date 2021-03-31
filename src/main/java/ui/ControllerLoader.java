@@ -19,6 +19,7 @@ public class ControllerLoader {
             controller.setStage(primaryStage);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            scene.getStylesheets().add(0, MenuController.class.getResource("notificationsStyle.css").toExternalForm());
             return controller;
         } catch (IOException e){
             e.printStackTrace();
@@ -35,6 +36,7 @@ public class ControllerLoader {
             controller.setStage(primaryStage);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            scene.getStylesheets().add(0, BuilderController.class.getResource("notificationsStyle.css").toExternalForm());
             return controller;
         } catch (IOException e){
             e.printStackTrace();
@@ -50,6 +52,7 @@ public class ControllerLoader {
             SimulatorController controller = simulatorScreenLoader.getController();
             controller.setStage(primaryStage);
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(0, SimulatorController.class.getResource("notificationsStyle.css").toExternalForm());
             primaryStage.setScene(scene);
             return controller;
         } catch (IOException e){

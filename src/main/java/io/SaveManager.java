@@ -22,7 +22,68 @@ import javax.xml.xpath.XPathFactory;
 
 public class SaveManager {
 
-    private static final Path TapeSavePath = Paths.get("C:\\Users\\Blackout\\Documents\\IDEA\\Animated-visual-toolkit-for-Turing-machines\\src\\main\\resources\\TapeSaveTest.xml");
+    public static TuringMachine loadTuringMachine(File saveFile) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        if(saveFile == null){
+            return null;
+        }
+        else{
+            FileInputStream stream = new FileInputStream(saveFile);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document xml = builder.parse(stream);
+            XPath xpath = XPathFactory.newInstance().newXPath();
+
+            Element tmNode = (Element) xpath.compile("/TuringMachineSave").evaluate(xml, XPathConstants.NODE);
+
+            String tmName = tmNode.getAttribute("name");
+
+            HashMap<String, State> states = new HashMap<>();
+            State initialState = new State();
+            Element globalStatesNode = (Element) tmNode.getElementsByTagName("states").item(0);
+            NodeList stateNodeList = globalStatesNode.getElementsByTagName("state");
+            for (int i = 0; i < stateNodeList.getLength(); i++) {
+                Element stateElement = (Element) stateNodeList.item(i);
+                String stateName = stateElement.getAttribute("name");
+                boolean isInitial = Boolean.parseBoolean(stateElement.getElementsByTagName("isInitial").item(0).getTextContent());
+                boolean isAccepting = Boolean.parseBoolean(stateElement.getElementsByTagName("isAccepting").item(0).getTextContent());
+                boolean isRejecting = Boolean.parseBoolean(stateElement.getElementsByTagName("isRejecting").item(0).getTextContent());
+                boolean isHalting = Boolean.parseBoolean(stateElement.getElementsByTagName("isHalting").item(0).getTextContent());
+                double xPos = Double.parseDouble(stateElement.getElementsByTagName("xPos").item(0).getTextContent());
+                double yPos = Double.parseDouble(stateElement.getElementsByTagName("yPos").item(0).getTextContent());
+                State state = new State();
+                state.setName(stateName);
+                state.setInitial(isInitial);
+                state.setAccepting(isAccepting);
+                state.setRejecting(isRejecting);
+                state.setHalting(isHalting);
+                state.setPosition(xPos, yPos);
+                if(isInitial){
+                    initialState = state;
+                }
+                states.put(stateName, state);
+
+            }
+            TuringMachine tm = new TuringMachine(initialState);
+            tm.setName(tmName);
+            for (State state:states.values()) {
+                if(!state.isInitial()){
+                    tm.addState(state);
+                }
+            }
+            NodeList transitionsNodeList = tmNode.getElementsByTagName("transition");
+            for (int i = 0; i < transitionsNodeList.getLength(); i++) {
+                Element transitionElement = (Element) transitionsNodeList.item(i);
+                State fromState = states.get(transitionElement.getElementsByTagName("fromState").item(0).getTextContent());
+                State toState = states.get(transitionElement.getElementsByTagName("toState").item(0).getTextContent());
+                char readSymbol = transitionElement.getElementsByTagName("readSymbol").item(0).getTextContent().charAt(0);
+                char writeSymbol = transitionElement.getElementsByTagName("writeSymbol").item(0).getTextContent().charAt(0);
+                char direction = transitionElement.getElementsByTagName("direction").item(0).getTextContent().charAt(0);
+                tm.addTransition(new TuringTransition(fromState, toState, new TransitionRule(readSymbol, writeSymbol, direction)));
+            }
+
+            return tm;
+        }
+    }
 
     public static void saveTuringMachine(TuringMachine tm, Path savePath) throws IOException {
         String xml = getTuringXML(tm);
@@ -33,97 +94,6 @@ public class SaveManager {
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
         writer.print(xml);
         writer.close();
-    }
-
-    public static void saveTape(Tape tape) throws IOException {
-        String xml = getTapeXML(tape);
-        if(!Files.exists(TapeSavePath)){
-            Files.createFile(TapeSavePath);
-        }
-        OutputStream outputStream = new FileOutputStream(TapeSavePath.toString());
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-        writer.print(xml);
-        writer.close();
-    }
-
-    public static TuringMachine loadTuringMachine(File saveFile) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-        FileInputStream stream = new FileInputStream(saveFile);
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document xml = builder.parse(stream);
-        XPath xpath = XPathFactory.newInstance().newXPath();
-
-        Element tmNode = (Element) xpath.compile("/TuringMachineSave").evaluate(xml, XPathConstants.NODE);
-
-        String tmName = tmNode.getAttribute("name");
-
-        HashMap<String, State> states = new HashMap<>();
-        State initialState = new State();
-        Element globalStatesNode = (Element) tmNode.getElementsByTagName("states").item(0);
-        String initialStateName = globalStatesNode.getAttribute("initial");
-        NodeList stateNodeList = globalStatesNode.getElementsByTagName("state");
-        for (int i = 0; i < stateNodeList.getLength(); i++) {
-            Element stateElement = (Element) stateNodeList.item(i);
-            String stateName = stateElement.getAttribute("name");
-            boolean isInitial = Boolean.parseBoolean(stateElement.getElementsByTagName("isInitial").item(0).getTextContent());
-            boolean isAccepting = Boolean.parseBoolean(stateElement.getElementsByTagName("isAccepting").item(0).getTextContent());
-            boolean isRejecting = Boolean.parseBoolean(stateElement.getElementsByTagName("isRejecting").item(0).getTextContent());
-            boolean isHalting = Boolean.parseBoolean(stateElement.getElementsByTagName("isHalting").item(0).getTextContent());
-            double xPos = Double.parseDouble(stateElement.getElementsByTagName("xPos").item(0).getTextContent());
-            double yPos = Double.parseDouble(stateElement.getElementsByTagName("yPos").item(0).getTextContent());
-            State state = new State();
-            state.setName(stateName);
-            state.setInitial(isInitial);
-            state.setAccepting(isAccepting);
-            state.setRejecting(isRejecting);
-            state.setHalting(isHalting);
-            state.setPosition(xPos, yPos);
-            if(isInitial){
-                initialState = state;
-            }
-            states.put(stateName, state);
-
-        }
-        TuringMachine tm = new TuringMachine(initialState);
-        tm.setName(tmName);
-        for (State state:states.values()) {
-            if(!state.isInitial()){
-                tm.addState(state);
-            }
-        }
-        NodeList transitionsNodeList = tmNode.getElementsByTagName("transition");
-        for (int i = 0; i < transitionsNodeList.getLength(); i++) {
-            Element transitionElement = (Element) transitionsNodeList.item(i);
-            State fromState = states.get(transitionElement.getElementsByTagName("fromState").item(0).getTextContent());
-            State toState = states.get(transitionElement.getElementsByTagName("toState").item(0).getTextContent());
-            char readSymbol = transitionElement.getElementsByTagName("readSymbol").item(0).getTextContent().charAt(0);
-            char writeSymbol = transitionElement.getElementsByTagName("writeSymbol").item(0).getTextContent().charAt(0);
-            char direction = transitionElement.getElementsByTagName("direction").item(0).getTextContent().charAt(0);
-            tm.addTransition(new TuringTransition(fromState, toState, new TransitionRule(readSymbol, writeSymbol, direction)));
-        }
-
-        return tm;
-    }
-
-    public static Tape loadTape() throws IOException, SAXException, ParserConfigurationException, XPathExpressionException {
-        FileInputStream stream = new FileInputStream(new File(TapeSavePath.toString()));
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document xml = builder.parse(stream);
-        XPath xpath = XPathFactory.newInstance().newXPath();
-
-        Element tapeNode = (Element) xpath.compile("/TuringTapeSave").evaluate(xml, XPathConstants.NODE);
-
-        int headPosition = Integer.parseInt(tapeNode.getElementsByTagName("headPosition").item(0).getTextContent());
-
-        Element valuesNode = (Element) tapeNode.getElementsByTagName("tape").item(0);
-        NodeList values = valuesNode.getElementsByTagName("value");
-        ArrayList<Character> tapeList = new ArrayList<>();
-        for (int i = 0; i < values.getLength(); i++) {
-            tapeList.add(values.item(i).getTextContent().charAt(0));
-        }
-
-        return new Tape(tapeList, headPosition);
     }
 
     private static String getTuringXML(TuringMachine tm){
@@ -159,27 +129,6 @@ public class SaveManager {
         }
         builder.append('\t' + "</transitions>"  + '\n');
         builder.append("</TuringMachineSave>" + '\n');
-
-        return builder.toString();
-    }
-
-    private static String getTapeXML(Tape tape){
-        List<Character> tapeArray = tape.getTapeArray();
-        int head = tape.getInitialHeadPosition();
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + '\n');
-        builder.append("<TuringTapeSave>" + '\n');
-        builder.append('\t' + "<headPosition>").append(head).append("</headPosition>" + '\n');
-        builder.append('\t' + "<tape>" + '\n');
-        for(char ch: tapeArray){
-            if (ch == '\n'){
-                ch = '~';
-            }
-            builder.append(tab(2)).append("<value>").append(ch).append("</value>" + '\n');
-        }
-        builder.append('\t' + "</tape>" + '\n');
-        builder.append("</TuringTapeSave>" + '\n');
 
         return builder.toString();
     }

@@ -19,72 +19,72 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="866.0" prefWidth="1549.0" styleClass="bodybg" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.BuilderController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="715.0" prefWidth="1240.0" styleClass="body-bg" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.BuilderController">
    <children>
       <HBox prefHeight="846.0" prefWidth="1549.0" stylesheets="@../stylesheet.css">
          <children>
             <BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
                <bottom>
-                  <VBox alignment="BOTTOM_CENTER" prefHeight="472.0" prefWidth="190.0" BorderPane.alignment="BOTTOM_CENTER">
+                  <VBox alignment="BOTTOM_CENTER" prefHeight="323.0" prefWidth="190.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="loadButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="loadButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="saveToFileButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Save To File" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="saveToFileButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Save To File" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Save" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="saveButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Save" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="20.0" left="6.0" right="6.0" top="6.0" />
+                              <Insets bottom="15.0" left="3.0" right="3.0" top="3.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="addTransitionsButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Add Transitions" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                        <Button fx:id="addTransitionsButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Add Transitions" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                            <font>
                               <Font size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="6.0" left="6.0" right="6.0" top="20.0" />
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="15.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="runButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Run" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="runButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Run" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="clearButton" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="140.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="Clear Canvas" textAlignment="CENTER" textFill="WHITE">
+                        <Button fx:id="clearButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Clear Canvas" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="20.0" />
                            </font>
                            <VBox.margin>
-                              <Insets bottom="30.0" left="6.0" right="6.0" top="6.0" />
+                              <Insets bottom="30.0" left="3.0" right="3.0" top="3.0" />
                            </VBox.margin>
                         </Button>
                      </children>
                   </VBox>
                </bottom>
                <center>
-                  <StackPane prefHeight="447.0" prefWidth="190.0" BorderPane.alignment="CENTER">
+                  <StackPane prefHeight="461.0" prefWidth="190.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="394.0" stroke="BLACK" strokeType="INSIDE" styleClass="states-toolbar" width="183.0" />
-                        <VBox alignment="TOP_CENTER" prefHeight="441.0" prefWidth="190.0" stylesheets="@../stylesheet.css">
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="391.0" stroke="BLACK" strokeType="INSIDE" styleClass="states-toolbar" width="183.0" />
+                        <VBox alignment="TOP_CENTER" prefHeight="405.0" prefWidth="190.0" stylesheets="@../stylesheet.css">
                            <children>
-                              <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="simulator-buttons" stylesheets="@../stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
+                              <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -179,12 +179,15 @@
                <children>
                   <ScrollPane fx:id="canvasScroll" maxWidth="1.7976931348623157E308" minHeight="220.0" pannable="true" prefHeight="866.0" prefWidth="1163.0" styleClass="canvas">
                      <content>
-                        <Pane fx:id="canvas" prefHeight="864.0" prefWidth="1144.0" />
+                        <Pane fx:id="canvas" prefHeight="707.0" prefWidth="851.0" />
                      </content>
                   </ScrollPane>
                   <VBox alignment="CENTER" prefHeight="866.0" prefWidth="214.0">
                      <children>
-                        <TextArea editable="false" maxWidth="190.0" prefHeight="556.0" prefWidth="190.0" styleClass="help_section" text="Start by dragging an initial state to the canvas in the center of the screen to add it to the Turing Machine&#10;&#10;Hold Ctrl (Command) and left-click on the states to add a transition between them&#10;&#10;To encode a Turing Machine using just transition rules - press the &quot;Add Transitions &quot;button at the bottom of the toolbar&#10;&#10;Remember that you can save your progress or load an existing Turing Machine&#10;&#10;To simulate execution of the Turing Machine - press the &quot;Run&quot; button" wrapText="true" />
+                        <TextArea editable="false" maxWidth="190.0" prefHeight="610.0" prefWidth="190.0" styleClass="help_section" text="&#10;Start by dragging an initial state to the canvas in the center of the screen to add it to the Turing Machine&#10;&#10;Hold Ctrl (Command) and left-click on the states to add a transition between them&#10;&#10;Right-click on an added state to bring up the context menu&#10;&#10;To encode a Turing Machine using transition rules - press the &quot;Add Transitions&quot; button in the toolbar&#10;&#10;You can save your progress or load an existing Turing Machine using Save and Load buttons&#10;&#10;To simulate execution of the Turing Machine - press the &quot;Run&quot; button" wrapText="true">
+                           <VBox.margin>
+                              <Insets top="3.0" />
+                           </VBox.margin></TextArea>
                         <Group>
                            <children>
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3b566f" height="87.0" stroke="BLACK" strokeType="INSIDE" styleClass="states-toolbar" width="191.0" />
@@ -192,7 +195,7 @@
                               <Label layoutX="20.0" layoutY="12.0" prefHeight="32.0" prefWidth="151.0" styleClass="transition-label" text="Turing Machine's Name" />
                            </children>
                            <VBox.margin>
-                              <Insets top="30.0" />
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="20.0" />
                            </VBox.margin>
                         </Group>
                      </children>

@@ -40,6 +40,11 @@ public class TuringMachine {
         states.put(state.getName(), state);
     }
 
+    public void clearTransitions(){
+        transitionFunction.clear();
+        transitionMap.clear();
+    }
+
     public void addTransition(TuringTransition turingTransition){
         State fromState = turingTransition.getFromState();
         State toState = turingTransition.getToState();

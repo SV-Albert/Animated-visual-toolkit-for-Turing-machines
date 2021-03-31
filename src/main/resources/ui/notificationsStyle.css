@@ -1,0 +1,22 @@
+.notification-bar > .pane {
+    -fx-background-color: #292929;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 5;
+    -fx-border-color: #000000;
+    -fx-border-radius: 5;
+    -fx-border-width: 2;
+    -fx-padding: 7 7 7 7;
+}
+.notification-bar > .pane .title {
+    -fx-font-size: 15;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-family: Roboto;
+}
+
+.notification-bar > .pane .label {
+    -fx-font-size: 15;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-family: Roboto;
+}

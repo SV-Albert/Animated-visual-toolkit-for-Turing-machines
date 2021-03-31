@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TuringMachineSave name = "Ones And Zeros">
+	<states initial = "s1">
+		<state name = "s3">
+			<isInitial>false</isInitial>
+			<isAccepting>true</isAccepting>
+			<isRejecting>false</isRejecting>
+			<isHalting>false</isHalting>
+			<xPos>647.0</xPos>
+			<yPos>240.0</yPos>
+		</state>
+		<state name = "s1">
+			<isInitial>true</isInitial>
+			<isAccepting>false</isAccepting>
+			<isRejecting>false</isRejecting>
+			<isHalting>false</isHalting>
+			<xPos>178.0</xPos>
+			<yPos>235.0</yPos>
+		</state>
+		<state name = "s2">
+			<isInitial>false</isInitial>
+			<isAccepting>false</isAccepting>
+			<isRejecting>false</isRejecting>
+			<isHalting>false</isHalting>
+			<xPos>414.0</xPos>
+			<yPos>239.0</yPos>
+		</state>
+	</states>
+	<transitions>
+		<transition>
+			<fromState>s2</fromState>
+			<toState>s3</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s2</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s2</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s2</fromState>
+			<toState>s2</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s2</fromState>
+			<toState>s2</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s1</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>R</direction>
+		</transition>
+	</transitions>
+</TuringMachineSave>

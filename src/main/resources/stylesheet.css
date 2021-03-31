@@ -1,26 +1,26 @@
-.bodybg{
+.body-bg{
     -fx-background-image: url('background.jpg');
     -fx-background-size: 100% 100%;
 }
-/* .menu_buttons{
+.buttons{
     -fx-background-color: #292929;
-    -fx-background-radius: 160px;
+    -fx-background-radius: 100;
     -fx-border-color: #000000;
-    -fx-border-radius: 160px;
-    -fx-border-width: 2px;
+    -fx-border-radius: 100;
+    -fx-border-width: 2;
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 20px;
-} */
-.simulator-buttons{
-    -fx-background-color: #292929;
-    -fx-background-radius: 100px;
-    -fx-border-color: #000000;
-    -fx-border-radius: 100px;
-    -fx-border-width: 2px;
+    -fx-font-size: 15;
+}
+.buttons:pressed{
+    -fx-background-color: #6b6a6a;
+    -fx-background-radius: 100;
+    -fx-border-color: #292929;
+    -fx-border-radius: 100;
+    -fx-border-width: 2;
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 15px;
+    -fx-font-size: 15;
 }
 .tape-cells{
     -fx-fill: #292929;
@@ -30,6 +30,17 @@
     -fx-fill: #292929;
     -fx-stroke: #07595e;
     -fx-stroke-width: 2;
+}
+.tape-text{
+    -fx-fill: #ffffff;
+    -fx-font-family: Roboto;
+    -fx-font-size: 20;
+}
+.tape-text-previous{
+    -fx-fill: #07595e;
+    -fx-font-family: Roboto;
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
 }
 
 .text-area .scroll-pane .viewport .content{
@@ -44,20 +55,20 @@
 
 .help_section{
     -fx-background-color: #000000;
-    -fx-arc-width: 40px;
-    -fx-arc-height: 40px;
+    -fx-arc-width: 40;
+    -fx-arc-height: 40;
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 16px;
+    -fx-font-size: 15.5;
 }
 .text-area .text {
     -fx-text-alignment: center ;
 }
-.history_section{
+.history-section{
     -fx-fill: #292929;
     -fx-stroke: #000000;
-    -fx-arc-width: 20px;
-    -fx-arc-height: 20px;
+    -fx-arc-width: 10px;
+    -fx-arc-height: 10px;
 }
 .menu-area{
     -fx-border-color: #000000;
@@ -78,14 +89,24 @@
 }
 
 .scroll-bar > .track{
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
+    -fx-background-color: #292929;
+    -fx-border-color: #000000;
     -fx-border-radius: 10;
 }
 
 .scroll-bar > .thumb{
-    -fx-background-color: #292929;
-    -fx-background-radius: 2em;
+    -fx-background-color: #3c3c3c;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar:vertical{
+    -fx-pref-width: 14;
+    -fx-padding: 2;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 14;
+    -fx-padding: 2;
 }
 
 .increment-button:hover, .decrement-button:hover {
@@ -99,9 +120,9 @@
 
 .execution-history-label{
     -fx-background-color: #292929;
-    -fx-background-radius: 5px;
+    -fx-background-radius: 5;
     -fx-border-color: #000000;
-    -fx-border-radius: 5px;
+    -fx-border-radius: 5;
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
     -fx-min-width: 75;
@@ -149,39 +170,47 @@
 .pop-up{
     -fx-background-color: #292929;
     -fx-border-color: #000000;
-    -fx-border-width: 2px;
+    -fx-border-width: 2;
 }
 .pop-up-text{
     -fx-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 14px;
+    -fx-font-size: 14;
 }
 
 .pop-up-textfield{
+    -fx-background-color: #ffffff;
     -fx-border-color: #000000;
-    -fx-border-width: 1px;
-    -fx-padding: 4px;
-    -fx-border-insets: 4px;
-    -fx-background-insets: 4px;
+    -fx-border-width: 1;
+    -fx-padding: 4;
+    -fx-border-insets: 4;
+    -fx-background-insets: 4;
     /* -fx-text-font: Roboto; */
     -fx-alignment: center;
 }
 
 .pop-up-combobox{
+    -fx-background-color: #ffffff;
     -fx-border-color: #000000;
-    -fx-border-width: 1px;
-    -fx-padding: 1px;
-    -fx-border-insets: 1px;
-    -fx-background-insets: 1px;
+    -fx-border-width: 1;
+    -fx-padding: 1;
+    -fx-border-insets: 1;
+    -fx-background-insets: 1;
 }
 
 .pop-up-label{
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 14px;
+    -fx-font-size: 14;
     -fx-padding: 7 14 7 14;
     -fx-wrap-text: true;
 }
+
+.status-label{
+    -fx-text-fill: #ffffff;
+    -fx-font-family: Roboto;
+    -fx-font-size: 14;
+    -fx-padding: 10 0 0 15;}
 
 .transition-arrow{
     -fx-stroke:#292929;
@@ -197,14 +226,14 @@
 .transition-label{
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 14px;
+    -fx-font-size: 14;
 }
 
 .transition-rule-label{
     -fx-padding: -7 7 7 7;
     -fx-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 14px;
+    -fx-font-size: 14;
 }
 
 .context-menu {
@@ -212,7 +241,7 @@
 }
 .menu-item{
     -fx-font-family: Roboto;
-    -fx-font-size: 12px;
+    -fx-font-size: 12;
 }
 .menu-item .label{
     -fx-text-fill: #ffffff;
@@ -228,8 +257,8 @@
     -fx-font-size: 14;
     -fx-border-color: #000000;
     -fx-control-inner-background: #292929;
-    -fx-background-radius: 16;
-    -fx-border-radius: 15;
+    -fx-background-radius: 3;
+    -fx-border-radius: 2;
     -fx-border-width: 2;
 }
 
@@ -238,12 +267,8 @@
     -fx-background-radius: 10;
     -fx-border-color: #000000;
     -fx-border-radius: 10;
-    -fx-border-width: 1px;
+    -fx-border-width: 1;
     -fx-text-fill: #ffffff;
     -fx-font-family: Roboto;
-    -fx-font-size: 10px;
+    -fx-font-size: 10;
 }
-/* 
-.list-view .list-cell:filled:selected:focused{
-    -fx-background-color: -fx-highlight-color;
-} */

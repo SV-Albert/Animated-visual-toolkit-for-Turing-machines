@@ -1,42 +1,45 @@
-package turing;
+package execution;
 
-import execution.ExecutionStep;
+import turing.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ExecutorThread{
+public class Executor {
 
     private final TuringMachine turingMachine;
     private final Tape tape;
     private final TuringMachineHandler handler;
     private final List<String> stateCodes = new ArrayList<>();
-    private final List<ExecutionStep> stepHistory;
+    private final ExecutionPath executionPath;
+    private boolean isSplitStep;
 
-    public ExecutorThread(TuringMachine turingMachine, Tape tape, TuringMachineHandler handler){
+    public Executor(TuringMachine turingMachine, Tape tape, TuringMachineHandler handler){
         this.turingMachine = turingMachine;
         this.tape = tape;
         this.handler = handler;
-        stepHistory = new ArrayList<>();
+        executionPath = new ExecutionPath();
         stateCodes.add("Accept");
         stateCodes.add("Reject");
         stateCodes.add("Halt");
         stateCodes.add("Stuck");
         stateCodes.add("Run");
+        isSplitStep = true;
     }
 
-    public ExecutorThread(TuringMachine turingMachine, Tape tape, List<ExecutionStep> stepHistory,
-                          TuringTransition nextTuringTransition, TuringMachineHandler handler) {
+    public Executor(TuringMachine turingMachine, Tape tape, ExecutionPath executionPath,
+                    TuringTransition nextTuringTransition, TuringMachineHandler handler) {
         this.turingMachine = turingMachine;
         this.tape = tape;
-        this.stepHistory = stepHistory;
+        this.executionPath = executionPath;
         this.handler = handler;
         stateCodes.add("Accept");
         stateCodes.add("Reject");
         stateCodes.add("Halt");
         stateCodes.add("Stuck");
         stateCodes.add("Run");
+        isSplitStep = true;
         step(nextTuringTransition);
     }
 
@@ -52,14 +55,16 @@ public class ExecutorThread{
             return stateCodes.get(2);
         }
         else{
+            boolean splitExecution = false;
             char read = tape.read();
             List<TuringTransition> turingTransitions = findTransitions(read);
             if(turingTransitions.size() > 1){
+                splitExecution = true;
                 for (int i = 1; i < turingTransitions.size(); i++) {
                     TuringMachine tmCopy = turingMachine.getCopy();
-                    List<ExecutionStep> historyCopy = new ArrayList<>(stepHistory);
-                    ExecutorThread executorThread = new ExecutorThread(tmCopy, tape.getCopy(), historyCopy, turingTransitions.get(i), handler);
-                    handler.addThread(tmCopy, executorThread);
+                    ExecutionPath pathCopy = executionPath.copy();
+                    Executor executor = new Executor(tmCopy, tape.getCopy(), pathCopy, turingTransitions.get(i), handler);
+                    handler.addExecutor(tmCopy, executor);
                 }
             }
             else if (turingTransitions.size() == 0){
@@ -68,6 +73,7 @@ public class ExecutorThread{
 
             TuringTransition turingTransition = turingTransitions.get(0);
             step(turingTransition);
+            isSplitStep = splitExecution;
             return stateCodes.get(4);
         }
     }
@@ -78,14 +84,14 @@ public class ExecutorThread{
         char read = turingTransition.getTransitionRule().getReadSymbol();
         char write = turingTransition.getTransitionRule().getWriteSymbol();
         char direction = turingTransition.getTransitionRule().getDirection();
-        stepHistory.add(new ExecutionStep(from, to, read, write, direction));
+        executionPath.addStep(new ExecutionStep(from, to, read, write, direction, isSplitStep));
         try{
             tape.write(write);
             tape.move(direction);
             turingMachine.setCurrentState(to);
         }
         catch (Exception e){
-//            TODO DO SOMETHING ABOUT EXCEPTION HANDLING
+            e.printStackTrace();
         }
     }
 
@@ -102,17 +108,8 @@ public class ExecutorThread{
         return foundTuringTransitions;
     }
 
-    public List<ExecutionStep> getStepHistory(){
-        return stepHistory;
-    }
-
-    public String getExecutionPath(){
-        StringBuilder builder = new StringBuilder();
-        for (ExecutionStep step: stepHistory) {
-            builder.append(step.getFrom().getName());
-            builder.append(" | ");
-        }
-        return builder.toString();
+    public ExecutionPath getExecutionPath(){
+        return executionPath;
     }
 
     public TuringMachine getTM(){

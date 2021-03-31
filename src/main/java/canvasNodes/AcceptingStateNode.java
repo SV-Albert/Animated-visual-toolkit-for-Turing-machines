@@ -1,6 +1,7 @@
 package canvasNodes;
 
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 public class AcceptingStateNode extends StateNode{
     private Circle innerCircle;
@@ -9,7 +10,9 @@ public class AcceptingStateNode extends StateNode{
         double innerRadius = 22;
         innerCircle = new Circle(xPos, yPos, innerRadius);
         innerCircle.getStyleClass().add("state-accepting");
-        super.getNodeGroup().getChildren().add(innerCircle);
+        Text name = (Text) super.getNodeGroup().getChildren().get(1);
+        super.getNodeGroup().getChildren().remove(1);
+        super.getNodeGroup().getChildren().addAll(innerCircle, name);
     }
 
     @Override

@@ -1,14 +1,14 @@
 package turing;
 
-import exceptions.InvalidSymbolException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Tape {
-    private List<Character> tapeArray;
+    private final List<Character> tapeArray;
     private int head;
     private final int initialHeadPosition;
     private final char emptyChar = '~';
+    private int previousWriteIndex;
 
     public Tape(List<Character> tapeArray, int head){
         this.tapeArray = tapeArray;
@@ -20,14 +20,14 @@ public class Tape {
         return tapeArray.get(head);
     }
 
-    public void move(char direction) throws InvalidSymbolException{
-        if (direction == 'L'){
+    public void move(char direction){
+        if (direction == 'R'){
             head++;
             if(head == tapeArray.size()){
                 tapeArray.add(emptyChar);
             }
         }
-        else if (direction == 'R'){
+        else if (direction == 'L'){
             if(head == 0){
                 addSpaceAfter(-1);
             }
@@ -35,12 +35,10 @@ public class Tape {
                 head--;
             }
         }
-        else if (direction != 'N'){
-            throw new InvalidSymbolException("Direction '" + direction + "' " + "is invalid");
-        }
     }
 
     public void write(char ch){
+        previousWriteIndex = head;
         if (head < tapeArray.size()){
             tapeArray.set(head, ch);
         }
@@ -83,6 +81,10 @@ public class Tape {
 
     public int getHead(){
         return head;
+    }
+
+    public int getPreviousWriteIndex(){
+        return previousWriteIndex;
     }
 
     public List<Character> getTapeArray(){

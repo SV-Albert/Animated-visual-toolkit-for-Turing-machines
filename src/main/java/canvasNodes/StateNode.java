@@ -23,8 +23,6 @@ public class StateNode {
         nodeCircle.getStyleClass().add("state");
         stateName = new Text("");
         stateName.getStyleClass().add("state-label");
-        stateName.setTranslateX(nodeCircle.getCenterX() - stateName.prefWidth(-1)/3);
-        stateName.setTranslateY(nodeCircle.getCenterY() - radius - stateName.prefHeight(-1)/2);
         nodeGroup = new Group();
         nodeGroup.getChildren().addAll(nodeCircle, stateName);
         isActive = false;
@@ -46,7 +44,7 @@ public class StateNode {
         state.setName(name);
         stateName.setText(name);
         stateName.setTranslateX(xPos - stateName.prefWidth(-1)/1.7);
-        stateName.setTranslateY(yPos - radius - stateName.prefHeight(-1)/2);
+        stateName.setTranslateY(yPos  + stateName.prefHeight(-1)/2.5);
     }
 
     public void move(double xPos, double yPos){
@@ -56,7 +54,7 @@ public class StateNode {
         nodeCircle.setCenterX(xPos);
         nodeCircle.setCenterY(yPos);
         stateName.setTranslateX(xPos - stateName.prefWidth(-1)/1.7);
-        stateName.setTranslateY(yPos - radius - stateName.prefHeight(-1)/2);
+        stateName.setTranslateY(yPos  + stateName.prefHeight(-1)/2.5);
     }
 
     public double getX(){

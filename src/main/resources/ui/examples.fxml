@@ -1,43 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
-  All rights reserved. Use is subject to license terms.
-
-  This file is available and licensed under the following license:
-
-  Redistribution and use in source and binary forms, with or without
-  modification, are permitted provided that the following conditions
-  are met:
-
-  - Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-  - Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in
-    the documentation and/or other materials provided with the distribution.
-  - Neither the name of Oracle Corporation nor the names of its
-    contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--->
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -47,169 +13,106 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox prefHeight="715.0" prefWidth="1240.0" styleClass="body-bg" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.SimulatorController">
+<HBox prefHeight="715.0" prefWidth="1240.0" styleClass="body-bg" stylesheets="@../stylesheet.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.ExamplesController">
    <children>
-      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
-         <bottom>
-            <VBox alignment="CENTER" prefHeight="324.0" prefWidth="190.0" BorderPane.alignment="BOTTOM_CENTER">
-               <children>
-                  <Label fx:id="inputStatusLabel" prefHeight="41.0" prefWidth="169.0" styleClass="status-label" text="Input status: None" textAlignment="CENTER">
-                     <VBox.margin>
-                        <Insets bottom="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="tmNameLabel" prefHeight="41.0" prefWidth="169.0" styleClass="status-label" text="TM: Not loaded" textAlignment="CENTER">
-                     <VBox.margin>
-                        <Insets bottom="5.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Button fx:id="loadButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Load From File" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="loadExampleButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Load Example" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="editButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Edit" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="3.0" right="3.0" top="3.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="tapeInputButton" alignment="CENTER" mnemonicParsing="false" prefHeight="15.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Add Tape Input" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="10.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="runPauseButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Run/Pause" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="resetButton" alignment="CENTER" mnemonicParsing="false" prefHeight="20.0" prefWidth="140.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Reset" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Speed" textAlignment="CENTER" wrappingWidth="140.0">
-                     <font>
-                        <Font name="Roboto" size="15.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="2.0" left="2.0" right="2.0" top="5.0" />
-                     </VBox.margin>
-                  </Text>
-                  <Slider fx:id="speedSlider" blockIncrement="5.0" maxWidth="-Infinity" min="1.0" prefHeight="14.0" prefWidth="140.0" showTickMarks="true" snapToTicks="true" value="51.0">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="2.0" right="2.0" top="2.0" />
-                     </VBox.margin>
-                  </Slider>
-               </children>
-            </VBox>
-         </bottom>
-         <center>
-            <StackPane prefHeight="606.0" prefWidth="190.0" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" StackPane.alignment="CENTER">
-                     <children>
-                        <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="23.0" prefWidth="175.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
-                           <font>
-                              <Font size="20.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin>
-                        </Button>
-                        <Label prefHeight="32.0" prefWidth="193.0" styleClass="pop-up-label" text="  Unique execution paths:" textAlignment="JUSTIFY" />
-                        <ListView fx:id="executionPathListView" prefHeight="272.0" prefWidth="180.0">
-                           <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-                        </ListView>
-                     </children>
-                  </VBox>
-               </children>
-            </StackPane>
-         </center>
-      </BorderPane>
-      <VBox alignment="TOP_CENTER" prefHeight="805.0" prefWidth="1550.0" stylesheets="@../stylesheet.css">
+      <VBox alignment="TOP_CENTER" prefHeight="715.0" prefWidth="246.0">
          <children>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
-               <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="211.0" stroke="BLACK" strokeType="INSIDE" styleClass="history-section" width="1048.0" />
-                  <ScrollPane fx:id="historyScroll" hbarPolicy="ALWAYS" maxWidth="1.7976931348623157E308" minHeight="210.0" pannable="true" prefHeight="210.0" prefWidth="1050.0" styleClass="execution-history" stylesheets="@../stylesheet.css" vbarPolicy="NEVER">
-                     <content>
-                        <HBox fx:id="executionHistorySection" prefHeight="176.0" prefWidth="1044.0">
-                           <children>
-                              <VBox alignment="CENTER" prefHeight="204.0" prefWidth="70.0">
-                                 <children>
-                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Step" textAlignment="CENTER" textFill="WHITE">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="From State" textAlignment="CENTER" textFill="WHITE">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="To State" textAlignment="CENTER" textFill="WHITE">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Read" textAlignment="CENTER" textFill="WHITE">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="70.0" styleClass="execution-history-label" text="Write" textAlignment="CENTER" textFill="WHITE">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label alignment="CENTER" styleClass="execution-history-label" text="Move Tape" textAlignment="CENTER" textFill="WHITE">
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Label>
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets left="5.0" />
-                                 </HBox.margin>
-                              </VBox>
-                           </children>
-                        </HBox>
-                     </content>
-                  </ScrollPane>
-               </children>
-            </StackPane>
-            <ScrollPane maxWidth="1.7976931348623157E308" minHeight="220.0" pannable="true" prefHeight="606.0" prefWidth="1360.0" styleClass="canvas">
-               <content>
-                  <Pane fx:id="canvas" prefHeight="472.0" prefWidth="1047.0" />
-               </content>
-            </ScrollPane>
-            <HBox fx:id="tapeSection" alignment="CENTER" prefHeight="40.0" prefWidth="1549.0">
+            <Button fx:id="backButton" alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="&lt;-- Back" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="30.0" left="3.0" right="3.0" top="20.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex1" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Bit flipper" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex2" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 2" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex3" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 3" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex4" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 4" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex5" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 5" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex6" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 6" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex7" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 7" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex8" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 8" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex9" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 9" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="ex10" alignment="CENTER" mnemonicParsing="false" prefHeight="45.0" prefWidth="230.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Example 10" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <BorderPane prefHeight="200.0" prefWidth="200.0">
+         <left>
+            <TextArea fx:id="textArea" prefHeight="675.0" prefWidth="213.0" BorderPane.alignment="CENTER" />
+         </left>
+         <bottom>
+            <HBox fx:id="tapeSection" alignment="CENTER" prefHeight="40.0" prefWidth="1549.0" BorderPane.alignment="CENTER">
                <children>
                   <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0">
                      <children>
@@ -543,7 +446,32 @@
                   </StackPane>
                </children>
             </HBox>
-         </children>
-      </VBox>
+         </bottom>
+         <center>
+            <ScrollPane hbarPolicy="NEVER" maxWidth="1.7976931348623157E308" minHeight="220.0" pannable="true" prefHeight="701.0" prefWidth="785.0" styleClass="canvas" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+               <content>
+                  <Pane fx:id="canvas" prefHeight="680.0" prefWidth="778.0">
+                     <children>
+                        <Button fx:id="resetButton" alignment="CENTER" layoutX="632.0" layoutY="568.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="138.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Reset" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="addInputButton" alignment="CENTER" layoutX="632.0" layoutY="514.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="138.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Add input" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="runButton" alignment="CENTER" layoutX="632.0" layoutY="621.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="138.0" styleClass="buttons" stylesheets="@../stylesheet.css" text="Run" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </Pane>
+               </content>
+            </ScrollPane>
+         </center>
+      </BorderPane>
    </children>
 </HBox>

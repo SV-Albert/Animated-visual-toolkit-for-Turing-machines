@@ -1,6 +1,7 @@
 package canvasNodes;
 
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 public class HaltingStateNode extends StateNode{
 
@@ -11,7 +12,9 @@ public class HaltingStateNode extends StateNode{
         double innerRadius = 22;
         innerCircle = new Circle(xPos, yPos, innerRadius);
         innerCircle.getStyleClass().add("state");
-        super.getNodeGroup().getChildren().add(innerCircle);
+        Text name = (Text) super.getNodeGroup().getChildren().get(1);
+        super.getNodeGroup().getChildren().remove(1);
+        super.getNodeGroup().getChildren().addAll(innerCircle, name);
     }
 
     @Override

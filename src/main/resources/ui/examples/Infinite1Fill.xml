@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TuringMachineSave name = "Infinite 1 Fill (Input: ~)">
+	<states initial = "s0">
+		<state name = "s0">
+			<isInitial>true</isInitial>
+			<isAccepting>false</isAccepting>
+			<isRejecting>false</isRejecting>
+			<isHalting>false</isHalting>
+			<xPos>348.0</xPos>
+			<yPos>268.0</yPos>
+		</state>
+		<state name = "s1">
+			<isInitial>false</isInitial>
+			<isAccepting>false</isAccepting>
+			<isRejecting>false</isRejecting>
+			<isHalting>false</isHalting>
+			<xPos>690.0</xPos>
+			<yPos>269.0</yPos>
+		</state>
+	</states>
+	<transitions>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s0</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s1</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s1</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s0</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>L</direction>
+		</transition>
+	</transitions>
+</TuringMachineSave>
