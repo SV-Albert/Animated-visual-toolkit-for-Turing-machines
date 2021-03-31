@@ -167,6 +167,30 @@ public class BuilderController {
         });
     }
 
+    private void addDragging(Group nodeGroup){
+        nodeGroup.setOnDragDetected(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+                Dragboard dragboard;
+                if(canvas.getChildren().contains(nodeGroup)){
+                    dragboard = nodeGroup.startDragAndDrop(TransferMode.MOVE);
+                    nodeMoved = true;
+                }
+                else {
+                    dragboard = nodeGroup.startDragAndDrop(TransferMode.COPY);
+                }
+                nodeDragged = nodeGroup;
+                SnapshotParameters parameters = new SnapshotParameters();
+                parameters.setFill(Color.TRANSPARENT);
+                Image dragImage = nodeGroup.snapshot(parameters, null);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(dragImage);
+                dragboard.setContent(content);
+                event.consume();
+            }
+        });
+    }
+
     //UI Methods
 
     private void setUIDisable(boolean isDisabled){
@@ -237,30 +261,6 @@ public class BuilderController {
     }
 
     //Event handling methods
-
-    private void addDragging(Group nodeGroup){
-        nodeGroup.setOnDragDetected(new EventHandler<MouseEvent>(){
-                @Override
-                public void handle(MouseEvent event) {
-                    Dragboard dragboard;
-                    if(canvas.getChildren().contains(nodeGroup)){
-                        dragboard = nodeGroup.startDragAndDrop(TransferMode.MOVE);
-                        nodeMoved = true;
-                    }
-                    else {
-                        dragboard = nodeGroup.startDragAndDrop(TransferMode.COPY);
-                    }
-                    nodeDragged = nodeGroup;
-                    SnapshotParameters parameters = new SnapshotParameters();
-                    parameters.setFill(Color.TRANSPARENT);
-                    Image dragImage = nodeGroup.snapshot(parameters, null);
-                    ClipboardContent content = new ClipboardContent();
-                    content.putImage(dragImage);
-                    dragboard.setContent(content);
-                    event.consume();
-                }
-            });
-    }
 
     private void addClickListener(Group nodeGroup){
         nodeGroup.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -608,7 +608,6 @@ public class BuilderController {
             }
             else if(groupNode == finalAcceptingStateNode){
                 newState.setAccepting(true);
-
             }
             else if(groupNode == finalRejectingStateNode){
                 newState.setRejecting(true);

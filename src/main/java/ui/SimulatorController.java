@@ -26,6 +26,7 @@ import javafx.util.Pair;
 import turing.*;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 
 public class SimulatorController {
@@ -275,7 +276,7 @@ public class SimulatorController {
             listView.getItems().add("Infinite1Fill");
             listView.getItems().add("InfiniteNDTM");
             listView.getItems().add("ABCopier");
-            listView.getItems().add("BinaryAddition.xml");
+            listView.getItems().add("BinaryAddition");
 
             listView.setOnMouseClicked(event -> {
                 loadExample(listView.getSelectionModel().getSelectedItem());
@@ -299,11 +300,12 @@ public class SimulatorController {
 
     private void loadExample(String fileName){
         try {
-            File exampleFile = new File(getClass().getResource("examples/" + fileName + ".xml").toURI());
-            TuringMachine exampleTM = SaveManager.loadTuringMachine(exampleFile);
+            InputStream stream = SimulatorController.class.getResourceAsStream("examples/" + fileName + ".xml");
+            TuringMachine exampleTM = SaveManager.loadTuringMachineFromStream(stream);
             loadTuringMachine(exampleTM);
             exampleLoaded = true;
         } catch (Exception e) {
+            e.printStackTrace();
             NotificationManager.errorNotification("Error", "Could not load the example file", primaryStage);
         }
     }

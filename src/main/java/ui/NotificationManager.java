@@ -25,6 +25,7 @@ public class NotificationManager {
     }
 
     public static void errorNotification(String title, String message, Stage owner){
+        System.out.println(NotificationManager.class.getResource("icons/error_icon.png").toExternalForm());
         Notifications.create()
                 .graphic(errorGraphic)
                 .position(Pos.BOTTOM_RIGHT)
