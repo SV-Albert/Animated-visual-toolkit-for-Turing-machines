@@ -12,14 +12,14 @@ public class ControllerLoader {
 
     public static MenuController openMainMenu(Stage primaryStage){
         try{
-            FXMLLoader menuScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("start_menu.fxml"));
+            FXMLLoader menuScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("fxml/start_menu.fxml"));
             Parent root = new Pane();
             root = menuScreenLoader.load();
             MenuController controller = menuScreenLoader.getController();
             controller.setStage(primaryStage);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            scene.getStylesheets().add(0, MenuController.class.getResource("notificationsStyle.css").toExternalForm());
+            scene.getStylesheets().add(0, MenuController.class.getResource("stylesheets/notificationsStyle.css").toExternalForm());
             return controller;
         } catch (IOException e){
             e.printStackTrace();
@@ -29,14 +29,14 @@ public class ControllerLoader {
 
     public static BuilderController openBuilderWindow(Stage primaryStage){
         try{
-            FXMLLoader builderScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("builder.fxml"));
+            FXMLLoader builderScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("fxml/builder.fxml"));
             Parent root = new Pane();
             root = builderScreenLoader.load();
             BuilderController controller = builderScreenLoader.getController();
             controller.setStage(primaryStage);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            scene.getStylesheets().add(0, BuilderController.class.getResource("notificationsStyle.css").toExternalForm());
+            scene.getStylesheets().add(0, BuilderController.class.getResource("stylesheets/notificationsStyle.css").toExternalForm());
             return controller;
         } catch (IOException e){
             e.printStackTrace();
@@ -46,13 +46,13 @@ public class ControllerLoader {
 
     public static SimulatorController openSimulatorWindow(Stage primaryStage){
         try{
-            FXMLLoader simulatorScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("simulator.fxml"));
+            FXMLLoader simulatorScreenLoader = new FXMLLoader(ControllerLoader.class.getResource("fxml/simulator.fxml"));
             Parent root = new Pane();
             root = simulatorScreenLoader.load();
             SimulatorController controller = simulatorScreenLoader.getController();
             controller.setStage(primaryStage);
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(0, SimulatorController.class.getResource("notificationsStyle.css").toExternalForm());
+            scene.getStylesheets().add(0, SimulatorController.class.getResource("stylesheets/notificationsStyle.css").toExternalForm());
             primaryStage.setScene(scene);
             return controller;
         } catch (IOException e){

@@ -12,7 +12,7 @@ public class Main extends Application {
         ControllerLoader.openMainMenu(primaryStage);
         primaryStage.resizableProperty().setValue(Boolean.FALSE);
         primaryStage.setTitle("TM Toolkit");
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("TM_Toolkit_Icon.png")));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("ui/images/TM_Toolkit_Icon.png")));
         primaryStage.show();
     }
 }

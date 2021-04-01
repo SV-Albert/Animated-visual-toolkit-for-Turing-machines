@@ -12,7 +12,7 @@ public class InitialStateNode extends StateNode{
         super(xPos, yPos);
         super.activate();
         try {
-            arrowImage = new ImageView("arrow_right.png");
+            arrowImage = new ImageView("ui/images/arrow_right.png");
             arrowImage.setX(xPos - xOffset);
             arrowImage.setY(yPos - yOffset);
             super.getNodeGroup().getChildren().add(arrowImage);

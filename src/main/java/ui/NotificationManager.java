@@ -8,9 +8,9 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 public class NotificationManager {
-    public static final Image errorIcon = new Image(NotificationManager.class.getResource("icons/error_icon.png").toExternalForm());
+    public static final Image errorIcon = new Image(NotificationManager.class.getResource("images/error_icon.png").toExternalForm());
     public static final ImageView errorGraphic = new ImageView(errorIcon);
-    public static final Image confirmIcon = new Image(NotificationManager.class.getResource("icons/confirm_icon.png").toExternalForm());
+    public static final Image confirmIcon = new Image(NotificationManager.class.getResource("images/confirm_icon.png").toExternalForm());
     public static final ImageView confirmGraphic = new ImageView(confirmIcon);
 
     public static void confirmationNotification(String title, String message, Stage owner){
@@ -25,7 +25,6 @@ public class NotificationManager {
     }
 
     public static void errorNotification(String title, String message, Stage owner){
-        System.out.println(NotificationManager.class.getResource("icons/error_icon.png").toExternalForm());
         Notifications.create()
                 .graphic(errorGraphic)
                 .position(Pos.BOTTOM_RIGHT)

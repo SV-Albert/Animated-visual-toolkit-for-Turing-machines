@@ -124,7 +124,7 @@ public class BuilderController {
             controller.loadTuringMachine(tm);
             controller.setSaveFile(currentSaveFile);
         });
-        addTransitionsButton.setOnAction(e -> addTransitionsThroughRulesPopup());
+        addTransitionsButton.setOnAction(e -> openAddTransitionsThroughRulesPopUp());
         backButton.setOnAction(event -> ControllerLoader.openMainMenu(primaryStage));
         setUIDisable(true);
         setupTransitionRulesInputWindow();
@@ -221,7 +221,7 @@ public class BuilderController {
         MenuItem renameState = new MenuItem("Rename State");
         renameState.setOnAction(event -> {
             usedNames.remove(stateNode.getName());
-            enterStateNamePopUp(stateNode, stateNode.getState());
+            openStateNamePopUp(stateNode, stateNode.getState());
         });
         MenuItem deleteState = new MenuItem("Delete State");
         deleteState.setOnAction(event -> deleteState(nodeGroup));
@@ -322,9 +322,9 @@ public class BuilderController {
 
     //Popup methods
 
-    private void enterStateNamePopUp(StateNode stateNode, State state){
+    private void openStateNamePopUp(StateNode stateNode, State state){
         VBox root = new VBox();
-        root.getStylesheets().add("stylesheet.css");
+        root.getStylesheets().add("ui/stylesheets/stylesheet.css");
         root.getStyleClass().add("pop-up");
         root.setAlignment(Pos.CENTER);
         root.setPrefHeight(100);
@@ -340,6 +340,7 @@ public class BuilderController {
         text.getStyleClass().add("pop-up-text");
         TextField textField = new TextField();
         textField.getStyleClass().add("pop-up-textfield");
+        textField.setId("nameTextField");
         textField.setOnKeyPressed(event -> {
             if(event.getCode().equals(KeyCode.ENTER)){
                 if(addStateName(textField, stateNode, state)){
@@ -349,6 +350,7 @@ public class BuilderController {
         });
         Button confirmButton = new Button("Confirm");
         confirmButton.getStyleClass().add("buttons");
+        confirmButton.setId("confirmButton");
         confirmButton.setOnAction(event -> {
             if(addStateName(textField, stateNode, state)){
                 canvas.getChildren().remove(root);
@@ -360,7 +362,7 @@ public class BuilderController {
 
     private void addTransitionWithPopup(StateNode from, StateNode to){
         if(!(from instanceof AcceptingStateNode || from instanceof RejectingStateNode || from instanceof HaltingStateNode)){
-            TransitionRule transitionRule = newTransitionPopup(from.getX(), from.getY());
+            TransitionRule transitionRule = openTransitionPopup(from.getX(), from.getY());
             TuringTransition tmTuringTransition = new TuringTransition(from.getState(), to.getState(), transitionRule);
             tm.addTransition(tmTuringTransition);
             addTransitionArrow(from, to, transitionRule);
@@ -370,10 +372,10 @@ public class BuilderController {
         }
     }
 
-    private TransitionRule newTransitionPopup(double xPos, double yPos){
+    private TransitionRule openTransitionPopup(double xPos, double yPos){
 
         VBox root = new VBox();
-        root.getStylesheets().add("stylesheet.css");
+        root.getStylesheets().add("ui/stylesheets/stylesheet.css");
         root.getStyleClass().add("pop-up");
         root.setAlignment(Pos.CENTER);
         root.setPrefHeight(100);
@@ -398,6 +400,7 @@ public class BuilderController {
         readField.setPrefWidth(70);
         addLengthLimit(readField);
         readField.getStyleClass().add("pop-up-textfield");
+        readField.setId("readField");
         readSection.getChildren().addAll(read, readField);
 
         VBox writeSection = new VBox();
@@ -409,6 +412,7 @@ public class BuilderController {
         writeField.setPrefWidth(70);
         addLengthLimit(writeField);
         writeField.getStyleClass().add("pop-up-textfield");
+        writeField.setId("writeField");
         writeSection.getChildren().addAll(write, writeField);
 
         VBox directionSection = new VBox();
@@ -416,19 +420,21 @@ public class BuilderController {
         directionSection.setAlignment(Pos.CENTER);
         Text direction = new Text("Direction");
         direction.getStyleClass().add("pop-up-text");
-        ComboBox<Character> directionChoices = new ComboBox<Character>();
-        directionChoices.setPrefWidth(70);
-        directionChoices.getItems().add('R');
-        directionChoices.getItems().add('L');
-        directionChoices.getItems().add('N');
-        directionChoices.getStyleClass().add("pop-up-combobox");
-        directionSection.getChildren().addAll(direction, directionChoices);
+        ChoiceBox<Character> directionChoiceBox = new ChoiceBox<Character>();
+        directionChoiceBox.setPrefWidth(70);
+        directionChoiceBox.getItems().add('R');
+        directionChoiceBox.getItems().add('L');
+        directionChoiceBox.getItems().add('N');
+        directionChoiceBox.getStyleClass().add("pop-up-combobox");
+        directionChoiceBox.setId("directionChoiceBox");
+        directionSection.getChildren().addAll(direction, directionChoiceBox);
 
         fields.getChildren().addAll(readSection, writeSection, directionSection);
 
         TransitionRule transitionRule = new TransitionRule();
         Button confirmButton = new Button("Confirm");
         confirmButton.getStyleClass().add("buttons");
+        confirmButton.setId("confirmButton");
         confirmButton.setOnAction(event -> {
             char readChar;
             if(!readField.getText().isEmpty()){
@@ -445,8 +451,8 @@ public class BuilderController {
                 writeChar = '~';
             }
             char directionChar;
-            if(directionChoices.getValue() != null){
-                directionChar = directionChoices.getValue();
+            if(directionChoiceBox.getValue() != null){
+                directionChar = directionChoiceBox.getValue();
             }
             else{
                 directionChar = 'N';
@@ -463,14 +469,14 @@ public class BuilderController {
         return transitionRule;
     }
 
-    private void addTransitionsThroughRulesPopup(){
+    private void openAddTransitionsThroughRulesPopUp(){
         BorderPane root = new BorderPane();
         ScrollPane content = new ScrollPane();
         content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         content.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         setupTransitionRulesInputWindow();
         content.setContent(transitionRulesInputWindow);
-        root.getStylesheets().add("stylesheet.css");
+        root.getStylesheets().add("ui/stylesheets/stylesheet.css");
         root.getStyleClass().add("pop-up");
 
         double xPos = 0;
@@ -535,12 +541,14 @@ public class BuilderController {
         initialStateLabel.setPrefWidth(labelWidth);
         initialStateLabel.getStyleClass().add("pop-up-label");
         TextField initialStateField = new TextField();
+        initialStateField.setId("initialStateTextField");
         initialStateField.setPrefWidth(60);
         initialStateField.getStyleClass().add("pop-up-textfield");
         if(initialStateExists){
             initialStateField.setText(tm.getInitialState().getName());
         }
         Button confirmButton = new Button("Confirm");
+        confirmButton.setId("confirmButton");
         confirmButton.getStyleClass().add("buttons");
         confirmButton.setPrefWidth(80);
         confirmButton.setOnAction(event -> {
@@ -616,7 +624,7 @@ public class BuilderController {
                 newState.setHalting(true);
             }
             StateNode stateNode = loadStateNode(newState);
-            enterStateNamePopUp(stateNode, newState);
+            openStateNamePopUp(stateNode, newState);
             registerNewStateNode(stateNode, newState);
         }
     }
@@ -640,6 +648,7 @@ public class BuilderController {
         else if(!usedNames.contains(textFieldString)){
             usedNames.add(textFieldString);
             stateNode.setName(textFieldString);
+            stateNode.getNodeGroup().setId(textFieldString);
             state.setName(textFieldString);
             return true;
         }
@@ -868,25 +877,6 @@ public class BuilderController {
             StateNode fromStateNode = stateStateNodeMap.get(statePair.getKey());
             StateNode toStateNode = stateStateNodeMap.get(statePair.getValue());
             for (TransitionRule rule: transitionRuleList.get(statePair)) {
-//                boolean arrowExists = false;
-//                if(stateNodeArrowMap.containsKey(fromStateNode) && stateNodeArrowMap.containsKey(toStateNode)){
-//                    if(!stateNodeArrowMap.get(fromStateNode).isEmpty() && !stateNodeArrowMap.get(toStateNode).isEmpty()){
-//                        for (TransitionArrow arrow: stateNodeArrowMap.get(fromStateNode)) {
-//                            if(arrow.getFrom() == fromStateNode && arrow.getTo() == toStateNode &&
-//                                    arrow.containsTransitionRule(rule.toString())){
-//                                arrowExists = true;
-//                            }
-//                        }
-//                        for (TransitionArrow arrow: stateNodeArrowMap.get(toStateNode)) {
-//                            if(arrow.getFrom() == fromStateNode && arrow.getTo() == toStateNode &&
-//                                    arrow.containsTransitionRule(rule.toString())){
-//                                arrowExists = true;
-//                            }
-//                        }
-//                    }
-//                }
-//                if(!arrowExists){
-//                }
                     tm.addTransition(new TuringTransition(statePair.getKey(), statePair.getValue(), rule));
                     addTransitionArrow(fromStateNode, toStateNode, rule);
             }
@@ -944,13 +934,19 @@ public class BuilderController {
     private HBox getTransitionRuleInputFields(){
         HBox inputs = new HBox();
         inputs.setAlignment(Pos.CENTER);
+        int index = transitionRulesInputWindow.getChildren().size();
         TextField fromState = getNewPopupTextField("");
+        fromState.setId("fromStateTextField" + index);
         TextField toState = getNewPopupTextField("");
+        toState.setId("toStateTextField" + index);
         TextField read = getNewPopupTextField("~");
+        read.setId("readTextField" + index);
         addLengthLimit(read);
         TextField write = getNewPopupTextField("~");
+        write.setId("writeTextField" + index);
         addLengthLimit(write);
         ChoiceBox<Character> direction = new ChoiceBox<>();
+        direction.setId("directionChoiceBox" + index);
         direction.getItems().addAll('R', 'L', 'N');
         direction.getSelectionModel().select(2);
         direction.setMinWidth(55);
@@ -1017,11 +1013,14 @@ public class BuilderController {
         for(State state: stateStateNodeMap.keySet()){
             if(state.isAccepting()){
                 TextField newTextField = getNewPopupTextField(state.getName());
+                newTextField.setId("acceptingStatesTextField" + acceptingStatesFields.getChildren().size());
+                System.out.println(acceptingStatesFields.getChildren().size());
                 newTextField.textProperty().addListener((observable, oldValue, newValue) -> onSpecialStatesInputChange(acceptingStatesFields));
                 acceptingStatesFields.getChildren().add(newTextField);
             }
         }
         TextField newTextField = getNewPopupTextField("");
+        newTextField.setId("acceptingStatesTextField" + acceptingStatesFields.getChildren().size());
         newTextField.textProperty().addListener((observable, oldValue, newValue) -> onSpecialStatesInputChange(acceptingStatesFields));
         acceptingStatesFields.getChildren().add(newTextField);
 
@@ -1034,11 +1033,13 @@ public class BuilderController {
         for(State state: stateStateNodeMap.keySet()){
             if(state.isHalting()){
                 TextField newTextField = getNewPopupTextField(state.getName());
+                newTextField.setId("haltingStatesTextField" + haltingStatesFields.getChildren().size());
                 newTextField.textProperty().addListener((observable, oldValue, newValue) -> onSpecialStatesInputChange(haltingStatesFields));
                 haltingStatesFields.getChildren().add(newTextField);
             }
         }
         TextField newTextField = getNewPopupTextField("");
+        newTextField.setId("haltingStatesTextField" + haltingStatesFields.getChildren().size());
         newTextField.textProperty().addListener((observable, oldValue, newValue) -> onSpecialStatesInputChange(haltingStatesFields));
         haltingStatesFields.getChildren().add(newTextField);
 
@@ -1051,15 +1052,21 @@ public class BuilderController {
         for(State state: stateStateNodeMap.keySet()){
             if(state.isRejecting()){
                 TextField newTextField = getNewPopupTextField(state.getName());
+                newTextField.setId("rejectingStatesTextField" + rejectingStatesFields.getChildren().size());
                 newTextField.textProperty().addListener((observable, oldValue, newValue) -> onSpecialStatesInputChange(rejectingStatesFields));
                 rejectingStatesFields.getChildren().add(newTextField);
             }
         }
         TextField newTextField = getNewPopupTextField("");
+        newTextField.setId("rejectingStatesTextField" + rejectingStatesFields.getChildren().size());
         newTextField.textProperty().addListener((observable, oldValue, newValue) -> onSpecialStatesInputChange(rejectingStatesFields));
         rejectingStatesFields.getChildren().add(newTextField);
 
         return rejectingStatesFields;
+    }
+
+    public TuringMachine getTM(){
+        return tm;
     }
 
     //IO Methods

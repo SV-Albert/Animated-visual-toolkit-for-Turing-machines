@@ -4,8 +4,6 @@ import canvasNodes.*;
 import execution.*;
 import io.SaveManager;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -224,7 +222,7 @@ public class SimulatorController {
     private void selectNextStepPopup(List<TuringTransition> transitionList){
         if(!popupOpened){
             ListView<TuringTransition> root = new ListView<>();
-            root.getStylesheets().add("stylesheet.css");
+            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
             root.getStyleClass().add("pop-up");
             root.setPrefHeight(90);
             root.setPrefWidth(120);
@@ -413,7 +411,7 @@ public class SimulatorController {
     private void loadExamplePopup(){
         if(!popupOpened){
             VBox root = new VBox();
-            root.getStylesheets().add("stylesheet.css");
+            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
             root.getStyleClass().add("pop-up");
             root.setAlignment(Pos.CENTER);
             root.setPrefHeight(260);
@@ -552,7 +550,7 @@ public class SimulatorController {
         if(!popupOpened){
             List<Character> tapeArray = new ArrayList<>();
             VBox root = new VBox();
-            root.getStylesheets().add("stylesheet.css");
+            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
             root.getStyleClass().add("pop-up");
             root.setAlignment(Pos.CENTER);
             root.setPrefHeight(120);
