@@ -262,6 +262,10 @@
     -fx-border-width: 2;
 }
 
+.list-view:disabled{
+    -fx-opacity: 0.4 ;
+}
+
 .transition-rules-popup-delete-button{
     -fx-background-color: #292929;
     -fx-background-radius: 10;
@@ -272,3 +276,15 @@
     -fx-font-family: Roboto;
     -fx-font-size: 10;
 }
+
+.slider .track{
+    -fx-background-color: #323232;
+    -fx-border-color: #000000;
+    -fx-border-radius: 20;
+}
+.slider .thumb{
+    -fx-background-color: #212121;
+    -fx-border-color: #000000;
+    -fx-border-radius: 20;
+}
+

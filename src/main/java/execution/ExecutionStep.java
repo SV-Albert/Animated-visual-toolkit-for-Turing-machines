@@ -2,7 +2,8 @@ package execution;
 
 import turing.State;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExecutionStep {
     private final State from;
@@ -11,14 +12,17 @@ public class ExecutionStep {
     private final char write;
     private final char direction;
     private final boolean isSplitStep;
+    private final List<Character> tapeArray;
 
-    public ExecutionStep(State from, State to, char read, char write, char direction, boolean isSplitStep){
+    public ExecutionStep(State from, State to, char read, char write, char direction,
+                         boolean isSplitStep, List<Character> tapeArray){
         this.from = from;
         this.to = to;
         this.read = read;
         this.write = write;
         this.direction = direction;
         this.isSplitStep = isSplitStep;
+        this.tapeArray = new ArrayList<>(tapeArray);
     }
     public State getFrom() {
         return from;
@@ -42,5 +46,9 @@ public class ExecutionStep {
 
     public boolean isSplitStep(){
         return isSplitStep;
+    }
+
+    public List<Character> getTapeArray(){
+        return tapeArray;
     }
 }

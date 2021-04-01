@@ -23,7 +23,7 @@ public class ExecutionTimer implements Runnable{
             try {
                 int maxDelayInMs = 2000;
                 Thread.sleep((long) (maxDelayInMs /speed));
-                controller.nextStep();
+                controller.nextAutoStep();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 isRunning = false;

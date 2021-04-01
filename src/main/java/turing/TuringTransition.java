@@ -1,6 +1,6 @@
 package turing;
 
-public class TuringTransition {
+public class TuringTransition implements Comparable<TuringTransition>{
 
     private final State fromState;
     private final State toState;
@@ -23,5 +23,14 @@ public class TuringTransition {
 
     public TransitionRule getTransitionRule(){
         return transitionRule;
+    }
+
+    public String toString(){
+        return fromState.getName() + "|" + toState.getName() + "|" + transitionRule.toString();
+    }
+
+    @Override
+    public int compareTo(TuringTransition o) {
+        return this.toString().compareTo(o.toString());
     }
 }

@@ -51,8 +51,9 @@ public class TransitionArrow {
             loop.setEndY(y);
             loop.setControlX(x + radius*2);
             loop.setControlY(y - radius*2);
-            rulesLabel.setTranslateX(x - Math.max(rulesLabel.getWidth()/2, radius/2));
-            rulesLabel.setTranslateY(y - radius*2 - Math.max(rulesLabel.getHeight(), radius));
+            double rulesLabelYOffset = (transitionRules.size() + 1) * 16 + radius;
+            rulesLabel.setTranslateX(x);
+            rulesLabel.setTranslateY(Math.max(y - rulesLabelYOffset, 0));
             lineGroup.getChildren().clear();
             lineGroup.getChildren().add(loop);
             lineGroup.getChildren().add(rulesLabel);

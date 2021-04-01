@@ -225,7 +225,7 @@ public class BuilderController {
         });
         MenuItem deleteState = new MenuItem("Delete State");
         deleteState.setOnAction(event -> deleteState(nodeGroup));
-        MenuItem deleteTransition = new MenuItem("Delete TuringTransition...");
+        MenuItem deleteTransition = new MenuItem("Delete Transition...");
         deleteTransition.setOnAction(event -> {
             ContextMenu removeTransitionMenu = getDeleteTransitionArrowsContextMenu(nodeGroup);
             removeTransitionMenu.show(nodeGroup, Side.RIGHT, menu.getPrefWidth(), 0);

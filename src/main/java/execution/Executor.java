@@ -1,5 +1,6 @@
 package execution;
 
+import javafx.util.Pair;
 import turing.*;
 
 import java.util.ArrayList;
@@ -10,22 +11,25 @@ public class Executor {
 
     private final TuringMachine turingMachine;
     private final Tape tape;
-    private final TuringMachineHandler handler;
+    private TuringMachineHandler handler;
     private final List<String> stateCodes = new ArrayList<>();
     private final ExecutionPath executionPath;
     private boolean isSplitStep;
+
+    public Executor(TuringMachine turingMachine, Tape tape){
+        this.turingMachine = turingMachine;
+        this.tape = tape;
+        executionPath = new ExecutionPath();
+        setup();
+    }
 
     public Executor(TuringMachine turingMachine, Tape tape, TuringMachineHandler handler){
         this.turingMachine = turingMachine;
         this.tape = tape;
         this.handler = handler;
         executionPath = new ExecutionPath();
-        stateCodes.add("Accept");
-        stateCodes.add("Reject");
-        stateCodes.add("Halt");
-        stateCodes.add("Stuck");
-        stateCodes.add("Run");
         isSplitStep = true;
+        setup();
     }
 
     public Executor(TuringMachine turingMachine, Tape tape, ExecutionPath executionPath,
@@ -34,17 +38,20 @@ public class Executor {
         this.tape = tape;
         this.executionPath = executionPath;
         this.handler = handler;
+        isSplitStep = true;
+        setup();
+        step(nextTuringTransition);
+    }
+
+    private void setup(){
         stateCodes.add("Accept");
         stateCodes.add("Reject");
         stateCodes.add("Halt");
         stateCodes.add("Stuck");
         stateCodes.add("Run");
-        isSplitStep = true;
-        step(nextTuringTransition);
     }
 
     public String nextState(){
-
         if(turingMachine.getCurrentState().isAccepting()){
             return stateCodes.get(0);
         }
@@ -78,13 +85,32 @@ public class Executor {
         }
     }
 
-    private void step(TuringTransition turingTransition){
+    public Pair<String, List<TuringTransition>> manualStep(){
+        String stateCode = stateCodes.get(4);
+        if(turingMachine.getCurrentState().isAccepting()){
+            stateCode = stateCodes.get(0);
+        }
+        else if(turingMachine.getCurrentState().isRejecting()){
+            stateCode = stateCodes.get(1);
+        }
+        else if(turingMachine.getCurrentState().isHalting()){
+            stateCode = stateCodes.get(2);
+        }
+        char read = tape.read();
+        List<TuringTransition> turingTransitions = findTransitions(read);
+        if (turingTransitions.size() == 0){
+            stateCode = stateCodes.get(3);
+        }
+        return new Pair<>(stateCode, turingTransitions);
+    }
+
+    public void step(TuringTransition turingTransition){
         State from = turingTransition.getFromState();
         State to = turingTransition.getToState();
         char read = turingTransition.getTransitionRule().getReadSymbol();
         char write = turingTransition.getTransitionRule().getWriteSymbol();
         char direction = turingTransition.getTransitionRule().getDirection();
-        executionPath.addStep(new ExecutionStep(from, to, read, write, direction, isSplitStep));
+        executionPath.addStep(new ExecutionStep(from, to, read, write, direction, isSplitStep, tape.getTapeArray()));
         try{
             tape.write(write);
             tape.move(direction);
@@ -95,7 +121,24 @@ public class Executor {
         }
     }
 
-    private List<TuringTransition> findTransitions(char read){
+    public void stepBack(){
+        int numberOfSteps = executionPath.getAllSteps().size();
+        if(numberOfSteps > 0){
+            ExecutionStep lastStep = executionPath.getAllSteps().get(numberOfSteps - 1);
+            tape.setTapeArray(lastStep.getTapeArray());
+            char direction = lastStep.getDirection();
+            if(direction == 'R'){
+                tape.move('L');
+            }
+            else if(direction == 'L'){
+                tape.move('R');
+            }
+            executionPath.getAllSteps().remove(lastStep);
+            turingMachine.setCurrentState(lastStep.getFrom());
+        }
+    }
+
+    public List<TuringTransition> findTransitions(char read){
         List<TuringTransition> foundTuringTransitions = new ArrayList<>();
         Set<TuringTransition> transitionsFromState = turingMachine.getTransitionsFromCurrentState();
         if(transitionsFromState != null){

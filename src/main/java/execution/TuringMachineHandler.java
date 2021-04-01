@@ -18,14 +18,20 @@ public class TuringMachineHandler {
         newExecutors = new HashMap<>();
     }
 
-    synchronized public String step(){
+    synchronized public String autoStep(){
         if(!executorsMap.isEmpty()){
+            List<TuringMachine> turingMachinesToStop = new ArrayList<>();
             uniqueExecutionPaths.clear();
             String stateCode = "Run";
             for (Executor executor : executorsMap.values()) {
                 String receivedStateCode = executor.nextState();
                 ExecutionPath path = executor.getExecutionPath();
-                uniqueExecutionPaths.putIfAbsent(path, executor.getTM());
+                if(uniqueExecutionPaths.containsKey(path)){
+                    turingMachinesToStop.add(executor.getTM());
+                }
+                else{
+                    uniqueExecutionPaths.putIfAbsent(path, executor.getTM());
+                }
                 if(!receivedStateCode.equals("Run")){
                     if(stateCode.equals("Run")){
                         stateCode = receivedStateCode;
@@ -43,6 +49,9 @@ public class TuringMachineHandler {
             }
             for (TuringMachine tm: newExecutors.keySet()) {
                 executorsMap.putIfAbsent(tm, newExecutors.get(tm));
+            }
+            for (TuringMachine tm: turingMachinesToStop){
+                executorsMap.remove(tm);
             }
             newExecutors.clear();
             return stateCode;
