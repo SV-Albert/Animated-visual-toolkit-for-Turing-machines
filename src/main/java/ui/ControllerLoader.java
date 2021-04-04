@@ -19,6 +19,7 @@ public class ControllerLoader {
             controller.setStage(primaryStage);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            //https://stackoverflow.com/questions/51359901/javafx-controlsfx-adding-custom-css-notification
             scene.getStylesheets().add(0, MenuController.class.getResource("stylesheets/notificationsStyle.css").toExternalForm());
             return controller;
         } catch (IOException e){

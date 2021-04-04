@@ -12,7 +12,6 @@ dependencies {
     implementation 'org.controlsfx:controlsfx:8.40.16'
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testImplementation('org.junit.jupiter:junit-jupiter-params:5.7.0')
-    testImplementation('org.hamcrest:hamcrest:2.2')
     testImplementation group: 'org.testfx', name: 'testfx-core', version: '4.0.15-alpha'
     testImplementation group: 'org.testfx', name: 'testfx-junit5', version: '4.0.15-alpha'
     testImplementation group: 'org.loadui', name: 'testFx', version: '3.1.2'
@@ -26,7 +25,6 @@ test {
 }
 
 apply plugin: 'java'
-//apply plugin: 'com.github.johnrengelman.shadow'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -38,12 +36,6 @@ jar {
         attributes 'Main-Class': 'Main'
     }
 }
-
-//shadowJar {
-//    mainClassName = 'src/main/java/Main'
-//    include 'src/main/java'
-//    include 'src/main/resources/'
-//}
 
 mainClassName = 'Main'
 

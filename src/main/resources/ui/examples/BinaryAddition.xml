@@ -14,8 +14,8 @@
 			<isAccepting>false</isAccepting>
 			<isRejecting>false</isRejecting>
 			<isHalting>false</isHalting>
-			<xPos>91.0</xPos>
-			<yPos>478.0</yPos>
+			<xPos>115.0</xPos>
+			<yPos>468.0</yPos>
 		</state>
 		<state name = "s4">
 			<isInitial>false</isInitial>
@@ -30,8 +30,8 @@
 			<isAccepting>false</isAccepting>
 			<isRejecting>false</isRejecting>
 			<isHalting>false</isHalting>
-			<xPos>637.0</xPos>
-			<yPos>368.0</yPos>
+			<xPos>620.0</xPos>
+			<yPos>378.0</yPos>
 		</state>
 		<state name = "s6">
 			<isInitial>false</isInitial>
@@ -116,44 +116,16 @@
 	</states>
 	<transitions>
 		<transition>
-			<fromState>s7</fromState>
-			<toState>s4</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s2</fromState>
+			<fromState>s3</fromState>
 			<toState>s3</toState>
 			<readSymbol>1</readSymbol>
-			<writeSymbol>x</writeSymbol>
+			<writeSymbol>0</writeSymbol>
 			<direction>L</direction>
 		</transition>
 		<transition>
-			<fromState>s4</fromState>
+			<fromState>s3</fromState>
 			<toState>s4</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>init</fromState>
-			<toState>skip1</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>init</fromState>
-			<toState>skip1</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>skip1</fromState>
-			<toState>skip1</toState>
-			<readSymbol>1</readSymbol>
+			<readSymbol>0</readSymbol>
 			<writeSymbol>1</writeSymbol>
 			<direction>R</direction>
 		</transition>
@@ -165,6 +137,181 @@
 			<direction>R</direction>
 		</transition>
 		<transition>
+			<fromState>s1</fromState>
+			<toState>s1</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>skip1</fromState>
+			<toState>skip1</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s9</fromState>
+			<toState>s9</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s8</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s5</fromState>
+			<toState>s5</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s5</fromState>
+			<toState>s5</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s5</fromState>
+			<toState>s5</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>skip2</fromState>
+			<toState>skip2</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s7</fromState>
+			<toState>s4</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>skip2</fromState>
+			<toState>skip2</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s8</fromState>
+			<toState>s8</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s7</fromState>
+			<toState>s7</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>init</fromState>
+			<toState>skip1</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s8</fromState>
+			<toState>s9</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s4</fromState>
+			<toState>s4</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s4</fromState>
+			<toState>s4</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s6</fromState>
+			<toState>s6</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>init</fromState>
+			<toState>skip1</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s7</fromState>
+			<toState>s4</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s3</fromState>
+			<toState>s4</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s2</fromState>
+			<toState>s2</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s6</fromState>
+			<toState>s6</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s6</fromState>
+			<toState>s7</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>skip2</fromState>
+			<toState>skip2</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s4</fromState>
+			<toState>s5</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
 			<fromState>init</fromState>
 			<toState>skip1</toState>
 			<readSymbol>~</readSymbol>
@@ -172,15 +319,36 @@
 			<direction>R</direction>
 		</transition>
 		<transition>
-			<fromState>skip2</fromState>
-			<toState>s0</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
+			<fromState>s5</fromState>
+			<toState>s5</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
 		</transition>
 		<transition>
 			<fromState>skip1</fromState>
 			<toState>skip1</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s2</fromState>
+			<toState>s4</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>init</fromState>
+			<toState>skip1</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s9</fromState>
+			<toState>s9</toState>
 			<readSymbol>0</readSymbol>
 			<writeSymbol>0</writeSymbol>
 			<direction>R</direction>
@@ -193,227 +361,10 @@
 			<direction>L</direction>
 		</transition>
 		<transition>
-			<fromState>s9</fromState>
-			<toState>s9</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s4</fromState>
-			<toState>s4</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s0</fromState>
-			<toState>s1</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s6</fromState>
-			<toState>s6</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>skip2</fromState>
-			<toState>skip2</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s5</fromState>
-			<toState>s5</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>skip2</fromState>
-			<toState>skip2</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>skip2</fromState>
-			<toState>skip2</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s6</fromState>
-			<toState>s6</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s7</fromState>
-			<toState>s7</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>skip1</fromState>
-			<toState>skip1</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>init</fromState>
-			<toState>skip1</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s5</fromState>
-			<toState>s5</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s5</fromState>
-			<toState>s5</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>init</fromState>
-			<toState>skip1</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s0</fromState>
-			<toState>s6</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s8</fromState>
-			<toState>s8</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s9</fromState>
-			<toState>s9</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s7</fromState>
-			<toState>s7</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
 			<fromState>s2</fromState>
 			<toState>s4</toState>
 			<readSymbol>0</readSymbol>
 			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s5</fromState>
-			<toState>s5</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>skip2</fromState>
-			<toState>skip2</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s7</fromState>
-			<toState>s4</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s1</fromState>
-			<toState>s2</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s3</fromState>
-			<toState>s4</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s7</fromState>
-			<toState>s4</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s9</fromState>
-			<toState>s9</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s2</fromState>
-			<toState>s2</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>y</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s8</fromState>
-			<toState>s9</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s0</fromState>
-			<toState>s8</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s8</fromState>
-			<toState>s8</toState>
-			<readSymbol>y</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>skip1</fromState>
-			<toState>skip1</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
 			<direction>R</direction>
 		</transition>
 		<transition>
@@ -424,6 +375,48 @@
 			<direction>L</direction>
 		</transition>
 		<transition>
+			<fromState>s0</fromState>
+			<toState>s1</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s7</fromState>
+			<toState>s7</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s7</fromState>
+			<toState>s4</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s6</fromState>
+			<toState>s6</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s4</fromState>
+			<toState>s4</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>skip1</fromState>
+			<toState>skip1</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
 			<fromState>s6</fromState>
 			<toState>s6</toState>
 			<readSymbol>x</readSymbol>
@@ -431,9 +424,9 @@
 			<direction>L</direction>
 		</transition>
 		<transition>
-			<fromState>s2</fromState>
-			<toState>s4</toState>
-			<readSymbol>~</readSymbol>
+			<fromState>skip1</fromState>
+			<toState>skip1</toState>
+			<readSymbol>y</readSymbol>
 			<writeSymbol>y</writeSymbol>
 			<direction>R</direction>
 		</transition>
@@ -445,88 +438,95 @@
 			<direction>R</direction>
 		</transition>
 		<transition>
+			<fromState>s1</fromState>
+			<toState>s1</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s9</fromState>
+			<toState>s9</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s2</fromState>
+			<toState>s3</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>s6</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s8</fromState>
+			<toState>s8</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>0</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s2</fromState>
+			<toState>s2</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>init</fromState>
+			<toState>skip1</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>skip2</fromState>
+			<toState>skip2</toState>
+			<readSymbol>y</readSymbol>
+			<writeSymbol>y</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s2</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s4</fromState>
+			<toState>s4</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>skip2</fromState>
+			<toState>s0</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>s9</fromState>
+			<toState>s9</toState>
+			<readSymbol>x</readSymbol>
+			<writeSymbol>x</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
 			<fromState>s8</fromState>
 			<toState>s9</toState>
 			<readSymbol>0</readSymbol>
 			<writeSymbol>0</writeSymbol>
 			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s6</fromState>
-			<toState>s7</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s1</fromState>
-			<toState>s1</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s4</fromState>
-			<toState>s4</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s6</fromState>
-			<toState>s6</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s1</fromState>
-			<toState>s1</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s3</fromState>
-			<toState>s4</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s2</fromState>
-			<toState>s2</toState>
-			<readSymbol>x</readSymbol>
-			<writeSymbol>x</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>s4</fromState>
-			<toState>s4</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s4</fromState>
-			<toState>s5</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s9</fromState>
-			<toState>s9</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s3</fromState>
-			<toState>s3</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>L</direction>
 		</transition>
 	</transitions>
 </TuringMachineSave>

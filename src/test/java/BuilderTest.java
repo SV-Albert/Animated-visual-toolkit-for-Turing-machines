@@ -1,16 +1,8 @@
-import canvasNodes.InitialStateNode;
-import io.SaveManager;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.loadui.testfx.GuiTest;
@@ -41,7 +33,6 @@ public class BuilderTest extends ApplicationTest {
     public void beforeEach () throws Exception {
         controller.initialize();
     }
-
 
     @Test
     public void testAddingStateByDragging(){

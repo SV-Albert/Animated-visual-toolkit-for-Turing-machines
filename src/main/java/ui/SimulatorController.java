@@ -50,7 +50,7 @@ public class SimulatorController {
     private TuringMachine currentTM;
     private File currentSaveFile;
     private boolean isRunning;
-    private TuringMachineHandler tmHandler;
+    private ExecutorHandler executorHandler;
     private ExecutionTimer timer;
     private Thread timerThread;
     private Executor manualExecutor;
@@ -65,7 +65,6 @@ public class SimulatorController {
     public void initialize(){
         stateStateNodeMap = new HashMap<>();
         stateNodeArrowMap = new HashMap<>();
-
         timer = new ExecutionTimer(this, speedSlider.getValue());
         timerThread = new Thread(timer);
         isRunning = false;
@@ -127,6 +126,8 @@ public class SimulatorController {
     private void run(){
         if(!isRunning){
             try {
+                pauseOrBackButton.setDisable(false);
+                runOrNextButton.setDisable(true);
                 timerThread.start();
                 isRunning = true;
             }
@@ -141,6 +142,8 @@ public class SimulatorController {
             timerThread.interrupt();
             isRunning = false;
             timerThread = new Thread(timer);
+            pauseOrBackButton.setDisable(true);
+            runOrNextButton.setDisable(false);
         }
     }
 
@@ -212,10 +215,13 @@ public class SimulatorController {
     }
 
     private void changeCurrentState(){
-        if(currentState != stateStateNodeMap.get(currentTM.getCurrentState())){
-            currentState.deactivate();
-            currentState = stateStateNodeMap.get(currentTM.getCurrentState());
-            currentState.activate();
+        if (currentTM != null) {
+            StateNode newCurrentState = stateStateNodeMap.get(currentTM.getCurrentState());
+            if(newCurrentState != null && currentState != newCurrentState){
+                currentState.deactivate();
+                currentState = newCurrentState;
+                currentState.activate();
+            }
         }
     }
 
@@ -247,8 +253,8 @@ public class SimulatorController {
 
     public void nextAutoStep(){
         String stateCode = "";
-        if(tmHandler != null && isRunning){
-            stateCode = tmHandler.autoStep();
+        if(executorHandler != null && isRunning){
+            stateCode = executorHandler.autoStep();
             if(!stateCode.equals("Run")){
                 isRunning = false;
                 runOrNextButton.setDisable(true);
@@ -257,6 +263,7 @@ public class SimulatorController {
         }
         timer.stop();
         timerThread.interrupt();
+
         changeCurrentState();
         String finalStateCode = stateCode;
         if(executionHistorySection.getChildren().size() >= 1000){
@@ -278,6 +285,9 @@ public class SimulatorController {
                         setInputStatus("Terminated");
                     }
                 }
+                if(executorHandler != null && !executorHandler.isExecutorRunning(currentTM)){
+                    switchTM(executorHandler.getARunningTM());
+                }
             }
         });
         if(isRunning){
@@ -287,29 +297,31 @@ public class SimulatorController {
     }
 
     private void recordStep(int stepIndex){
-        VBox stepLabelContainer = new VBox();
-        stepLabelContainer.setAlignment(Pos.CENTER);
-        ExecutionStep executionStep;
-        if(isAutoToggle.isSelected()){
-            executionStep = tmHandler.getStep(currentTM, stepIndex - 1);
-        }
-        else{
-            executionStep = manualExecutor.getExecutionPath().getAllSteps().get(stepIndex - 1);
-        }
-        Label step = new Label(String.valueOf(stepIndex));
-        Label from = new Label(executionStep.getFrom().getName());
-        Label to = new Label(executionStep.getTo().getName());
-        Label read = new Label(String.valueOf(executionStep.getRead()));
-        Label write = new Label(String.valueOf(executionStep.getWrite()));
-        Label move = new Label(String.valueOf(executionStep.getDirection()));
-        stepLabelContainer.getChildren().addAll(step, from, to, read, write, move);
-        for (Node label: stepLabelContainer.getChildren()) {
-            label.getStyleClass().add("execution-history-label");
-            ((Label) label).setAlignment(Pos.CENTER);
-        }
-        executionHistorySection.getChildren().add(stepLabelContainer);
-        if(executionHistorySection.getWidth() > historyScroll.getHvalue()){
-            historyScroll.setHvalue(executionHistorySection.getWidth() - historyScroll.getHvalue());
+        if(stepIndex <= executorHandler.getAllSteps(currentTM).size()){
+            VBox stepLabelContainer = new VBox();
+            stepLabelContainer.setAlignment(Pos.CENTER);
+            ExecutionStep executionStep;
+            if(isAutoToggle.isSelected()){
+                executionStep = executorHandler.getStep(currentTM, stepIndex - 1);
+            }
+            else{
+                executionStep = manualExecutor.getExecutionPath().getAllSteps().get(stepIndex - 1);
+            }
+            Label step = new Label(String.valueOf(stepIndex));
+            Label from = new Label(executionStep.getFrom().getName());
+            Label to = new Label(executionStep.getTo().getName());
+            Label read = new Label(String.valueOf(executionStep.getRead()));
+            Label write = new Label(String.valueOf(executionStep.getWrite()));
+            Label move = new Label(String.valueOf(executionStep.getDirection()));
+            stepLabelContainer.getChildren().addAll(step, from, to, read, write, move);
+            for (Node label: stepLabelContainer.getChildren()) {
+                label.getStyleClass().add("execution-history-label");
+                ((Label) label).setAlignment(Pos.CENTER);
+            }
+            executionHistorySection.getChildren().add(stepLabelContainer);
+            if(executionHistorySection.getWidth() > historyScroll.getHvalue()){
+                historyScroll.setHvalue(executionHistorySection.getWidth() - historyScroll.getHvalue());
+            }
         }
     }
 
@@ -317,7 +329,7 @@ public class SimulatorController {
         resetHistorySection();
         List<ExecutionStep> steps;
         if(isAutoToggle.isSelected()){
-            steps = tmHandler.getAllSteps(currentTM);
+            steps = executorHandler.getAllSteps(currentTM);
         }
         else{
             steps = manualExecutor.getExecutionPath().getAllSteps();
@@ -330,7 +342,8 @@ public class SimulatorController {
 
     private void updateUniquePathsSelector(){
         if(isAutoToggle.isSelected()){
-            Map<ExecutionPath, TuringMachine> executorMap = tmHandler.getUniqueExecutionPaths();
+            executionPathListView.getItems().clear();
+            Map<ExecutionPath, TuringMachine> executorMap = new TreeMap<>(executorHandler.getUniqueExecutionPaths());
             for (ExecutionPath uniquePath: executorMap.keySet()) {
                 if(!executionPathListView.getItems().contains(uniquePath)){
                     executionPathListView.getItems().add(uniquePath);
@@ -349,7 +362,7 @@ public class SimulatorController {
             currentTM = tm;
             changeCurrentState();
             switchHistorySection();
-            tape = tmHandler.getTape(tm);
+            tape = executorHandler.getTape(tm);
             populateTape();
             tmNameLabel.setText("TM: " + currentTM.getName());
             Tooltip tmNameTooltip = new Tooltip(tmNameLabel.getText());
@@ -421,10 +434,12 @@ public class SimulatorController {
             ListView<String> listView = new ListView<>();
 
             listView.getItems().add("BitFlipper");
+            listView.getItems().add("BinaryAddition");
+            listView.getItems().add("IsPalindrome");
+            listView.getItems().add("IsDivisibleBy3");
+            listView.getItems().add("Copier");
             listView.getItems().add("Infinite1Fill");
             listView.getItems().add("InfiniteNDTM");
-            listView.getItems().add("ABCopier");
-            listView.getItems().add("BinaryAddition");
 
             listView.setOnMouseClicked(event -> {
                 loadExample(listView.getSelectionModel().getSelectedItem());
@@ -447,14 +462,15 @@ public class SimulatorController {
     }
 
     private void loadExample(String fileName){
-        try {
-            InputStream stream = SimulatorController.class.getResourceAsStream("examples/" + fileName + ".xml");
-            TuringMachine exampleTM = SaveManager.loadTuringMachineFromStream(stream);
-            loadTuringMachine(exampleTM);
-            exampleLoaded = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            NotificationManager.errorNotification("Error", "Could not load the example file", primaryStage);
+        if(fileName != null && !fileName.isEmpty()){
+            try {
+                InputStream stream = SimulatorController.class.getResourceAsStream("examples/" + fileName + ".xml");
+                TuringMachine exampleTM = SaveManager.loadTuringMachineFromStream(stream);
+                loadTuringMachine(exampleTM);
+                exampleLoaded = true;
+            } catch (Exception e) {
+                NotificationManager.errorNotification("Error", "Could not load the example file", primaryStage);
+            }
         }
     }
 
@@ -600,7 +616,7 @@ public class SimulatorController {
         populateTape();
         canvas.getChildren().remove(root);
         popupOpened = false;
-        tmHandler = new TuringMachineHandler(initialTM, tape);
+        executorHandler = new ExecutorHandler(initialTM, tape);
         runOrNextButton.setDisable(false);
         pauseOrBackButton.setDisable(true);
         reset();
@@ -704,14 +720,13 @@ public class SimulatorController {
         if(tape != null){
             tape.setTapeArray(originalTapeInput);
             tape.resetHead();
-            populateTape();
             runOrNextButton.setDisable(false);
-            pauseOrBackButton.setDisable(false);
         }
         else{
             runOrNextButton.setDisable(true);
-            pauseOrBackButton.setDisable(true);
         }
+        populateTape();
+        pauseOrBackButton.setDisable(true);
         resetHistorySection();
         executionPathListView.getItems().clear();
         if(initialTM != null){
@@ -723,11 +738,11 @@ public class SimulatorController {
         }
         timerThread = new Thread(timer);
         if(isAutoToggle.isSelected()){
-            tmHandler = new TuringMachineHandler(currentTM, tape);
+            executorHandler = new ExecutorHandler(currentTM, tape);
             manualExecutor = null;
         }
         else{
-            tmHandler = null;
+            executorHandler = null;
             manualExecutor = new Executor(currentTM, tape);
         }
         inputStatusLabel.setText("Input status: None");

@@ -552,7 +552,7 @@ public class BuilderController {
         confirmButton.getStyleClass().add("buttons");
         confirmButton.setPrefWidth(80);
         confirmButton.setOnAction(event -> {
-            if(initialStateField.getText() != null){
+            if(!initialStateField.getText().isEmpty()){
                 List<String> acceptingStateNamesList = new ArrayList<>();
                 for(Node node: ((HBox)acceptingStatesScrollPane.getContent()).getChildren()){
                     if(node instanceof TextField && !((TextField) node).getText().isEmpty()){
@@ -1142,7 +1142,9 @@ public class BuilderController {
                 State toState = turingTransition.getToState();
                 addTransitionArrow(stateStateNodeMap.get(fromState), stateStateNodeMap.get(toState), transitionRule);
             }
-            tmNameField.setText(tm.getName());
+            if(tm.getName() != null){
+                tmNameField.setText(tm.getName());
+            }
             setUIDisable(false);
             while(highestX > canvas.getMinWidth()){
                 increaseCanvas(true);

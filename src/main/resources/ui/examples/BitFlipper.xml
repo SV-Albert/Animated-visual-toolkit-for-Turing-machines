@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TuringMachineSave name = "Ones And Zeros">
+<TuringMachineSave name = "Binary bit flipper">
 	<states initial = "s1">
 		<state name = "s3">
 			<isInitial>false</isInitial>
@@ -29,6 +29,13 @@
 	<transitions>
 		<transition>
 			<fromState>s2</fromState>
+			<toState>s2</toState>
+			<readSymbol>0</readSymbol>
+			<writeSymbol>1</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s2</fromState>
 			<toState>s3</toState>
 			<readSymbol>~</readSymbol>
 			<writeSymbol>~</writeSymbol>
@@ -36,20 +43,6 @@
 		</transition>
 		<transition>
 			<fromState>s1</fromState>
-			<toState>s2</toState>
-			<readSymbol>0</readSymbol>
-			<writeSymbol>1</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s1</fromState>
-			<toState>s2</toState>
-			<readSymbol>1</readSymbol>
-			<writeSymbol>0</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s2</fromState>
 			<toState>s2</toState>
 			<readSymbol>0</readSymbol>
 			<writeSymbol>1</writeSymbol>
@@ -67,6 +60,13 @@
 			<toState>s1</toState>
 			<readSymbol>~</readSymbol>
 			<writeSymbol>~</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s1</fromState>
+			<toState>s2</toState>
+			<readSymbol>1</readSymbol>
+			<writeSymbol>0</writeSymbol>
 			<direction>R</direction>
 		</transition>
 	</transitions>

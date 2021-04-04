@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TuringMachineSave name = "ABCopier">
+<TuringMachineSave name = "Copier (Input: a, b)">
 	<states initial = "s0">
-		<state name = "s0">
-			<isInitial>true</isInitial>
-			<isAccepting>false</isAccepting>
-			<isRejecting>false</isRejecting>
-			<isHalting>false</isHalting>
-			<xPos>51.0</xPos>
-			<yPos>298.0</yPos>
-		</state>
 		<state name = "q1">
 			<isInitial>false</isInitial>
 			<isAccepting>false</isAccepting>
@@ -81,6 +73,14 @@
 			<xPos>194.0</xPos>
 			<yPos>249.0</yPos>
 		</state>
+		<state name = "s0">
+			<isInitial>true</isInitial>
+			<isAccepting>false</isAccepting>
+			<isRejecting>false</isRejecting>
+			<isHalting>false</isHalting>
+			<xPos>51.0</xPos>
+			<yPos>298.0</yPos>
+		</state>
 		<state name = "t1">
 			<isInitial>false</isInitial>
 			<isAccepting>false</isAccepting>
@@ -108,39 +108,11 @@
 	</states>
 	<transitions>
 		<transition>
-			<fromState>n1</fromState>
-			<toState>n1</toState>
-			<readSymbol>a</readSymbol>
-			<writeSymbol>a</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>n2</fromState>
-			<toState>n2</toState>
-			<readSymbol>a</readSymbol>
-			<writeSymbol>a</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>m0</fromState>
-			<toState>s0</toState>
+			<fromState>p2</fromState>
+			<toState>p2</toState>
 			<readSymbol>b</readSymbol>
 			<writeSymbol>b</writeSymbol>
 			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>p1</fromState>
-			<toState>p1</toState>
-			<readSymbol>b</readSymbol>
-			<writeSymbol>b</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>t1</fromState>
-			<toState>t1</toState>
-			<readSymbol>b</readSymbol>
-			<writeSymbol>b</writeSymbol>
-			<direction>L</direction>
 		</transition>
 		<transition>
 			<fromState>s0</fromState>
@@ -151,87 +123,24 @@
 		</transition>
 		<transition>
 			<fromState>p1</fromState>
-			<toState>p1</toState>
-			<readSymbol>a</readSymbol>
+			<toState>t1</toState>
+			<readSymbol>~</readSymbol>
 			<writeSymbol>a</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>p2</fromState>
-			<toState>p2</toState>
-			<readSymbol>a</readSymbol>
-			<writeSymbol>a</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>s0</fromState>
-			<toState>q1</toState>
-			<readSymbol>a</readSymbol>
-			<writeSymbol>~</writeSymbol>
 			<direction>N</direction>
 		</transition>
 		<transition>
-			<fromState>r2</fromState>
-			<toState>p2</toState>
+			<fromState>r1</fromState>
+			<toState>p1</toState>
 			<readSymbol>~</readSymbol>
 			<writeSymbol>~</writeSymbol>
 			<direction>R</direction>
 		</transition>
 		<transition>
 			<fromState>t1</fromState>
-			<toState>n1</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>r2</fromState>
-			<toState>r2</toState>
-			<readSymbol>a</readSymbol>
-			<writeSymbol>a</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>q2</fromState>
-			<toState>r2</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>t2</fromState>
-			<toState>n2</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>p2</fromState>
-			<toState>p2</toState>
+			<toState>t1</toState>
 			<readSymbol>b</readSymbol>
 			<writeSymbol>b</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>t2</fromState>
-			<toState>t2</toState>
-			<readSymbol>a</readSymbol>
-			<writeSymbol>a</writeSymbol>
 			<direction>L</direction>
-		</transition>
-		<transition>
-			<fromState>m0</fromState>
-			<toState>s0</toState>
-			<readSymbol>a</readSymbol>
-			<writeSymbol>a</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
-			<fromState>q1</fromState>
-			<toState>r1</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>R</direction>
 		</transition>
 		<transition>
 			<fromState>r2</fromState>
@@ -239,6 +148,13 @@
 			<readSymbol>b</readSymbol>
 			<writeSymbol>b</writeSymbol>
 			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>n1</fromState>
+			<toState>m0</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>a</writeSymbol>
+			<direction>N</direction>
 		</transition>
 		<transition>
 			<fromState>s0</fromState>
@@ -255,18 +171,53 @@
 			<direction>R</direction>
 		</transition>
 		<transition>
-			<fromState>r1</fromState>
-			<toState>r1</toState>
+			<fromState>t2</fromState>
+			<toState>t2</toState>
+			<readSymbol>b</readSymbol>
+			<writeSymbol>b</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>p1</fromState>
+			<toState>p1</toState>
+			<readSymbol>a</readSymbol>
+			<writeSymbol>a</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>s0</fromState>
+			<toState>q1</toState>
+			<readSymbol>a</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>N</direction>
+		</transition>
+		<transition>
+			<fromState>m0</fromState>
+			<toState>s0</toState>
 			<readSymbol>b</readSymbol>
 			<writeSymbol>b</writeSymbol>
 			<direction>R</direction>
 		</transition>
 		<transition>
-			<fromState>n2</fromState>
-			<toState>m0</toState>
-			<readSymbol>~</readSymbol>
+			<fromState>p2</fromState>
+			<toState>p2</toState>
+			<readSymbol>a</readSymbol>
+			<writeSymbol>a</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>p1</fromState>
+			<toState>p1</toState>
+			<readSymbol>b</readSymbol>
 			<writeSymbol>b</writeSymbol>
-			<direction>N</direction>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>r2</fromState>
+			<toState>r2</toState>
+			<readSymbol>a</readSymbol>
+			<writeSymbol>a</writeSymbol>
+			<direction>R</direction>
 		</transition>
 		<transition>
 			<fromState>p2</fromState>
@@ -276,11 +227,11 @@
 			<direction>N</direction>
 		</transition>
 		<transition>
-			<fromState>p1</fromState>
-			<toState>t1</toState>
-			<readSymbol>~</readSymbol>
+			<fromState>m0</fromState>
+			<toState>s0</toState>
+			<readSymbol>a</readSymbol>
 			<writeSymbol>a</writeSymbol>
-			<direction>N</direction>
+			<direction>R</direction>
 		</transition>
 		<transition>
 			<fromState>n1</fromState>
@@ -290,24 +241,17 @@
 			<direction>L</direction>
 		</transition>
 		<transition>
-			<fromState>n1</fromState>
-			<toState>m0</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>a</writeSymbol>
-			<direction>N</direction>
-		</transition>
-		<transition>
-			<fromState>r1</fromState>
-			<toState>p1</toState>
-			<readSymbol>~</readSymbol>
-			<writeSymbol>~</writeSymbol>
-			<direction>R</direction>
-		</transition>
-		<transition>
 			<fromState>t2</fromState>
 			<toState>t2</toState>
-			<readSymbol>b</readSymbol>
-			<writeSymbol>b</writeSymbol>
+			<readSymbol>a</readSymbol>
+			<writeSymbol>a</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>t1</fromState>
+			<toState>n1</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
 			<direction>L</direction>
 		</transition>
 		<transition>
@@ -318,11 +262,67 @@
 			<direction>L</direction>
 		</transition>
 		<transition>
+			<fromState>n2</fromState>
+			<toState>n2</toState>
+			<readSymbol>a</readSymbol>
+			<writeSymbol>a</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>t2</fromState>
+			<toState>n2</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>r1</fromState>
+			<toState>r1</toState>
+			<readSymbol>b</readSymbol>
+			<writeSymbol>b</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>n1</fromState>
+			<toState>n1</toState>
+			<readSymbol>a</readSymbol>
+			<writeSymbol>a</writeSymbol>
+			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>n2</fromState>
+			<toState>m0</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>b</writeSymbol>
+			<direction>N</direction>
+		</transition>
+		<transition>
 			<fromState>t1</fromState>
 			<toState>t1</toState>
 			<readSymbol>a</readSymbol>
 			<writeSymbol>a</writeSymbol>
 			<direction>L</direction>
+		</transition>
+		<transition>
+			<fromState>q1</fromState>
+			<toState>r1</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>q2</fromState>
+			<toState>r2</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>R</direction>
+		</transition>
+		<transition>
+			<fromState>r2</fromState>
+			<toState>p2</toState>
+			<readSymbol>~</readSymbol>
+			<writeSymbol>~</writeSymbol>
+			<direction>R</direction>
 		</transition>
 	</transitions>
 </TuringMachineSave>

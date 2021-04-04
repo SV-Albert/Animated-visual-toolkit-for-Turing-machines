@@ -1,6 +1,5 @@
 package execution;
 
-import javafx.util.Pair;
 import turing.*;
 
 import java.util.ArrayList;
@@ -11,10 +10,9 @@ public class Executor {
 
     private final TuringMachine turingMachine;
     private final Tape tape;
-    private TuringMachineHandler handler;
+    private ExecutorHandler handler;
     private final List<String> stateCodes = new ArrayList<>();
     private final ExecutionPath executionPath;
-    private boolean isSplitStep;
 
     public Executor(TuringMachine turingMachine, Tape tape){
         this.turingMachine = turingMachine;
@@ -23,22 +21,20 @@ public class Executor {
         setup();
     }
 
-    public Executor(TuringMachine turingMachine, Tape tape, TuringMachineHandler handler){
+    public Executor(TuringMachine turingMachine, Tape tape, ExecutorHandler handler){
         this.turingMachine = turingMachine;
         this.tape = tape;
         this.handler = handler;
         executionPath = new ExecutionPath();
-        isSplitStep = true;
         setup();
     }
 
     public Executor(TuringMachine turingMachine, Tape tape, ExecutionPath executionPath,
-                    TuringTransition nextTuringTransition, TuringMachineHandler handler) {
+                    TuringTransition nextTuringTransition, ExecutorHandler handler) {
         this.turingMachine = turingMachine;
         this.tape = tape;
         this.executionPath = executionPath;
         this.handler = handler;
-        isSplitStep = true;
         setup();
         step(nextTuringTransition);
     }
@@ -62,15 +58,14 @@ public class Executor {
             return stateCodes.get(2);
         }
         else{
-            boolean splitExecution = false;
             char read = tape.read();
             List<TuringTransition> turingTransitions = findTransitions(read);
             if(turingTransitions.size() > 1){
-                splitExecution = true;
                 for (int i = 1; i < turingTransitions.size(); i++) {
                     TuringMachine tmCopy = turingMachine.getCopy();
-                    ExecutionPath pathCopy = executionPath.copy();
-                    Executor executor = new Executor(tmCopy, tape.getCopy(), pathCopy, turingTransitions.get(i), handler);
+                    ExecutionPath pathCopy = executionPath.getCopy();
+                    Tape tapeCopy = tape.getCopy();
+                    Executor executor = new Executor(tmCopy, tapeCopy, pathCopy, turingTransitions.get(i), handler);
                     handler.addExecutor(tmCopy, executor);
                 }
             }
@@ -80,28 +75,8 @@ public class Executor {
 
             TuringTransition turingTransition = turingTransitions.get(0);
             step(turingTransition);
-            isSplitStep = splitExecution;
             return stateCodes.get(4);
         }
-    }
-
-    public Pair<String, List<TuringTransition>> manualStep(){
-        String stateCode = stateCodes.get(4);
-        if(turingMachine.getCurrentState().isAccepting()){
-            stateCode = stateCodes.get(0);
-        }
-        else if(turingMachine.getCurrentState().isRejecting()){
-            stateCode = stateCodes.get(1);
-        }
-        else if(turingMachine.getCurrentState().isHalting()){
-            stateCode = stateCodes.get(2);
-        }
-        char read = tape.read();
-        List<TuringTransition> turingTransitions = findTransitions(read);
-        if (turingTransitions.size() == 0){
-            stateCode = stateCodes.get(3);
-        }
-        return new Pair<>(stateCode, turingTransitions);
     }
 
     public void step(TuringTransition turingTransition){
@@ -110,7 +85,7 @@ public class Executor {
         char read = turingTransition.getTransitionRule().getReadSymbol();
         char write = turingTransition.getTransitionRule().getWriteSymbol();
         char direction = turingTransition.getTransitionRule().getDirection();
-        executionPath.addStep(new ExecutionStep(from, to, read, write, direction, isSplitStep, tape.getTapeArray()));
+        executionPath.addStep(new ExecutionStep(from, to, read, write, direction, tape.getTapeArray()));
         try{
             tape.write(write);
             tape.move(direction);

@@ -26,20 +26,27 @@ public class ExecutionPath implements Comparable<ExecutionPath>{
 
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        int numberOfSteps = steps.size();
-        for (int i = 0; i < numberOfSteps-1; i++) {
-            ExecutionStep step = steps.get(i);
-            if(step.isSplitStep()){
-                builder.append(step.getFrom().getName());
-                builder.append("...");
+        if(steps.size() > 0){
+            String previousState = "";
+            for (ExecutionStep step : steps) {
+                String stateName = step.getFrom().getName();
+                if (stateName.equals(previousState)) {
+                    builder.append("...");
+                } else {
+                    builder.append(stateName);
+                    builder.append("-");
+                }
+                previousState = stateName;
             }
+            builder.append(steps.get(steps.size() - 1).getTo().getName());
+            return builder.toString();
         }
-        builder.append(steps.get(numberOfSteps-1).getFrom().getName());
-
-        return builder.toString();
+        else{
+            return "";
+        }
     }
 
-    public ExecutionPath copy(){
+    public ExecutionPath getCopy(){
         ExecutionPath copy = new ExecutionPath();
         copy.addAllSteps(new ArrayList<>(steps));
         return copy;
@@ -47,10 +54,16 @@ public class ExecutionPath implements Comparable<ExecutionPath>{
 
     @Override
     public boolean equals(Object o) {
+        ExecutionPath other = (ExecutionPath) o;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ExecutionPath that = (ExecutionPath) o;
-        return Objects.equals(steps, that.steps);
+        for (int i = 0; i < Math.min(steps.size(), other.getAllSteps().size()); i++) {
+            if(steps.get(i) != other.getAllSteps().get(i)){
+                return false;
+            }
+        }
+        return true;
+
     }
 
     @Override
