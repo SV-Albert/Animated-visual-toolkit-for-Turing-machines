@@ -2,8 +2,6 @@ package execution;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 
 public class ExecutionPath implements Comparable<ExecutionPath>{
     private List<ExecutionStep> steps;
@@ -28,13 +26,18 @@ public class ExecutionPath implements Comparable<ExecutionPath>{
         StringBuilder builder = new StringBuilder();
         if(steps.size() > 0){
             String previousState = "";
+            int counter = 0;
             for (ExecutionStep step : steps) {
                 String stateName = step.getFrom().getName();
-                if (stateName.equals(previousState)) {
-                    builder.append("...");
-                } else {
-                    builder.append(stateName);
-                    builder.append("-");
+                if (stateName.equals(previousState)){
+                    counter++;
+                }
+                else{
+                    if(counter > 0){
+                        builder.append("(x").append(counter).append(") ");
+                        counter = 0;
+                    }
+                    builder.append(stateName).append(" ");
                 }
                 previousState = stateName;
             }
@@ -50,25 +53,6 @@ public class ExecutionPath implements Comparable<ExecutionPath>{
         ExecutionPath copy = new ExecutionPath();
         copy.addAllSteps(new ArrayList<>(steps));
         return copy;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        ExecutionPath other = (ExecutionPath) o;
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        for (int i = 0; i < Math.min(steps.size(), other.getAllSteps().size()); i++) {
-            if(steps.get(i) != other.getAllSteps().get(i)){
-                return false;
-            }
-        }
-        return true;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(steps);
     }
 
     @Override

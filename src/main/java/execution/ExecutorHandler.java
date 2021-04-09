@@ -11,6 +11,7 @@ public class ExecutorHandler {
     private final Map<TuringMachine, Executor> newExecutors;
     private final List<Executor> stoppedExecutors;
     private boolean rejectedStateReached;
+    private TuringMachine acceptingExecution;
 
     public ExecutorHandler(TuringMachine turingMachine, Tape tape){
         Executor rootExecutor = new Executor(turingMachine, tape, this);
@@ -22,20 +23,26 @@ public class ExecutorHandler {
         stoppedExecutors = new ArrayList<>();
     }
 
-    synchronized public String autoStep(){
-        if(!executorsMap.isEmpty()){
+    synchronized public String step(){
+        if(executorsMap.size() != stoppedExecutors.size()){
             String stateCode = "Run";
             for (Executor executor : executorsMap.values()) {
                 if(!stoppedExecutors.contains(executor)){
                     String receivedStateCode = executor.nextState();
                     ExecutionPath path = executor.getExecutionPath();
-                    uniqueExecutionPaths.putIfAbsent(path, executor.getTM());
+                    if(uniqueExecutionPaths.containsKey(path) && uniqueExecutionPaths.get(path) != executor.getTM()){
+                        stoppedExecutors.add(executor);
+                    }
+                    else{
+                        uniqueExecutionPaths.put(path, executor.getTM());
+                    }
                     if(receivedStateCode.equals("Accept")){
                         stateCode = "Accept";
+                        acceptingExecution = executor.getTM();
                         break;
                     }
                     if(!receivedStateCode.equals("Run")){
-                        if(executorsMap.size() + newExecutors.size() > 1){
+                        if(executorsMap.size() - stoppedExecutors.size() > 1){
                             stoppedExecutors.add(executor);
                             if(receivedStateCode.equals("Reject")){
                                 rejectedStateReached = true;
@@ -56,7 +63,6 @@ public class ExecutorHandler {
                 executorsMap.putIfAbsent(tm, newExecutors.get(tm));
             }
             newExecutors.clear();
-            stoppedExecutors.clear();
             return stateCode;
         }
         if(rejectedStateReached){
@@ -67,13 +73,8 @@ public class ExecutorHandler {
         }
     }
 
-    public boolean executionPathExists(ExecutionPath path){
-        for(ExecutionPath uniquePath: uniqueExecutionPaths.keySet()){
-            if(path.equals(uniquePath)){
-                return true;
-            }
-        }
-        return false;
+    public TuringMachine getAcceptingExecution(){
+        return acceptingExecution;
     }
 
     public Map<ExecutionPath, TuringMachine> getUniqueExecutionPaths(){
@@ -96,13 +97,15 @@ public class ExecutorHandler {
         newExecutors.put(tm, executor);
     }
 
-    public boolean isExecutorRunning(TuringMachine tm){
-        return executorsMap.containsKey(tm);
+    public boolean isExecutorStopped(TuringMachine tm){
+        return stoppedExecutors.contains(executorsMap.get(tm));
     }
 
     public TuringMachine getARunningTM(){
-        for (TuringMachine tm:executorsMap.keySet()) {
-            return tm;
+        for (TuringMachine tm: executorsMap.keySet()) {
+            if(!isExecutorStopped(tm)){
+                return tm;
+            }
         }
         return null;
     }

@@ -85,7 +85,7 @@ public class Executor {
         char read = turingTransition.getTransitionRule().getReadSymbol();
         char write = turingTransition.getTransitionRule().getWriteSymbol();
         char direction = turingTransition.getTransitionRule().getDirection();
-        executionPath.addStep(new ExecutionStep(from, to, read, write, direction, tape.getTapeArray()));
+        executionPath.addStep(new ExecutionStep(from, to, read, write, direction));
         try{
             tape.write(write);
             tape.move(direction);
@@ -100,7 +100,6 @@ public class Executor {
         int numberOfSteps = executionPath.getAllSteps().size();
         if(numberOfSteps > 0){
             ExecutionStep lastStep = executionPath.getAllSteps().get(numberOfSteps - 1);
-            tape.setTapeArray(lastStep.getTapeArray());
             char direction = lastStep.getDirection();
             if(direction == 'R'){
                 tape.move('L');
@@ -108,6 +107,7 @@ public class Executor {
             else if(direction == 'L'){
                 tape.move('R');
             }
+            tape.write(lastStep.getRead());
             executionPath.getAllSteps().remove(lastStep);
             turingMachine.setCurrentState(lastStep.getFrom());
         }
@@ -137,5 +137,4 @@ public class Executor {
     public Tape getTape(){
         return tape;
     }
-
 }

@@ -6,14 +6,12 @@ import java.util.List;
 public class Tape {
     private final List<Character> tapeArray;
     private int head;
-    private final int initialHeadPosition;
     private final char emptyChar = '~';
-    private int previousWriteIndex;
+    private int previousHeadPos;
 
     public Tape(List<Character> tapeArray, int head){
         this.tapeArray = tapeArray;
         this.head = head;
-        this.initialHeadPosition = head;
     }
 
     public char read(){
@@ -21,6 +19,7 @@ public class Tape {
     }
 
     public void move(char direction){
+        previousHeadPos = head;
         if (direction == 'R'){
             head++;
             if(head == tapeArray.size()){
@@ -38,7 +37,6 @@ public class Tape {
     }
 
     public void write(char ch){
-        previousWriteIndex = head;
         if (head < tapeArray.size()){
             tapeArray.set(head, ch);
         }
@@ -83,8 +81,8 @@ public class Tape {
         return head;
     }
 
-    public int getPreviousWriteIndex(){
-        return previousWriteIndex;
+    public int getPreviousHeadPos(){
+        return previousHeadPos;
     }
 
     public List<Character> getTapeArray(){
@@ -97,16 +95,12 @@ public class Tape {
     }
 
     public void resetHead(){
-        head = initialHeadPosition;
-    }
-
-    public int getInitialHeadPosition(){
-        return initialHeadPosition;
+        head = 0;
+        previousHeadPos = 0;
     }
 
     public Tape getCopy(){
         List<Character> tapeCopy = new ArrayList<>(tapeArray);
         return new Tape(tapeCopy, head);
     }
-
 }

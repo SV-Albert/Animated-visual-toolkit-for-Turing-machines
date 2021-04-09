@@ -4,7 +4,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class AcceptingStateNode extends StateNode{
-    private Circle innerCircle;
+
+    private final Circle innerCircle;
+
     public AcceptingStateNode(double xPos, double yPos) {
         super(xPos, yPos);
         double innerRadius = 22;
@@ -35,5 +37,4 @@ public class AcceptingStateNode extends StateNode{
         innerCircle.getStyleClass().clear();
         innerCircle.getStyleClass().add("state-accepting");
     }
-
 }

@@ -4,7 +4,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class RejectingStateNode extends StateNode{
-    private Circle innerCircle;
+
+    private final Circle innerCircle;
 
     public RejectingStateNode(double xPos, double yPos) {
         super(xPos, yPos);
@@ -36,5 +37,4 @@ public class RejectingStateNode extends StateNode{
         innerCircle.getStyleClass().clear();
         innerCircle.getStyleClass().add("state-rejecting");
     }
-
 }

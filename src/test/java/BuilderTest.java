@@ -24,13 +24,13 @@ public class BuilderTest extends ApplicationTest {
     private BuilderController controller;
 
     @Override
-    public void start (Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
         controller = ControllerLoader.openBuilderWindow(primaryStage);
         primaryStage.show();
     }
 
     @BeforeEach
-    public void beforeEach () throws Exception {
+    public void beforeEach(){
         controller.initialize();
     }
 
@@ -135,5 +135,64 @@ public class BuilderTest extends ApplicationTest {
                 assertEquals('N', transitionRule.getDirection());
             }
         }
+    }
+
+    @Test
+    public void testRenamingAndDeleting(){
+        clickOn("#addTransitionsButton");
+        clickOn("#fromStateTextField0");
+        write("s0");
+        clickOn("#toStateTextField0");
+        write("s1");
+        doubleClickOn("#readTextField0");
+        write("0");
+        doubleClickOn("#writeTextField0");
+        write("1");
+        clickOn("#fromStateTextField1");
+        write("s1");
+        clickOn("#toStateTextField1");
+        write("s2");
+        doubleClickOn("#readTextField1");
+        write("1");
+        doubleClickOn("#writeTextField1");
+        write("0");
+        clickOn("#initialStateTextField");
+        write("s0");
+        clickOn("#acceptingStatesTextField0");
+        write("s2");
+        clickOn("#confirmButton");
+
+        rightClickOn("#s0");
+        clickOn("#RenameState");
+        clickOn("#nameTextField");
+        write("Test");
+        clickOn("#confirmButton");
+
+        TuringMachine tm = controller.getTM();
+        assertTrue(tm.getStates().containsKey("Test"));
+
+        rightClickOn("s1");
+        clickOn("#DeleteTransitions");
+        clickOn("#Test|s1|0|1|N");
+        boolean transitionFound = false;
+        for (TuringTransition transition: tm.getTransitionFunction()) {
+            if(transition.getFromState().getName().equals("Test")){
+                transitionFound = true;
+                break;
+            }
+        }
+        assertFalse(transitionFound);
+
+        rightClickOn("s2");
+        clickOn("#DeleteState");
+        assertFalse(tm.getStates().containsKey("s2"));
+        transitionFound = false;
+        for (TuringTransition transition: tm.getTransitionFunction()) {
+            if(transition.getToState().getName().equals("s2")){
+                transitionFound = true;
+                break;
+            }
+        }
+        assertFalse(transitionFound);
     }
 }

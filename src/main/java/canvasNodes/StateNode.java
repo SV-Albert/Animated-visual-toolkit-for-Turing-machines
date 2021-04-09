@@ -1,7 +1,6 @@
 package canvasNodes;
 
 import javafx.scene.Group;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import turing.State;
@@ -45,6 +44,7 @@ public class StateNode {
         stateName.setText(name);
         stateName.setTranslateX(xPos - stateName.prefWidth(-1)/1.7);
         stateName.setTranslateY(yPos  + stateName.prefHeight(-1)/2.5);
+        nodeGroup.setId(name);
     }
 
     public void move(double xPos, double yPos){
@@ -88,5 +88,4 @@ public class StateNode {
     public boolean isActive() {
         return isActive;
     }
-
 }

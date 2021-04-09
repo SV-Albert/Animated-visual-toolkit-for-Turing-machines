@@ -5,7 +5,7 @@ import javafx.scene.text.Text;
 
 public class HaltingStateNode extends StateNode{
 
-    private Circle innerCircle;
+    private final Circle innerCircle;
 
     public HaltingStateNode(double xPos, double yPos) {
         super(xPos, yPos);

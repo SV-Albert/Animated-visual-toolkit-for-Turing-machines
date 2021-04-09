@@ -43,6 +43,7 @@ public class BuilderController {
     @FXML private Pane canvas;
     @FXML private TextField tmNameField;
 
+    private VBox transitionPopup;
     private Stage primaryStage;
     private TuringMachine tm;
     private Group nodeDragged;
@@ -57,12 +58,14 @@ public class BuilderController {
     private Map<StateNode, List<TransitionArrow>> stateNodeArrowMap;
     private Map<StateNode, List<StateNode>> transitions;
     private VBox transitionRulesInputWindow;
+    private boolean popupOpened;
 
     //Setup methods
     @FXML
     public void initialize(){
         initialStateExists = false;
         nodeMoved = false;
+        popupOpened = false;
         usedNames = new ArrayList<>();
         toolbarStateNodes = new ArrayList<>();
         stateStateNodeMap = new HashMap<>();
@@ -219,13 +222,16 @@ public class BuilderController {
         StateNode stateNode = groupStateNodeMap.get(nodeGroup);
         ContextMenu menu = new ContextMenu();
         MenuItem renameState = new MenuItem("Rename State");
+        renameState.setId("RenameState");
         renameState.setOnAction(event -> {
             usedNames.remove(stateNode.getName());
             openStateNamePopUp(stateNode, stateNode.getState());
         });
         MenuItem deleteState = new MenuItem("Delete State");
+        deleteState.setId("DeleteState");
         deleteState.setOnAction(event -> deleteState(nodeGroup));
         MenuItem deleteTransition = new MenuItem("Delete Transition...");
+        deleteTransition.setId("DeleteTransitions");
         deleteTransition.setOnAction(event -> {
             ContextMenu removeTransitionMenu = getDeleteTransitionArrowsContextMenu(nodeGroup);
             removeTransitionMenu.show(nodeGroup, Side.RIGHT, menu.getPrefWidth(), 0);
@@ -323,71 +329,83 @@ public class BuilderController {
     //Popup methods
 
     private void openStateNamePopUp(StateNode stateNode, State state){
-        VBox root = new VBox();
-        root.getStylesheets().add("ui/stylesheets/stylesheet.css");
-        root.getStyleClass().add("pop-up");
-        root.setAlignment(Pos.CENTER);
-        root.setPrefHeight(100);
-        root.setPrefWidth(260);
-        double xPos = Math.min(Math.max(stateNode.getX() - 130, 0), canvas.getWidth() - 260);
-        double yPos = Math.min(Math.max(stateNode.getY() + 40, 0), canvas.getHeight() - 100);
-        while(yPos > canvas.getHeight() + 150){
-            increaseCanvas(false);
-        }
-        root.setLayoutX(xPos);
-        root.setLayoutY(yPos);
-        Text text = new Text("Enter the state name");
-        text.getStyleClass().add("pop-up-text");
-        TextField textField = new TextField();
-        textField.getStyleClass().add("pop-up-textfield");
-        textField.setId("nameTextField");
-        textField.setOnKeyPressed(event -> {
-            if(event.getCode().equals(KeyCode.ENTER)){
+        if(!popupOpened){
+            VBox root = new VBox();
+            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
+            root.getStyleClass().add("pop-up");
+            root.setAlignment(Pos.CENTER);
+            root.setPrefHeight(100);
+            root.setPrefWidth(260);
+            double xPos = Math.min(Math.max(stateNode.getX() - 130, 0), canvas.getWidth() - 260);
+            double yPos = Math.min(Math.max(stateNode.getY() + 40, 0), canvas.getHeight() - 100);
+            while(yPos > canvas.getHeight() + 150){
+                increaseCanvas(false);
+            }
+            root.setLayoutX(xPos);
+            root.setLayoutY(yPos);
+            Text text = new Text("Enter the state name");
+            text.getStyleClass().add("pop-up-text");
+            TextField textField = new TextField();
+            textField.getStyleClass().add("pop-up-textfield");
+            textField.setId("nameTextField");
+            textField.setOnKeyPressed(event -> {
+                if(event.getCode().equals(KeyCode.ENTER)){
+                    if(addStateName(textField, stateNode, state)){
+                        canvas.getChildren().remove(root);
+                        popupOpened = false;
+                    }
+                }
+            });
+            Button confirmButton = new Button("Confirm");
+            confirmButton.getStyleClass().add("buttons");
+            confirmButton.setId("confirmButton");
+            confirmButton.setOnAction(event -> {
                 if(addStateName(textField, stateNode, state)){
                     canvas.getChildren().remove(root);
+                    popupOpened = false;
                 }
-            }
-        });
-        Button confirmButton = new Button("Confirm");
-        confirmButton.getStyleClass().add("buttons");
-        confirmButton.setId("confirmButton");
-        confirmButton.setOnAction(event -> {
-            if(addStateName(textField, stateNode, state)){
-                canvas.getChildren().remove(root);
-            }
-        });
-        root.getChildren().addAll(text, textField, confirmButton);
-        canvas.getChildren().add(root);
+            });
+            root.getChildren().addAll(text, textField, confirmButton);
+            canvas.getChildren().add(root);
+            popupOpened = true;
+        }
     }
 
     private void addTransitionWithPopup(StateNode from, StateNode to){
-        if(!(from instanceof AcceptingStateNode || from instanceof RejectingStateNode || from instanceof HaltingStateNode)){
-            TransitionRule transitionRule = openTransitionPopup(from.getX(), from.getY());
-            TuringTransition tmTuringTransition = new TuringTransition(from.getState(), to.getState(), transitionRule);
-            tm.addTransition(tmTuringTransition);
-            addTransitionArrow(from, to, transitionRule);
-        }
-        else{
-            NotificationManager.errorNotification("Illegal transition", "Cannot add a transition from the final state " + from.getName(), primaryStage);
+        if(!popupOpened){
+            if(!(from instanceof AcceptingStateNode || from instanceof RejectingStateNode || from instanceof HaltingStateNode)){
+                TransitionRule transitionRule = openTransitionPopup(from.getX(), from.getY());
+                TuringTransition tmTuringTransition = new TuringTransition(from.getState(), to.getState(), transitionRule);
+                tm.addTransition(tmTuringTransition);
+                addTransitionArrow(from, to, transitionRule);
+            }
+            else{
+                NotificationManager.errorNotification("Illegal transition", "Cannot add a transition from the final state " + from.getName(), primaryStage);
+            }
         }
     }
 
     private TransitionRule openTransitionPopup(double xPos, double yPos){
-
-        VBox root = new VBox();
-        root.getStylesheets().add("ui/stylesheets/stylesheet.css");
-        root.getStyleClass().add("pop-up");
-        root.setAlignment(Pos.CENTER);
-        root.setPrefHeight(100);
-        root.setPrefWidth(250);
+        transitionPopup = new VBox();
+        transitionPopup.getStylesheets().add("ui/stylesheets/stylesheet.css");
+        transitionPopup.getStyleClass().add("pop-up");
+        transitionPopup.setAlignment(Pos.CENTER);
+        transitionPopup.setPrefHeight(100);
+        transitionPopup.setPrefWidth(250);
         while(yPos > canvas.getHeight() + 150){
             increaseCanvas(false);
         }
 
         double x = Math.min(Math.max(xPos, 0), canvas.getWidth() - 250);
         double y = Math.min(Math.max(yPos + 40, 0), canvas.getHeight() - 100);
-        root.setLayoutX(x);
-        root.setLayoutY(y);
+        transitionPopup.setLayoutX(x);
+        transitionPopup.setLayoutY(y);
+        transitionPopup.setSpacing(3);
+
+        Text text = new Text("Enter the transition rule"  + '\n' +"(~ represents an empty cell)");
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.getStyleClass().add("pop-up-text");
+
         HBox fields = new HBox();
         fields.setAlignment(Pos.CENTER);
 
@@ -460,139 +478,148 @@ public class BuilderController {
             transitionRule.setReadSymbol(readChar);
             transitionRule.setWriteSymbol(writeChar);
             transitionRule.setDirection(directionChar);
-            canvas.getChildren().remove(root);
+            canvas.getChildren().remove(transitionPopup);
+            popupOpened = false;
         });
         confirmButton.getStyleClass().add("buttons");
 
-        root.getChildren().addAll(fields, confirmButton);
-        canvas.getChildren().add(root);
+        transitionPopup.getChildren().addAll(text, fields, confirmButton);
+        canvas.getChildren().add(transitionPopup);
+        popupOpened = true;
         return transitionRule;
+
     }
 
     private void openAddTransitionsThroughRulesPopUp(){
-        BorderPane root = new BorderPane();
-        ScrollPane content = new ScrollPane();
-        content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        content.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        setupTransitionRulesInputWindow();
-        content.setContent(transitionRulesInputWindow);
-        root.getStylesheets().add("ui/stylesheets/stylesheet.css");
-        root.getStyleClass().add("pop-up");
+        if(!popupOpened){
 
-        double xPos = 0;
-        double yPos = 275;
-        root.setLayoutX(xPos);
-        root.setLayoutY(yPos);
-
-        HBox labels = new HBox();
-        labels.setAlignment(Pos.CENTER_LEFT);
-        Label fromLabel = new Label("From");
-        Label toLabel = new Label(" To ");
-        Label readLabel = new Label("Read");
-        Label writeLabel = new Label("Write");
-        Label moveLabel = new Label("Move");
-        labels.getChildren().addAll(fromLabel, toLabel, readLabel, writeLabel, moveLabel);
-        for (Node label: labels.getChildren()) {
-            label.getStyleClass().add("pop-up-label");
-            ((Label)label).setPrefWidth(63);
-        }
-
-        VBox specialStateInputs = new VBox();
-
-        int labelWidth = 95;
-        HBox acceptingStates = new HBox();
-        acceptingStates.setMaxWidth(300);
-        Label acceptingStatesLabel = new Label("Accepting states");
-        acceptingStatesLabel.setTextAlignment(TextAlignment.CENTER);
-        acceptingStatesLabel.getStyleClass().add("pop-up-label");
-        acceptingStatesLabel.setPrefWidth(labelWidth);
-        ScrollPane acceptingStatesScrollPane = new ScrollPane();
-        acceptingStatesScrollPane.setContent(getExistingAcceptingStates());
-        acceptingStatesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        acceptingStates.getChildren().addAll(acceptingStatesLabel, acceptingStatesScrollPane);
-
-        HBox rejectingStates = new HBox();
-        rejectingStates.setMaxWidth(transitionRulesInputWindow.getPrefWidth() - labelWidth);
-        Label rejectingStatesLabel = new Label("Rejecting states");
-        rejectingStatesLabel.setTextAlignment(TextAlignment.CENTER);
-        rejectingStatesLabel.getStyleClass().add("pop-up-label");
-        rejectingStatesLabel.setPrefWidth(labelWidth);
-        ScrollPane rejectingStatesScrollPane = new ScrollPane();
-        rejectingStatesScrollPane.setContent(getExistingRejectingStates());
-        rejectingStatesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        rejectingStates.getChildren().addAll(rejectingStatesLabel, rejectingStatesScrollPane);
-
-        HBox haltingStates = new HBox();
-        haltingStates.setMaxWidth(transitionRulesInputWindow.getPrefWidth() - labelWidth);
-        Label haltingStatesLabel = new Label("Halting states");
-        haltingStatesLabel.setTextAlignment(TextAlignment.CENTER);
-        haltingStatesLabel.getStyleClass().add("pop-up-label");
-        haltingStatesLabel.setPrefWidth(labelWidth);
-        ScrollPane haltingStatesScrollPane = new ScrollPane();
-        haltingStatesScrollPane.setContent(getExistingHaltingStates());
-        haltingStatesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        haltingStates.getChildren().addAll(haltingStatesLabel, haltingStatesScrollPane);
-
-        HBox initialStateAndButtons = new HBox();
-        initialStateAndButtons.setSpacing(3);
-        initialStateAndButtons.setAlignment(Pos.CENTER_LEFT);
-        Label initialStateLabel = new Label("Initial State");
-        initialStateLabel.setTextAlignment(TextAlignment.CENTER);
-        initialStateLabel.setPrefWidth(labelWidth);
-        initialStateLabel.getStyleClass().add("pop-up-label");
-        TextField initialStateField = new TextField();
-        initialStateField.setId("initialStateTextField");
-        initialStateField.setPrefWidth(60);
-        initialStateField.getStyleClass().add("pop-up-textfield");
-        if(initialStateExists){
-            initialStateField.setText(tm.getInitialState().getName());
-        }
-        Button confirmButton = new Button("Confirm");
-        confirmButton.setId("confirmButton");
-        confirmButton.getStyleClass().add("buttons");
-        confirmButton.setPrefWidth(80);
-        confirmButton.setOnAction(event -> {
-            if(!initialStateField.getText().isEmpty()){
-                List<String> acceptingStateNamesList = new ArrayList<>();
-                for(Node node: ((HBox)acceptingStatesScrollPane.getContent()).getChildren()){
-                    if(node instanceof TextField && !((TextField) node).getText().isEmpty()){
-                        acceptingStateNamesList.add(((TextField) node).getText());
-                    }
-                }
-                List<String> rejectingStateNamesList = new ArrayList<>();
-                for(Node node: ((HBox)rejectingStatesScrollPane.getContent()).getChildren()){
-                    if(node instanceof TextField && !((TextField) node).getText().isEmpty()){
-                        rejectingStateNamesList.add(((TextField) node).getText());
-                    }
-                }
-                List<String> haltingStateNamesList = new ArrayList<>();
-                for(Node node: ((HBox)haltingStatesScrollPane.getContent()).getChildren()){
-                    if(node instanceof TextField && !((TextField) node).getText().isEmpty()){
-                        haltingStateNamesList.add(((TextField) node).getText());
-                    }
-                }
-                addTransitionThroughRules(initialStateField.getText(), acceptingStateNamesList, rejectingStateNamesList, haltingStateNamesList);
-                canvas.getChildren().remove(root);
-            }
-            else{
-                NotificationManager.errorNotification("Missing initial state", "Cannot create a turing machine without an initial state", primaryStage);
-            }
-        });
-        Button cancelButton = new Button("Cancel");
-        cancelButton.getStyleClass().add("buttons");
-        cancelButton.setPrefWidth(80);
-        cancelButton.setOnAction(event -> {
+            BorderPane root = new BorderPane();
+            ScrollPane content = new ScrollPane();
+            content.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            content.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
             setupTransitionRulesInputWindow();
-            canvas.getChildren().remove(root);
-        });
-        initialStateAndButtons.getChildren().addAll(initialStateLabel, initialStateField, confirmButton, cancelButton);
+            content.setContent(transitionRulesInputWindow);
+            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
+            root.getStyleClass().add("pop-up");
 
-        specialStateInputs.getChildren().addAll(acceptingStates, rejectingStates, haltingStates, initialStateAndButtons);
+            double xPos = 0;
+            double yPos = 275;
+            root.setLayoutX(xPos);
+            root.setLayoutY(yPos);
 
-        root.setTop(labels);
-        root.setCenter(content);
-        root.setBottom(specialStateInputs);
-        canvas.getChildren().add(root);
+            HBox labels = new HBox();
+            labels.setAlignment(Pos.CENTER_LEFT);
+            Label fromLabel = new Label("From");
+            Label toLabel = new Label(" To ");
+            Label readLabel = new Label("Read");
+            Label writeLabel = new Label("Write");
+            Label moveLabel = new Label("Move");
+            labels.getChildren().addAll(fromLabel, toLabel, readLabel, writeLabel, moveLabel);
+            for (Node label: labels.getChildren()) {
+                label.getStyleClass().add("pop-up-label");
+                ((Label)label).setPrefWidth(63);
+            }
+
+            VBox specialStateInputs = new VBox();
+
+            int labelWidth = 95;
+            HBox acceptingStates = new HBox();
+            acceptingStates.setMaxWidth(300);
+            Label acceptingStatesLabel = new Label("Accepting states");
+            acceptingStatesLabel.setTextAlignment(TextAlignment.CENTER);
+            acceptingStatesLabel.getStyleClass().add("pop-up-label");
+            acceptingStatesLabel.setPrefWidth(labelWidth);
+            ScrollPane acceptingStatesScrollPane = new ScrollPane();
+            acceptingStatesScrollPane.setContent(getExistingAcceptingStates());
+            acceptingStatesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            acceptingStates.getChildren().addAll(acceptingStatesLabel, acceptingStatesScrollPane);
+
+            HBox rejectingStates = new HBox();
+            rejectingStates.setMaxWidth(transitionRulesInputWindow.getPrefWidth() - labelWidth);
+            Label rejectingStatesLabel = new Label("Rejecting states");
+            rejectingStatesLabel.setTextAlignment(TextAlignment.CENTER);
+            rejectingStatesLabel.getStyleClass().add("pop-up-label");
+            rejectingStatesLabel.setPrefWidth(labelWidth);
+            ScrollPane rejectingStatesScrollPane = new ScrollPane();
+            rejectingStatesScrollPane.setContent(getExistingRejectingStates());
+            rejectingStatesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            rejectingStates.getChildren().addAll(rejectingStatesLabel, rejectingStatesScrollPane);
+
+            HBox haltingStates = new HBox();
+            haltingStates.setMaxWidth(transitionRulesInputWindow.getPrefWidth() - labelWidth);
+            Label haltingStatesLabel = new Label("Halting states");
+            haltingStatesLabel.setTextAlignment(TextAlignment.CENTER);
+            haltingStatesLabel.getStyleClass().add("pop-up-label");
+            haltingStatesLabel.setPrefWidth(labelWidth);
+            ScrollPane haltingStatesScrollPane = new ScrollPane();
+            haltingStatesScrollPane.setContent(getExistingHaltingStates());
+            haltingStatesScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            haltingStates.getChildren().addAll(haltingStatesLabel, haltingStatesScrollPane);
+
+            HBox initialStateAndButtons = new HBox();
+            initialStateAndButtons.setSpacing(3);
+            initialStateAndButtons.setAlignment(Pos.CENTER_LEFT);
+            Label initialStateLabel = new Label("Initial State");
+            initialStateLabel.setTextAlignment(TextAlignment.CENTER);
+            initialStateLabel.setPrefWidth(labelWidth);
+            initialStateLabel.getStyleClass().add("pop-up-label");
+            TextField initialStateField = new TextField();
+            initialStateField.setId("initialStateTextField");
+            initialStateField.setPrefWidth(60);
+            initialStateField.getStyleClass().add("pop-up-textfield");
+            if(initialStateExists){
+                initialStateField.setText(tm.getInitialState().getName());
+            }
+            Button confirmButton = new Button("Confirm");
+            confirmButton.setId("confirmButton");
+            confirmButton.getStyleClass().add("buttons");
+            confirmButton.setPrefWidth(80);
+            confirmButton.setOnAction(event -> {
+                if(!initialStateField.getText().isEmpty()){
+                    List<String> acceptingStateNamesList = new ArrayList<>();
+                    for(Node node: ((HBox)acceptingStatesScrollPane.getContent()).getChildren()){
+                        if(node instanceof TextField && !((TextField) node).getText().isEmpty()){
+                            acceptingStateNamesList.add(((TextField) node).getText());
+                        }
+                    }
+                    List<String> rejectingStateNamesList = new ArrayList<>();
+                    for(Node node: ((HBox)rejectingStatesScrollPane.getContent()).getChildren()){
+                        if(node instanceof TextField && !((TextField) node).getText().isEmpty()){
+                            rejectingStateNamesList.add(((TextField) node).getText());
+                        }
+                    }
+                    List<String> haltingStateNamesList = new ArrayList<>();
+                    for(Node node: ((HBox)haltingStatesScrollPane.getContent()).getChildren()){
+                        if(node instanceof TextField && !((TextField) node).getText().isEmpty()){
+                            haltingStateNamesList.add(((TextField) node).getText());
+                        }
+                    }
+                    addTransitionThroughRules(initialStateField.getText(), acceptingStateNamesList, rejectingStateNamesList, haltingStateNamesList);
+                    canvas.getChildren().remove(root);
+                    popupOpened = false;
+                }
+                else{
+                    NotificationManager.errorNotification("Missing initial state", "Cannot create a turing machine without an initial state", primaryStage);
+                }
+            });
+            Button cancelButton = new Button("Cancel");
+            cancelButton.getStyleClass().add("buttons");
+            cancelButton.setPrefWidth(80);
+            cancelButton.setOnAction(event -> {
+                setupTransitionRulesInputWindow();
+                canvas.getChildren().remove(root);
+                popupOpened = false;
+            });
+            initialStateAndButtons.getChildren().addAll(initialStateLabel, initialStateField, confirmButton, cancelButton);
+
+            specialStateInputs.getChildren().addAll(acceptingStates, rejectingStates, haltingStates, initialStateAndButtons);
+
+            root.setTop(labels);
+            root.setCenter(content);
+            root.setBottom(specialStateInputs);
+            canvas.getChildren().add(root);
+            popupOpened = true;
+        }
     }
 
 
@@ -625,7 +652,7 @@ public class BuilderController {
             }
             StateNode stateNode = loadStateNode(newState);
             openStateNamePopUp(stateNode, newState);
-            registerNewStateNode(stateNode, newState);
+//            registerNewStateNode(stateNode, newState);
         }
     }
 
@@ -646,10 +673,15 @@ public class BuilderController {
             return false;
         }
         else if(!usedNames.contains(textFieldString)){
+            if(tm.getStates().containsKey(state.getName())){
+                tm.renameState(state.getName(), textFieldString);
+            }
+            else {
+                state.setName(textFieldString);
+            }
             usedNames.add(textFieldString);
             stateNode.setName(textFieldString);
             stateNode.getNodeGroup().setId(textFieldString);
-            state.setName(textFieldString);
             return true;
         }
         else{
@@ -780,6 +812,9 @@ public class BuilderController {
             }
 
             canvas.getChildren().add(transitionArrow.getLineGroup());
+            if(canvas.getChildren().contains(transitionPopup)){
+                transitionPopup.toFront();
+            }
         }
         transitionArrow.addRules(transitionRule);
         transitionRule.setArrow(transitionArrow);
@@ -985,7 +1020,9 @@ public class BuilderController {
         if(stateNodeArrowMap.containsKey(stateNode) && !stateNodeArrowMap.get(stateNode).isEmpty()){
             for(TransitionArrow arrow: stateNodeArrowMap.get(stateNode)){
                 for(TransitionRule rule: arrow.getTransitionRules()){
-                    MenuItem menuItem = new MenuItem(arrow.getFrom().getName() + "|" + arrow.getTo().getName() + "|" + rule.toString());
+                    String text = arrow.getFrom().getName() + "|" + arrow.getTo().getName() + "|" + rule.toString();
+                    MenuItem menuItem = new MenuItem(text);
+                    menuItem.setId(text);
                     menuItem.setOnAction(event -> deleteTransition(arrow, rule));
                     deleteTransitionsMenu.getItems().add(menuItem);
                 }

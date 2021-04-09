@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 public class MenuController {
     @FXML private Button builderButton;
     @FXML private Button simulatorButton;
-    @FXML private Button examplesButton;
 
     private Stage primaryStage;
 

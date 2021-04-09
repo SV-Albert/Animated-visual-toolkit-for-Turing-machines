@@ -75,6 +75,15 @@ public class TuringMachine {
         transitionMap.remove(state);
     }
 
+    public void renameState(String oldName, String newName){
+        State stateToRename = states.get(oldName);
+        if(stateToRename != null){
+            stateToRename.setName(newName);
+            states.remove(oldName);
+            states.put(newName, stateToRename);
+        }
+    }
+
     public void removeTransition(TransitionRule transitionRule){
         TuringTransition transitionToRemove = null;
         for(TuringTransition turingTransition : transitionFunction){

@@ -74,6 +74,10 @@ public class SimulatorController {
         configureUI();
     }
 
+    public void setStage(Stage primaryStage){
+        this.primaryStage = primaryStage;
+    }
+
     private void configureUI(){
         setUIDisable(true);
         backButton.setOnAction(event -> ControllerLoader.openMainMenu(primaryStage));
@@ -105,22 +109,12 @@ public class SimulatorController {
         });
     }
 
-    private void switchExecutionMode(){
-        reset();
-        if(isAutoToggle.isSelected()){
-            runOrNextButton.setText("Run");
-            pauseOrBackButton.setText("Pause");
-            isAutoToggle.setText("Auto Simulation");
-            speedSlider.setDisable(false);
-            executionPathListView.setDisable(false);
-        }
-        else{
-            runOrNextButton.setText("Next");
-            pauseOrBackButton.setText("Back");
-            isAutoToggle.setText("Manual Simulation");
-            speedSlider.setDisable(true);
-            executionPathListView.setDisable(true);
-        }
+    private void setUIDisable(boolean isDisabled){
+        editButton.setDisable(isDisabled);
+        tapeInputButton.setDisable(isDisabled);
+        resetButton.setDisable(isDisabled);
+        speedSlider.setDisable(isDisabled);
+        isAutoToggle.setDisable(isDisabled);
     }
 
     private void run(){
@@ -136,6 +130,7 @@ public class SimulatorController {
             }
         }
     }
+
     private void pause(){
         if(isRunning){
             timer.stop();
@@ -144,6 +139,54 @@ public class SimulatorController {
             timerThread = new Thread(timer);
             pauseOrBackButton.setDisable(true);
             runOrNextButton.setDisable(false);
+        }
+    }
+
+    public void nextAutoStep(){
+        String stateCode = "";
+        if(executorHandler != null && isRunning){
+            stateCode = executorHandler.step();
+            if(!stateCode.equals("Run")){
+                isRunning = false;
+                runOrNextButton.setDisable(true);
+                pauseOrBackButton.setDisable(true);;
+            }
+        }
+        timer.stop();
+        timerThread.interrupt();
+
+        changeCurrentState();
+        String finalStateCode = stateCode;
+        if(executionHistorySection.getChildren().size() >= 1000){
+            isRunning = false;
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                setInputStatus(finalStateCode);
+                populateTape();
+                updateUniquePathsSelector();
+                if(finalStateCode.equals("Run")){
+                    int stepIndex = executionHistorySection.getChildren().size();
+                    if(stepIndex <= 1000){
+                        recordStep(stepIndex);
+                    }
+                    else {
+                        NotificationManager.confirmationNotification("Terminating simulation", "The maximum execution length of 1000 steps has been reached", primaryStage);
+                        setInputStatus("Terminated");
+                    }
+                }
+                else if(finalStateCode.equals("Accept")){
+                    switchTM(executorHandler.getAcceptingExecution());
+                }
+                if(executorHandler != null && executorHandler.isExecutorStopped(currentTM)){
+                    switchTM(executorHandler.getARunningTM());
+                }
+            }
+        });
+        if(isRunning){
+            timerThread = new Thread(timer);
+            timerThread.start();
         }
     }
 
@@ -196,20 +239,20 @@ public class SimulatorController {
     private void stepBack(){
         if(!popupOpened){
             if(manualExecutor.getExecutionPath().getAllSteps().size() > 0){
-                if(manualExecutor.getExecutionPath().getAllSteps().size() == 1){
-                    pauseOrBackButton.setDisable(true);
-                    tape.setTapeArray(originalTapeInput);
-                    tape.resetHead();
-                    setInputStatus("None");
-                }
-                else{
-                    setInputStatus("Run");
-                }
                 manualExecutor.stepBack();
                 changeCurrentState();
                 switchHistorySection();
                 populateTape();
                 runOrNextButton.setDisable(false);
+                if(manualExecutor.getExecutionPath().getAllSteps().size() == 0){
+                    pauseOrBackButton.setDisable(true);
+                    tape.resetHead();
+                    tape.setTapeArray(originalTapeInput);
+                    setInputStatus("None");
+                }
+                else{
+                    setInputStatus("Run");
+                }
             }
         }
     }
@@ -225,88 +268,96 @@ public class SimulatorController {
         }
     }
 
-    private void selectNextStepPopup(List<TuringTransition> transitionList){
-        if(!popupOpened){
-            ListView<TuringTransition> root = new ListView<>();
-            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
-            root.getStyleClass().add("pop-up");
-            root.setPrefHeight(90);
-            root.setPrefWidth(120);
-            root.setLayoutX(0);
-            root.setLayoutY(300);
+    private void createTape(List<Character> tapeArray, VBox root, TextField textField) {
+        originalTapeInput = new ArrayList<>();
+        if(textField.getText().isEmpty()){
+            textField.setText("~");
+        }
+        for (char ch:textField.getText().toCharArray()) {
+            tapeArray.add(ch);
+            originalTapeInput.add(ch);
+        }
+        tape = new Tape(tapeArray, 0);
+        populateTape();
+        canvas.getChildren().remove(root);
+        popupOpened = false;
+        executorHandler = new ExecutorHandler(initialTM, tape);
+        runOrNextButton.setDisable(false);
+        pauseOrBackButton.setDisable(true);
+        reset();
 
-            Collections.sort(transitionList);
-            for (TuringTransition transition: transitionList) {
-                root.getItems().add(transition);
+    }
+
+    public void populateTape(){
+        int numberOfCells = tapeSection.getChildren().size();
+        int headCellIndex = numberOfCells/2;
+        for (Node node: tapeSection.getChildren()) {
+            ((Text)((StackPane)node).getChildren().get(1)).setText("");
+        }
+        if(tape != null){
+            List<Character> tapeArray = tape.getTapeArray();
+            int tapeIndex;
+            int leftSideIndex;
+            int rightSideIndex;
+            int previousWriteIndex = tape.getPreviousHeadPos();
+            if(tape.getHead() <= headCellIndex){
+                tapeIndex = 0;
+                leftSideIndex = headCellIndex - tape.getHead();
+                rightSideIndex = Math.min(tapeArray.size() + leftSideIndex, numberOfCells);
+            }
+            else{
+                tapeIndex = tape.getHead() - headCellIndex;
+                leftSideIndex = 0;
+                rightSideIndex = Math.min((tapeArray.size() - tapeIndex), numberOfCells);
             }
 
-            root.setOnMouseClicked(event -> {
-                manualStep(root.getSelectionModel().getSelectedItem());
-                canvas.getChildren().remove(root);
-                popupOpened = false;
-            });
-
-            canvas.getChildren().add(root);
-            popupOpened = true;
+            for (int i = leftSideIndex; i < rightSideIndex; i++) {
+                char tapeChar = tapeArray.get(tapeIndex);
+                StackPane cell = (StackPane) tapeSection.getChildren().get(i);
+                Text cellText = (Text) cell.getChildren().get(1);
+                if(tapeChar == '~'){
+                    cellText.setText("");
+                }
+                else{
+                    cellText.setText(String.valueOf(tapeChar));
+                }
+                cellText.getStyleClass().clear();
+                if(tapeIndex == previousWriteIndex){
+                    cellText.getStyleClass().add("tape-text-previous");
+                }
+                else{
+                    cellText.getStyleClass().add("tape-text");
+                }
+                tapeIndex++;
+            }
         }
     }
 
-    public void nextAutoStep(){
-        String stateCode = "";
-        if(executorHandler != null && isRunning){
-            stateCode = executorHandler.autoStep();
-            if(!stateCode.equals("Run")){
-                isRunning = false;
-                runOrNextButton.setDisable(true);
-                pauseOrBackButton.setDisable(true);
-            }
-        }
-        timer.stop();
-        timerThread.interrupt();
-
-        changeCurrentState();
-        String finalStateCode = stateCode;
-        if(executionHistorySection.getChildren().size() >= 1000){
-            isRunning = false;
-        }
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                setInputStatus(finalStateCode);
-                populateTape();
-                updateUniquePathsSelector();
-                if(finalStateCode.equals("Run")){
-                    int stepIndex = executionHistorySection.getChildren().size();
-                    if(stepIndex <= 1000){
-                        recordStep(stepIndex);
-                    }
-                    else {
-                        NotificationManager.confirmationNotification("Terminating simulation", "The maximum execution length of 1000 steps has been reached", primaryStage);
-                        setInputStatus("Terminated");
-                    }
-                }
-                if(executorHandler != null && !executorHandler.isExecutorRunning(currentTM)){
-                    switchTM(executorHandler.getARunningTM());
-                }
-            }
-        });
-        if(isRunning){
-            timerThread = new Thread(timer);
-            timerThread.start();
+    private void switchTM(TuringMachine tm){
+        if(currentTM != tm && tm != null){
+            currentTM = tm;
+            changeCurrentState();
+            switchHistorySection();
+            tape = executorHandler.getTape(tm);
+            populateTape();
+            tmNameLabel.setText("TM: " + currentTM.getName());
+            Tooltip tmNameTooltip = new Tooltip(tmNameLabel.getText());
+            tmNameLabel.setTooltip(tmNameTooltip);
         }
     }
 
     private void recordStep(int stepIndex){
-        if(stepIndex <= executorHandler.getAllSteps(currentTM).size()){
-            VBox stepLabelContainer = new VBox();
-            stepLabelContainer.setAlignment(Pos.CENTER);
-            ExecutionStep executionStep;
-            if(isAutoToggle.isSelected()){
-                executionStep = executorHandler.getStep(currentTM, stepIndex - 1);
-            }
-            else{
-                executionStep = manualExecutor.getExecutionPath().getAllSteps().get(stepIndex - 1);
-            }
+
+        VBox stepLabelContainer = new VBox();
+        stepLabelContainer.setAlignment(Pos.CENTER);
+        ExecutionStep executionStep = null;
+        if(isAutoToggle.isSelected() && stepIndex <= executorHandler.getAllSteps(currentTM).size()){
+            executionStep = executorHandler.getStep(currentTM, stepIndex - 1);
+        }
+        else if(!isAutoToggle.isSelected()){
+            executionStep = manualExecutor.getExecutionPath().getAllSteps().get(stepIndex - 1);
+        }
+        if(executionStep != null){
             Label step = new Label(String.valueOf(stepIndex));
             Label from = new Label(executionStep.getFrom().getName());
             Label to = new Label(executionStep.getTo().getName());
@@ -343,11 +394,10 @@ public class SimulatorController {
     private void updateUniquePathsSelector(){
         if(isAutoToggle.isSelected()){
             executionPathListView.getItems().clear();
-            Map<ExecutionPath, TuringMachine> executorMap = new TreeMap<>(executorHandler.getUniqueExecutionPaths());
+            Map<ExecutionPath, TuringMachine> executorMap = executorHandler.getUniqueExecutionPaths();
             for (ExecutionPath uniquePath: executorMap.keySet()) {
                 if(!executionPathListView.getItems().contains(uniquePath)){
                     executionPathListView.getItems().add(uniquePath);
-                    executionPathListView.getItems().sort(Comparator.naturalOrder());
                 }
             }
             executionPathListView.setOnMouseClicked(event -> {
@@ -357,133 +407,33 @@ public class SimulatorController {
         }
     }
 
-    private void switchTM(TuringMachine tm){
-        if(currentTM != tm && tm != null){
-            currentTM = tm;
-            changeCurrentState();
-            switchHistorySection();
-            tape = executorHandler.getTape(tm);
-            populateTape();
-            tmNameLabel.setText("TM: " + currentTM.getName());
-            Tooltip tmNameTooltip = new Tooltip(tmNameLabel.getText());
-            tmNameLabel.setTooltip(tmNameTooltip);
-        }
-    }
-
     private void resetHistorySection(){
         VBox labels = (VBox) executionHistorySection.getChildren().get(0);
         executionHistorySection.getChildren().clear();
         executionHistorySection.getChildren().add(labels);
     }
 
-    public void populateTape(){
-        int numberOfCells = tapeSection.getChildren().size();
-        int headCellIndex = numberOfCells/2;
-        for (Node node: tapeSection.getChildren()) {
-            ((Text)((StackPane)node).getChildren().get(1)).setText("");
+    private void setInputStatus(String stateCode){
+        switch(stateCode){
+            case "Accept":
+                inputStatusLabel.setText("Input status: Accepted");
+                break;
+            case "Reject":
+                inputStatusLabel.setText("Input status: Rejected");
+                break;
+            case "Halt":
+                inputStatusLabel.setText("Input status: Halted");
+                break;
+            case "Stuck":
+                inputStatusLabel.setText("Input status: Stuck");
+                break;
+            case "Run":
+                inputStatusLabel.setText("Input status: Running");
+                break;
+            case "None":
+                inputStatusLabel.setText("Input status: None");
+                break;
         }
-        if(tape != null){
-            List<Character> tapeArray = tape.getTapeArray();
-            int tapeIndex;
-            int leftSideIndex;
-            int rightSideIndex;
-            int previousWriteIndex = tape.getPreviousWriteIndex();
-            if(tape.getHead() <= headCellIndex){
-                tapeIndex = 0;
-                leftSideIndex = headCellIndex - tape.getHead();
-                rightSideIndex = Math.min(tapeArray.size() + leftSideIndex, numberOfCells);
-            }
-            else{
-                tapeIndex = tape.getHead() - headCellIndex;
-                leftSideIndex = 0;
-                rightSideIndex = Math.min((tapeArray.size() - tapeIndex), numberOfCells);
-            }
-
-            for (int i = leftSideIndex; i < rightSideIndex; i++) {
-                char tapeChar = tapeArray.get(tapeIndex);
-                StackPane cell = (StackPane) tapeSection.getChildren().get(i);
-                Text cellText = (Text) cell.getChildren().get(1);
-                if(tapeChar == '~'){
-                    cellText.setText("");
-                }
-                else{
-                    cellText.setText(String.valueOf(tapeChar));
-                }
-                cellText.getStyleClass().clear();
-                if(tapeIndex == previousWriteIndex){
-                    cellText.getStyleClass().add("tape-text-previous");
-                }
-                else{
-                    cellText.getStyleClass().add("tape-text");
-                }
-                tapeIndex++;
-            }
-        }
-    }
-
-    private void loadExamplePopup(){
-        if(!popupOpened){
-            VBox root = new VBox();
-            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
-            root.getStyleClass().add("pop-up");
-            root.setAlignment(Pos.CENTER);
-            root.setPrefHeight(260);
-            root.setPrefWidth(150);
-            root.setLayoutX(0);
-            root.setLayoutY(200);
-            ListView<String> listView = new ListView<>();
-
-            listView.getItems().add("BitFlipper");
-            listView.getItems().add("BinaryAddition");
-            listView.getItems().add("IsPalindrome");
-            listView.getItems().add("IsDivisibleBy3");
-            listView.getItems().add("Copier");
-            listView.getItems().add("Infinite1Fill");
-            listView.getItems().add("InfiniteNDTM");
-
-            listView.setOnMouseClicked(event -> {
-                loadExample(listView.getSelectionModel().getSelectedItem());
-                canvas.getChildren().remove(root);
-                popupOpened = false;
-            });
-
-            Button cancelButton = new Button("Cancel");
-            cancelButton.getStyleClass().add("buttons");
-            cancelButton.setPrefWidth(140);
-            cancelButton.setOnAction(event -> {
-                canvas.getChildren().remove(root);
-                popupOpened = false;
-            });
-
-            root.getChildren().addAll(listView, cancelButton);
-            canvas.getChildren().add(root);
-            popupOpened = true;
-        }
-    }
-
-    private void loadExample(String fileName){
-        if(fileName != null && !fileName.isEmpty()){
-            try {
-                InputStream stream = SimulatorController.class.getResourceAsStream("examples/" + fileName + ".xml");
-                TuringMachine exampleTM = SaveManager.loadTuringMachineFromStream(stream);
-                loadTuringMachine(exampleTM);
-                exampleLoaded = true;
-            } catch (Exception e) {
-                NotificationManager.errorNotification("Error", "Could not load the example file", primaryStage);
-            }
-        }
-    }
-
-    public void setStage(Stage primaryStage){
-        this.primaryStage = primaryStage;
-    }
-
-    private void setUIDisable(boolean isDisabled){
-        editButton.setDisable(isDisabled);
-        tapeInputButton.setDisable(isDisabled);
-        resetButton.setDisable(isDisabled);
-        speedSlider.setDisable(isDisabled);
-        isAutoToggle.setDisable(isDisabled);
     }
 
     private void loadStateNode(State state) {
@@ -554,14 +504,6 @@ public class SimulatorController {
         transitionRule.setArrow(transitionArrow);
     }
 
-    private void openBuilderWindow(){
-        BuilderController controller = ControllerLoader.openBuilderWindow(primaryStage);
-        controller.loadTuringMachine(initialTM);
-        if(!exampleLoaded){
-            controller.setSaveFile(currentSaveFile);
-        }
-    }
-
     private void addTapeInput(){
         if(!popupOpened){
             List<Character> tapeArray = new ArrayList<>();
@@ -579,20 +521,22 @@ public class SimulatorController {
             text.setTextAlignment(TextAlignment.CENTER);
             text.getStyleClass().add("pop-up-text");
             TextField textField = new TextField();
-            if(tape != null){
+            if(originalTapeInput != null){
                 StringBuilder existingInput = new StringBuilder();
-                for (char ch: tape.getTapeArray()) {
+                for (char ch: originalTapeInput) {
                     existingInput.append(ch);
                 }
                 textField.setText(existingInput.toString());
             }
             textField.getStyleClass().add("pop-up-textfield");
+            textField.setId("InputField");
             textField.setOnKeyPressed(event -> {
                 if(event.getCode().equals(KeyCode.ENTER)){
                     createTape(tapeArray, root, textField);
                 }
             });
             Button confirmButton = new Button("Confirm");
+            confirmButton.setId("Confirm");
             confirmButton.getStyleClass().add("buttons");
             confirmButton.setOnAction(event -> {
                 createTape(tapeArray, root, textField);
@@ -603,48 +547,118 @@ public class SimulatorController {
         }
     }
 
-    private void createTape(List<Character> tapeArray, VBox root, TextField textField) {
-        originalTapeInput = new ArrayList<>();
-        if(textField.getText().isEmpty()){
-            textField.setText("~");
-        }
-        for (char ch:textField.getText().toCharArray()) {
-            tapeArray.add(ch);
-            originalTapeInput.add(ch);
-        }
-        tape = new Tape(tapeArray, 0);
-        populateTape();
-        canvas.getChildren().remove(root);
-        popupOpened = false;
-        executorHandler = new ExecutorHandler(initialTM, tape);
-        runOrNextButton.setDisable(false);
-        pauseOrBackButton.setDisable(true);
-        reset();
-
-    }
-
-    private void setInputStatus(String stateCode){
-        switch(stateCode){
-            case "Accept":
-                inputStatusLabel.setText("Input status: Accepted");
-                break;
-            case "Reject":
-                inputStatusLabel.setText("Input status: Rejected");
-                break;
-            case "Halt":
-                inputStatusLabel.setText("Input status: Halted");
-                break;
-            case "Stuck":
-                inputStatusLabel.setText("Input status: Stuck");
-                break;
-            case "Run":
-                inputStatusLabel.setText("Input status: Running");
-                break;
+    private void openBuilderWindow(){
+        BuilderController controller = ControllerLoader.openBuilderWindow(primaryStage);
+        controller.loadTuringMachine(initialTM);
+        if(!exampleLoaded){
+            controller.setSaveFile(currentSaveFile);
         }
     }
 
-    public void setSaveFile(File saveFile){
-        currentSaveFile = saveFile;
+    private void switchExecutionMode(){
+        if(!popupOpened){
+            reset();
+            if(isAutoToggle.isSelected()){
+                runOrNextButton.setText("Run");
+                pauseOrBackButton.setText("Pause");
+                isAutoToggle.setText("Auto Simulation");
+                speedSlider.setDisable(false);
+                executionPathListView.setDisable(false);
+            }
+            else{
+                runOrNextButton.setText("Next");
+                pauseOrBackButton.setText("Back");
+                isAutoToggle.setText("Manual Simulation");
+                speedSlider.setDisable(true);
+                executionPathListView.setDisable(true);
+            }
+        }
+    }
+
+    private void selectNextStepPopup(List<TuringTransition> transitionList){
+        if(!popupOpened){
+            VBox root = new VBox();
+            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
+            root.getStyleClass().add("pop-up");
+            root.setPrefHeight(180);
+            root.setPrefWidth(150);
+            root.setLayoutX(0);
+            root.setLayoutY(250);
+            Label label = new Label("Select transition:");
+
+            label.getStyleClass().add("pop-up-label");
+            ListView<TuringTransition> listView = new ListView<>();
+
+            Collections.sort(transitionList);
+            for (TuringTransition transition: transitionList) {
+                listView.getItems().add(transition);
+            }
+
+            listView.setOnMouseClicked(event -> {
+                TuringTransition selected = listView.getSelectionModel().getSelectedItem();
+                if(selected != null){
+                    manualStep(selected);
+                    canvas.getChildren().remove(root);
+                    popupOpened = false;
+                }
+            });
+            root.getChildren().addAll(label, listView);
+            canvas.getChildren().add(root);
+            popupOpened = true;
+        }
+    }
+
+    private void loadExamplePopup(){
+        if(!popupOpened){
+            VBox root = new VBox();
+            root.getStylesheets().add("ui/stylesheets/stylesheet.css");
+            root.getStyleClass().add("pop-up");
+            root.setAlignment(Pos.CENTER);
+            root.setPrefHeight(260);
+            root.setPrefWidth(150);
+            root.setLayoutX(0);
+            root.setLayoutY(200);
+            ListView<String> listView = new ListView<>();
+            listView.getItems().add("BitFlipper");
+            listView.getItems().add("IsPalindrome");
+            listView.getItems().add("IsDivisibleBy3");
+            listView.getItems().add("Is_y_in_x(NDTM)");
+            listView.getItems().add("BinaryAddition");
+            listView.getItems().add("Copier");
+            listView.getItems().add("Infinite1Fill");
+            listView.getItems().add("InfiniteNDTM");
+            listView.setId("Examples");
+            listView.setOnMouseClicked(event -> {
+                loadExample(listView.getSelectionModel().getSelectedItem());
+                canvas.getChildren().remove(root);
+                popupOpened = false;
+            });
+
+            Button cancelButton = new Button("Cancel");
+            cancelButton.getStyleClass().add("buttons");
+            cancelButton.setPrefWidth(140);
+            cancelButton.setOnAction(event -> {
+                canvas.getChildren().remove(root);
+                popupOpened = false;
+            });
+
+            root.getChildren().addAll(listView, cancelButton);
+            canvas.getChildren().add(root);
+            popupOpened = true;
+        }
+    }
+
+    public void loadExample(String fileName){
+        if(fileName != null && !fileName.isEmpty()){
+            try {
+                InputStream stream = SimulatorController.class.getResourceAsStream("examples/" + fileName + ".xml");
+                TuringMachine exampleTM = SaveManager.loadTuringMachineFromStream(stream);
+                loadTuringMachine(exampleTM);
+                exampleLoaded = true;
+            } catch (Exception e) {
+                NotificationManager.errorNotification("Error", "Could not load the example file", primaryStage);
+            }
+        }
     }
 
     private void loadFromFile(){
@@ -664,6 +678,7 @@ public class SimulatorController {
         if(tm != null){
             clearCanvas();
             tape = null;
+            originalTapeInput = new ArrayList<>();
             reset();
             initialTM = tm;
             currentTM = initialTM;
@@ -696,6 +711,10 @@ public class SimulatorController {
                 increaseCanvas(false);
             }
         }
+    }
+
+    public void setSaveFile(File saveFile){
+        currentSaveFile = saveFile;
     }
 
     private void increaseCanvas(boolean increaseWidth){
@@ -746,5 +765,13 @@ public class SimulatorController {
             manualExecutor = new Executor(currentTM, tape);
         }
         inputStatusLabel.setText("Input status: None");
+    }
+
+    public Tape getTape(){
+        return tape;
+    }
+
+    public TuringMachine getCurrentTM(){
+        return currentTM;
     }
 }
